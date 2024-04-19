@@ -85,7 +85,7 @@ DATABASES = {
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
-}}
+}
 
 
 # Password validation
