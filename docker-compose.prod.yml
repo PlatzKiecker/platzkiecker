@@ -19,9 +19,9 @@ services:
     env_file:
       - ./.env.prod.db
   proxy:
-    build: ./nginx
+    build: ./proxy
     volumes:
-      - static_volume:/opt/backend/backend/staticfiles
+      - static_volume:/backend/staticfiles
     ports:
       - 1337:8080
     depends_on:
