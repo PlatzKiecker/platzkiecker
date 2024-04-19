@@ -19,11 +19,11 @@ jobs:
 
       - name: Build frontend image
         working-directory: frontend
-        run docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod .
+        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod .
 
       - name: Build proxy image
         working-directory: proxy
-        run docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/proxy:prod .
+        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/proxy:prod .
 
   push:
     runs-on: ubuntu-latest
