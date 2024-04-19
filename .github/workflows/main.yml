@@ -15,15 +15,15 @@ jobs:
 
       - name: Build backend image
         working-directory: backend
-        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/backend:prod .
+        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:backend_prod .
 
       #- name: Build frontend image
       #  working-directory: frontend
-      #  run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/frontend:prod .
+      #  run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:frontend_prod .
 
       - name: Build proxy image
         working-directory: proxy
-        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/proxy:prod .
+        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:proxy_prod .
 
   push:
     runs-on: ubuntu-latest
@@ -35,10 +35,10 @@ jobs:
         run: echo "${{ secrets.CONTAINER_REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.CONTAINER_REGISTRY_USERNAME }}" --password-stdin "${{ secrets.CONTAINER_REGISTRY }}"
 
       - name: Push backend image
-        run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/backend:prod
+        run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:backend_prod .
 
       #- name: Push frontend image
-      #  run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/frontend:prod
+      #  run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:frontend_prod .
 
       - name: Push proxy image
-        run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker/proxy:prod
+        run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:proxy_prod .
