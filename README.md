@@ -35,17 +35,9 @@ Explain how to use the project, including code examples and any necessary comman
 
 Explain how the configuration works, including any configuration files and how users can customize settings.
 
-## Modules
+## Components
 
-List and describe the scripts or modules included in the project.
-
-### Module Name
-
-Description of what the module does.
-
-#### Function/Class Name
-
-Description of what the function/class does.
+List and describe the scripts or Components included in the project.
 
 - Parameters/Attributes: Description of the parameters/attributes.
 - Returns: Description of the return value (if applicable).
