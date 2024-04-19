@@ -39,9 +39,6 @@ Explain how the configuration works, including any configuration files and how u
 
 List and describe the scripts or Components included in the project.
 
-- Parameters/Attributes: Description of the parameters/attributes.
-- Returns: Description of the return value (if applicable).
-
 ## Contributing
 
 Provide guidelines for contributing to the project, including how to report issues, submit pull requests, and contribute code.
