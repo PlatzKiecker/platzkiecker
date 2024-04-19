@@ -17,9 +17,9 @@ jobs:
         working-directory: backend
         run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/backend:prod .
 
-      - name: Build frontend image
-        working-directory: frontend
-        run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod .
+      #- name: Build frontend image
+      #  working-directory: frontend
+      #  run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod .
 
       - name: Build proxy image
         working-directory: proxy
@@ -37,8 +37,8 @@ jobs:
       - name: Push backend image
         run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/backend:prod
 
-      - name: Push frontend image
-        run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod
+      #- name: Push frontend image
+      #  run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/frontend:prod
 
       - name: Push proxy image
         run: docker push "${{ secrets.CONTAINER_REGISTRY }}"/proxy:prod
