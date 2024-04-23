@@ -19,7 +19,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Connect to server
-        run: ssh -o StrictHostKeyChecking=no root@p${{ secrets.PROD_VM }} 'cd /srv/platzkiecker && git pull'
+        run: ssh -o StrictHostKeyChecking=no root@${{ secrets.PROD_VM }} 'cd /srv/platzkiecker && git pull'
 
       - name: Build and run Docker Compose
         run: |
