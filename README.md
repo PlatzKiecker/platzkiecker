@@ -1,6 +1,6 @@
-[Project Name]
+# PlatzKiecker
 
-Brief description of the project.
+PlatzKiecker is a project that aims to implement a table management system for restaurants.
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ Provide an overview of the project, its purpose, and any relevant background inf
 
 ## Project Structure
 
-Describe the structure of the project, including directories, main files, and their purposes.
+Each component has its own directory in the root directory. By that we ensure Modularity and independance between used components.
 
 ## Installation
 
