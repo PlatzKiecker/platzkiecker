@@ -23,4 +23,4 @@ jobs:
 
       - name: Build and run Docker Compose
         run: |
-          ssh -o StrictHostKeyChecking=no user@server-ip 'cd /path/to/repository && docker-compose -f docker-compose.prod.yml up -d'
+          ssh -o StrictHostKeyChecking=no user@server-ip 'cd /path/to/repository && docker-compose -f docker-compose.prod.yml up -d --build'
