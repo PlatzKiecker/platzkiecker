@@ -1,4 +1,4 @@
-mit# [Project Name]
+[Project Name]
 
 Brief description of the project.
 
