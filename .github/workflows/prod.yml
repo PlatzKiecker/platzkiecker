@@ -24,6 +24,7 @@ jobs:
       - name: stop application
         run: |
           ssh -o StrictHostKeyChecking=no root@{{ secrets.PROD_VM }} 'cd /srv/platzkiecker && docker compose -f docker-compose.prod.yml down'
+        continue-on-error: true
 
       - name: Build and run Docker Compose
         run: |
