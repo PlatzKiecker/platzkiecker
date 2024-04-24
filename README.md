@@ -35,7 +35,7 @@ Before getting started, make sure you have the following installed:
 
 To set up the development environment, follow these steps:
 
-1. Clone the repository: `git clone [https://github.com/platzliecker/platzkiecker.git](https://github.com/PlatzKiecker/platzkiecker.git)`
+1. Clone the repository: `git clone https://github.com/PlatzKiecker/platzkiecker.git`
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.dev` file in the project root directory and add the necessary environment variables for development.
     ```bash
@@ -66,7 +66,7 @@ To use the application, follow these steps:
 ## Production Environment Setup
 
 To set up the production environment, follow these steps:
-1. Clone the repository: `git clone [https://github.com/platzkiecker/platzkieckergit](https://github.com/PlatzKiecker/platzkiecker.git)`
+1. Clone the repository: `git clone https://github.com/PlatzKiecker/platzkiecker.git`
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.prod` file in the project root directory and add the necessary environment variables for production.
     ```bash
