@@ -21,6 +21,10 @@ jobs:
       - name: Connect to server
         run: ssh -o StrictHostKeyChecking=no root@${{ secrets.PROD_VM }} 'cd /srv/platzkiecker && git pull'
 
+      - name: stop application
+        run |
+          ssh -o StrictHostKeyChecking=no root@{{ secrets.PROD_VM }} 'cd /srv/platzkiecker && docker compose -f docker-compose.prod.yml down'
+
       - name: Build and run Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.PROD_VM }} 'cd /srv/platzkiecker && docker compose -f docker-compose.prod.yml up -d --build'
