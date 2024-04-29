@@ -1,5 +1,5 @@
 # build environment
-FROM node:20.5-alpine as build
+FROM node:22-alpine3.18 as build
 WORKDIR /frontend
 ENV PATH /frontend/node_modules/.bin:$PATH
 COPY package.json ./
