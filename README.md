@@ -9,11 +9,8 @@ PlatzKiecker is a project that aims to implement a table management system for r
 - [Installation](#installation)
     - [Development Setup](#development-environment-setup)
     - [Production Setup](#production-environment-setup)
-- [Usage](#usage)
 - [Configuration](#configuration)
-- [Scripts/Modules](#scriptsmodules)
-  - [Script/Module Name](#scriptmodule-name)
-    - [Function/Class Name](#functionclass-name)
+- [Components](#components)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -62,6 +59,7 @@ To use the application, follow these steps:
 
 1. Open your web browser and navigate to `http://localhost:8000` for the backend
 2. Open your web browser and navigate to `http://localhost:5051` for the database admin page
+3. Open your web browser and navigate to `http://localhost:3000` for the frontend
 
 ## Production Environment Setup
 
@@ -105,23 +103,21 @@ To set up the production environment, follow these steps:
 
 To use the application, follow these steps:
 
-1. Open your web browser and navigate to `http://localhost:80`
-
-## Usage
-
-Explain how to use the project, including code examples and any necessary command-line interface (CLI) commands.
+1. Open your web browser and navigate to `http://localhost:80` or `http://localhost:443`
+2. If you use the "docker-compose.full.yml" the frontend is reachable at `http://localhost:3000`
+    - We do deploy our frontend as a static site in a DCN.
 
 ## Configuration
 
-Explain how the configuration works, including any configuration files and how users can customize settings.
+Configuring the application is mainly achieved by manipulationg the ENV variables.
 
 ## Components
 
-List and describe the scripts or Components included in the project.
+Components and functions are documented in our "Docs" repository.
 
 ## Contributing
 
-Provide guidelines for contributing to the project, including how to report issues, submit pull requests, and contribute code.
+If you plan on contributing to this project, feel free to contact us.
 
 ## License
 
