@@ -1,5 +1,5 @@
-<a href="https://github.com/platzkiecker/platzkiecker/actions/workflows/build.yml">
-  <img alt="Build Status" src="https://github.com/platzkiecker/platzkiecker/actions/workflows/build.yml/badge.svg">
+<a href="https://github.com/platzkiecker/platzkiecker/actions/workflows/prod.yml">
+  <img alt="Build Status" src="https://github.com/platzkiecker/platzkiecker/actions/workflows/prod.yml/badge.svg">
 </a>
 
 # PlatzKiecker
