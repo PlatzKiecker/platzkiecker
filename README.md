@@ -1,3 +1,7 @@
+<a href="https://github.com/platzkiecker/platzkiecker/actions/workflows/build.yml">
+  <img alt="Build Status" src="https://github.com/platzkiecker/platzkiecker/actions/workflows/build.yml/badge.svg">
+</a>
+
 # PlatzKiecker
 Ich ändere hier jetzt einfach was lol
 PlatzKiecker is a project that aims to implement a table management system for restaurants.
