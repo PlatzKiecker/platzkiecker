@@ -21,8 +21,8 @@ services:
       - POSTGRES_PASSWORD=backend
       - POSTGRES_DB=backend_dev
       - POSTGRES_PORT=5432
-#    ports:
-#      - "5432:5432"
+    ports:
+      - "5432:5432"
     volumes:
       - postgres-dev-data:/var/lib/postgresql/data/ 
 
@@ -39,7 +39,8 @@ services:
     restart: always
     
   frontend-dev:
-    platform: linux/amd64
+# uncomment the following line to run the frontend container on an arm machine
+#    platform: linux/amd64
     build:
       context: ./frontend
       target: dev
