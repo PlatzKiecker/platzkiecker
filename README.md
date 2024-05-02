@@ -6,7 +6,6 @@
 </a>
 
 # PlatzKiecker
-Ich ändere hier jetzt einfach was lol
 PlatzKiecker is a project that aims to implement a table management system for restaurants.
 
 ## Table of Contents
