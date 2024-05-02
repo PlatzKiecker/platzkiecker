@@ -1,3 +1,4 @@
+[![CodeQL](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql)
 <a href="https://github.com/platzkiecker/platzkiecker/actions/workflows/main.yml">
   <img alt="Build Status" src="https://github.com/platzkiecker/platzkiecker/actions/workflows/main.yml/badge.svg">
 </a>
