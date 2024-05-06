@@ -1,5 +1,9 @@
-# PlatzKiecker
+[![Code Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql)
+[![Version Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates)
+[![Build](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml)
+[![Deploy](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml)
 
+# PlatzKiecker
 PlatzKiecker is a project that aims to implement a table management system for restaurants.
 
 ## Table of Contents
