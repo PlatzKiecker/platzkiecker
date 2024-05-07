@@ -1,9 +1,11 @@
-name: Deploy to Production
+name: Deploy
 
 on:
   push:
     branches:
       - prod
+    paths:
+      - '!frontend/**'
 
 jobs:
   deploy:
