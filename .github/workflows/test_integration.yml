@@ -14,8 +14,6 @@ jobs:
 
       - name: Set up Docker Compose
         env:
-          DOCKER_COMPOSE_CONFIG: ${{ secrets.DOCKER_COMPOSE_CONFIG }}
-          ANOTHER_SECRET: ${{ secrets.ANOTHER_SECRET }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
           SQL_USER: ${{ secrets.SQL_USER }}
