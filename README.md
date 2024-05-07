@@ -9,8 +9,6 @@
 [![Build](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml)
 [![Deploy](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml)
 
-
-
 # PlatzKiecker
 
 PlatzKiecker is a project that aims to implement a table management system for restaurants.
