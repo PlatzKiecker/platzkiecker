@@ -1,14 +1,13 @@
-## Service Status
+### Service Status
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
 ![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de&logo=django&logoColor=white&label=backend)
-## Testing Status
+### Testing Status
 [![Code Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql)
 [![Version Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates)
 [![Integration Test](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/test_integration.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/test_integration.yml)
-## CI/CD Status
+### CI/CD Status
 [![Build](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml)
 [![Deploy](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml)
-![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
 
 
 
