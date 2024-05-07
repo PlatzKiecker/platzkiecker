@@ -8,6 +8,7 @@
 ## CI/CD Status
 [![Build](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/build.yml)
 [![Deploy](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml/badge.svg)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/prod.yml)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
 
 
 
