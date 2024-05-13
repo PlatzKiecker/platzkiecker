@@ -1,5 +1,5 @@
 # development environment
-FROM node:21-alpine as dev
+FROM node:22-alpine as dev
 WORKDIR /frontend
 #ENV PATH /frontend/node_modules/.bin:$PATH
 COPY package*.json .
