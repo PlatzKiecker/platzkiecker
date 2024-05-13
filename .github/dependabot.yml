@@ -6,7 +6,22 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "/backend/Dockerfile"
+    schedule:
+      interval: "weekly"
+  
+  - package-ecosystem: "docker"
+    directory: "/backend/Dockerfile.prod"
+    schedule:
+      interval: "weekly"
+  
+  - package-ecosystem: "docker"
+    directory: "/frontend/Dockerfile"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/proxy/Dockerfile"
     schedule:
       interval: "weekly"
 
