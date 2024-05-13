@@ -39,6 +39,8 @@ Before getting started, make sure you have the following installed:
 
 - [Docker](https://www.docker.com)
 
+- If you use Windows for development, consider to switch the "end of line sequence" for all of the entrypoint.sh scripts in VS-Code to "LF".
+
 ## Development Environment Setup
 
 To set up the development environment, follow these steps:
