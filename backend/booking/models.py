@@ -8,7 +8,9 @@ class Booking(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('CONFIRMED', 'Confirmed'),
+        ('SEATED', 'Seated'),
         ('CANCELLED', 'Cancelled'),
+        ('COMPLETED', 'Completed'),
     ]
 
     guest_name = models.CharField(max_length=255, help_text="The name of the guest.")
