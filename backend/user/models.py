@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, email, password, team, **kwargs):
+    def create_user(self, email, password, **kwargs):
         if not email:
             raise ValueError("Users must have an email address")
         user = self.model(email=BaseUserManager.normalize_email(email), **kwargs)
@@ -13,11 +13,7 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password):
-        return self.create_user(email, password, team=Team.objects.create(), is_admin=True)
-
-
-class Team(models.Model):
-    stripe_customer_id = models.CharField(max_length=255)
+        return self.create_user(email, password, is_admin=True)
 
 
 class User(AbstractBaseUser):
