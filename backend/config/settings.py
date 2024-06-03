@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "psycopg2",
+    'user',
+    'restaurant',
+    'booking',
 ]
 
 MIDDLEWARE = [
