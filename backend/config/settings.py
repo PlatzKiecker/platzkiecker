@@ -28,6 +28,7 @@ DEBUG = bool(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = ["*"]
 
+AUTH_USER_MODEL = "user.User"
 
 # Application definition
 
@@ -40,6 +41,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "psycopg2",
+    'user',
+    'restaurant',
+    'booking',
 ]
 
 MIDDLEWARE = [
