@@ -21,7 +21,7 @@ services:
   proxy:
     build: ./proxy
     volumes:
-      - static_volume:/staticfiles
+      - static_volume:/backend/staticfiles
     ports:
       - 443:8080
       - 80:8080
