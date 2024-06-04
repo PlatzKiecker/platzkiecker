@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build backend image
         working-directory: backend
@@ -22,12 +22,6 @@ jobs:
       - name: Build proxy image
         working-directory: proxy
         run: docker build -t "${{ secrets.CONTAINER_REGISTRY }}"/platzkiecker:proxy_prod .
-
-  #push:
-    #runs-on: ubuntu-latest
-    #needs: build
-
-    #steps:
 
       - name: Login to Container Registry
         run: echo "${{ secrets.CONTAINER_REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.CONTAINER_REGISTRY_USERNAME }}" --password-stdin "${{ secrets.CONTAINER_REGISTRY }}"
