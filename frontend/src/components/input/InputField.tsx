@@ -1,4 +1,4 @@
-export default function InputField({ label }) {
+export default function InputField({ label }: { label: string }) {
   return (
     <div>
       <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
