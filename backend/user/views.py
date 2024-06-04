@@ -4,31 +4,29 @@ from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserSe
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+from django.contrib.auth import logout
 
 from rest_framework import generics
 from .models import User
 
-@api_view(['GET', 'POST'])
-#@renderer_classes([JSONRenderer])
-def user_registration_view(request):
-    if request.method == 'POST':
-        serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-@api_view(['GET', 'POST'])
-#@renderer_classes([JSONRenderer])
-def user_login_view(request):
-    if request.method == 'POST':
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-class UserCreateView(generics.CreateAPIView):
+class UserRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserRegistrationSerializer
+
+class UserLoginView(generics.GenericAPIView):
+    serializer_class = UserLoginSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserLogoutView(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    
+    def get(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
