@@ -1,9 +1,10 @@
 from rest_framework import generics, authentication, status
 from rest_framework.response import Response
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
 from django.shortcuts import redirect
 from .serializers import UserRegistrationSerializer, UserLoginSerializer
 from .models import User
+
 
 
 
@@ -17,14 +18,17 @@ class UserRegisterView(generics.CreateAPIView):
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
-    authentication_classes = [authentication.TokenAuthentication]
+    authentication_classes = [authentication.SessionAuthentication]
     
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response({"message": "Logged in successfully"}, status=status.HTTP_200_OK)
 
 class UserLogoutView(generics.DestroyAPIView):
     queryset = User.objects.all()

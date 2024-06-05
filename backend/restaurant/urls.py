@@ -18,8 +18,8 @@ from .views import (
 )
 
 urlpatterns = [
-    path('restaurants/', RestaurantCreateView.as_view(), name='restaurant-create'),
-    path('restaurants/<int:pk>/', RestaurantDetailView.as_view(), name='restaurant-detail'),
+    path('restaurant/', RestaurantCreateView.as_view(), name='restaurant-create'),
+    path('restaurant/detail/', RestaurantDetailView.as_view(), name='restaurant-detail'),
     path('zones/', ZoneCreateView.as_view(), name='zone-create'),
     path('zones/list/', ZoneListView.as_view(), name='zone-list'),
     path('zones/<int:pk>/', ZoneDetailView.as_view(), name='zone-detail'),

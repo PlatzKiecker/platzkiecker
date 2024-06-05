@@ -5,21 +5,27 @@ from .models import Restaurant, Zone, Table, Vacation, BookingPeriod
 from .serializers import RestaurantSerializer, ZoneSerializer, TableSerializer, VacationSerializer, BookingPeriodSerializer
 
 class RestaurantCreateView(generics.CreateAPIView):
-    queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class RestaurantDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
-    def get_queryset(self):
+    def get_object(self):
         user = self.request.user
-        return Restaurant.objects.filter(user=user.pk)
+        return Restaurant.objects.get(user=user.pk)
 
 
 class ZoneCreateView(generics.CreateAPIView):
     queryset = Zone.objects.all()
     serializer_class = ZoneSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(restaurant=self.request.user.restaurant)
 
 class ZoneListView(generics.ListAPIView):
     queryset = Zone.objects.all()
@@ -30,7 +36,6 @@ class ZoneListView(generics.ListAPIView):
         return Zone.objects.filter(restaurant__user=user.pk)
 
 class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Zone.objects.all()
     serializer_class = ZoneSerializer
 
     def get_queryset(self):
@@ -38,8 +43,17 @@ class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Zone.objects.filter(restaurant__user=user.pk)
 
 class TableCreateView(generics.CreateAPIView):
-    queryset = Table.objects.all()
     serializer_class = TableSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Table.objects.filter(zone__restaurant__user=user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['zones'] = Zone.objects.filter(restaurant__user=self.request.user)
+        return context
+    
 
 class TableListView(generics.ListAPIView):
     queryset = Table.objects.all()
@@ -55,11 +69,20 @@ class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Table.objects.filter(zone__restaurant__user=user.pk)
+        return Table.objects.filter(zone__restaurant__user=user)
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['zones'] = Zone.objects.filter(restaurant__user=self.request.user)
+        return context
 
 class VacationCreateView(generics.CreateAPIView):
     queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(restaurant=self.request.user.restaurant)
+
 
 class VacationListView(generics.ListAPIView):
     queryset = Vacation.objects.all()
@@ -80,6 +103,9 @@ class VacationDetailView(generics.RetrieveUpdateDestroyAPIView):
 class BookingPeriodCreateView(generics.CreateAPIView):
     queryset = BookingPeriod.objects.all()
     serializer_class = BookingPeriodSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(restaurant=self.request.user.restaurant)
 
 class BookingPeriodListView(generics.ListAPIView):
     queryset = BookingPeriod.objects.all()
