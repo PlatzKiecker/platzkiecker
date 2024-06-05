@@ -16,7 +16,7 @@ class BookingListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Booking.objects.filter(restaurant__user=user)
+        return Booking.objects.filter(restaurant__user=user.pk)
 
 class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
@@ -24,4 +24,4 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Booking.objects.filter(restaurant__user=user)
+        return Booking.objects.filter(restaurant__user=user.pk)
