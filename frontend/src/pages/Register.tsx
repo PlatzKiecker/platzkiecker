@@ -1,6 +1,6 @@
-import InputField from "./components/input/InputField";
+import InputField from "../components/input/InputField";
 
-export default function App() {
+export default function Register() {
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -13,18 +13,8 @@ export default function App() {
           <form className="space-y-6" action="#" method="POST">
             <InputField label="Email" />
 
-            <div>
-              <div className="mt-2">
-                <InputField label="Passwort" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
-                  </a>
-                </div>
-              </div>
-            </div>
+            <InputField label="Passwort" />
+            <InputField label="Confirm Passwort" />
 
             <div>
               <button
