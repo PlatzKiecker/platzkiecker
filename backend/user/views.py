@@ -15,7 +15,7 @@ class UserRegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED) and redirect('login')
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
@@ -24,11 +24,11 @@ class UserLoginView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK) and redirect('http://localhost:3000')
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserLogoutView(generics.DestroyAPIView):
     queryset = User.objects.all()
     
     def get(self, request):
         logout(request)
-        return Response(status=status.HTTP_200_OK) and redirect('login')
+        return Response(status=status.HTTP_200_OK)
