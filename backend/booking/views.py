@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.utils import timezone
 from restaurant.models import Table, BookingPeriod, Vacation
-from .serializers import AvailableDates, AvailableTables, AvailableTimeslots
+
 
 class BookingCreateView(generics.CreateAPIView):
     permission_classes = [AllowAny]
