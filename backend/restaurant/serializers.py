@@ -1,21 +1,19 @@
 # restaurant/serializers.py
 from rest_framework import serializers
-from .models import Restaurant, Zone, Table, Vacation, BookingPeriod
+from .models import Restaurant, Zone, Table, Vacation, BookingPeriod, DefaultBookingDuration
 from datetime import datetime, date
 from rest_framework import serializers
 from .models import BookingPeriod
+from restaurant.models import Table, BookingPeriod, Vacation
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import timedelta
+
 
 class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = ['id', 'name', 'user']
         extra_kwargs = {'user': {'read_only': True}}
-
-class ZoneSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Zone
-        fields = ['id', 'name', 'bookable', 'restaurant']
-        extra_kwargs = {'restaurant': {'read_only': True}}
 
 
 class TableSerializer(serializers.ModelSerializer):
@@ -24,7 +22,7 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = ['id', 'name', 'capacity', 'bookable', 'combinable', 'zone']
-        extra_kwargs = {'bookable': {'read_only': True}, 'combinable': {'read_only': True}}
+        extra_kwargs = {'combinable': {'read_only': True}}
 
     def __init__(self, *args, **kwargs):
         super(TableSerializer, self).__init__(*args, **kwargs)
@@ -40,6 +38,12 @@ class TableSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can only create tables in zones belonging to your restaurant.")
         return value
 
+class ZoneSerializer(serializers.ModelSerializer):
+    tables = TableSerializer(many=True, read_only=True, source='table_set')
+    class Meta:
+        model = Zone
+        fields = ['id', 'name', 'bookable', 'restaurant', 'tables']
+        extra_kwargs = {'restaurant': {'read_only': True}}
 
 class VacationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,27 +52,47 @@ class VacationSerializer(serializers.ModelSerializer):
         extra_kwargs = {'restaurant': {'read_only': True}}
 
 
+class DefaultBookingDurationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DefaultBookingDuration
+        fields = ['id', 'duration', 'restaurant']
+        extra_kwargs = {'restaurant': {'read_only': True}}
+
+
 class BookingPeriodSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingPeriod
-        fields = ['id', 'weekday', 'open', 'close', 'default_duration', 'restaurant']
+        fields = ['id', 'weekday', 'open', 'close', 'restaurant']
         extra_kwargs = {'restaurant': {'read_only': True}}
 
     def validate(self, attrs):
         open_time = attrs.get('open')
         close_time = attrs.get('close')
-        default_duration = attrs.get('default_duration')
 
         # Ensure the opening time is before the closing time
         if open_time >= close_time:
             raise serializers.ValidationError("Opening time must be before closing time.")
 
-        # Ensure the default duration does not exceed the time slot duration
-        time_slot_duration = (datetime.combine(date.min, close_time) - datetime.combine(date.min, open_time)).total_seconds()
-        default_duration_seconds = (datetime.combine(date.min, default_duration) - datetime.min).total_seconds()
+        # Fetch the default duration for the restaurant
+        restaurant = self.context['request'].user.restaurant
 
-        if default_duration_seconds > time_slot_duration:
-            raise serializers.ValidationError("Default duration cannot exceed the time slot duration.")
+        try:
+            default_duration = DefaultBookingDuration.objects.get(restaurant=restaurant)
+        except ObjectDoesNotExist:
+            raise serializers.ValidationError("No default booking duration found for the restaurant.")
+
+        # Calculate the default duration as a timedelta
+        default_duration_timedelta = timedelta(hours=default_duration.duration.hour, 
+                                               minutes=default_duration.duration.minute, 
+                                               seconds=default_duration.duration.second)
+
+        # Calculate the booking period duration as a timedelta
+        booking_period_duration = timedelta(hours=close_time.hour - open_time.hour,
+                                            minutes=close_time.minute - open_time.minute,
+                                            seconds=close_time.second - open_time.second)
+
+        # Ensure the default duration does not exceed the time slot duration
+        if booking_period_duration < default_duration_timedelta:
+            raise serializers.ValidationError("The default booking duration cannot exceed the booking period duration.")
 
         return attrs
-

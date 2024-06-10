@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Booking
-from .serializers import BookingSerializer
+from .serializers import BookingSerializer, BookingListSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.utils import timezone
+from restaurant.models import Table, BookingPeriod, Vacation
+from .serializers import AvailableDates, AvailableTables, AvailableTimeslots
 
 class BookingCreateView(generics.CreateAPIView):
     permission_classes = [AllowAny]
@@ -12,16 +17,9 @@ class BookingCreateView(generics.CreateAPIView):
         restaurant_id = self.kwargs.get('restaurant_id')
         serializer.save(restaurant_id=restaurant_id)
 
-        # Create an entry in the booked tables attribute availability
-        start = serializer.validated_data.get('start')
-        default_duration = serializer.validated_data.get('default_duration')
-        end = start + default_duration
-        serializer.instance.booked_tables.availability.create(start=start, end=end)
-
 class BookingListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
+    serializer_class = BookingListSerializer
 
     def get_queryset(self):
         user = self.request.user

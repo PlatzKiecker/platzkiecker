@@ -15,6 +15,8 @@ from .views import (
     BookingPeriodCreateView,
     BookingPeriodListView,
     BookingPeriodDetailView,
+    DefaultBookingDurationCreateView,
+    DefaultBookingDurationDetailView,
 )
 
 urlpatterns = [
@@ -29,6 +31,8 @@ urlpatterns = [
     path('vacations/', VacationCreateView.as_view(), name='vacation-create'),
     path('vacations/list/', VacationListView.as_view(), name='vacation-list'),
     path('vacations/<int:pk>/', VacationDetailView.as_view(), name='vacation-detail'),
+    path('default-duration/', DefaultBookingDurationCreateView.as_view(), name='default-duration-create'),
+    path('default-duration/<int:pk>/', DefaultBookingDurationDetailView.as_view(), name='default-duration-detail'),
     path('booking-periods/', BookingPeriodCreateView.as_view(), name='booking-period-create'),
     path('booking-periods/list/', BookingPeriodListView.as_view(), name='booking-period-list'),
     path('booking-periods/<int:pk>/', BookingPeriodDetailView.as_view(), name='booking-period-detail'),
