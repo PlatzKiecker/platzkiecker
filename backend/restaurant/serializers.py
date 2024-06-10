@@ -23,7 +23,8 @@ class TableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Table
-        fields = ['id', 'capacity', 'bookable', 'combinable', 'zone']
+        fields = ['id', 'name', 'capacity', 'bookable', 'combinable', 'zone']
+        extra_kwargs = {'bookable': {'read_only': True}, 'combinable': {'read_only': True}}
 
     def __init__(self, *args, **kwargs):
         super(TableSerializer, self).__init__(*args, **kwargs)

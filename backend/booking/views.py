@@ -12,8 +12,14 @@ class BookingCreateView(generics.CreateAPIView):
         restaurant_id = self.kwargs.get('restaurant_id')
         serializer.save(restaurant_id=restaurant_id)
 
+        # Create an entry in the booked tables attribute availability
+        start = serializer.validated_data.get('start')
+        default_duration = serializer.validated_data.get('default_duration')
+        end = start + default_duration
+        serializer.instance.booked_tables.availability.create(start=start, end=end)
+
 class BookingListView(generics.ListAPIView):
-    authentication_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 

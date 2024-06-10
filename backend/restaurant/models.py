@@ -26,6 +26,7 @@ class Table(models.Model):
     """
     Model representing a table within a zone.
     """
+    name = models.CharField(null=True, max_length=255, help_text="The name of the table.")
     capacity = models.IntegerField(help_text="The number of seats at the table.")
     bookable = models.BooleanField(default=False, help_text="Indicates if the table is bookable.")
     combinable = models.BooleanField(default=False, help_text="Indicates if the table can be combined with others.")
