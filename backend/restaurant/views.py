@@ -3,8 +3,10 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import Restaurant, Zone, Table, Vacation, BookingPeriod
 from .serializers import RestaurantSerializer, ZoneSerializer, TableSerializer, VacationSerializer, BookingPeriodSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class RestaurantCreateView(generics.CreateAPIView):
+    authentication_classes = [IsAuthenticated]
     serializer_class = RestaurantSerializer
     
     def perform_create(self, serializer):
@@ -12,6 +14,7 @@ class RestaurantCreateView(generics.CreateAPIView):
 
 
 class RestaurantDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
@@ -21,6 +24,7 @@ class RestaurantDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ZoneCreateView(generics.CreateAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Zone.objects.all()
     serializer_class = ZoneSerializer
 
@@ -28,6 +32,7 @@ class ZoneCreateView(generics.CreateAPIView):
         serializer.save(restaurant=self.request.user.restaurant)
 
 class ZoneListView(generics.ListAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Zone.objects.all()
     serializer_class = ZoneSerializer
 
@@ -36,6 +41,7 @@ class ZoneListView(generics.ListAPIView):
         return Zone.objects.filter(restaurant__user=user.pk)
 
 class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [IsAuthenticated]
     serializer_class = ZoneSerializer
 
     def get_queryset(self):
@@ -43,6 +49,7 @@ class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Zone.objects.filter(restaurant__user=user.pk)
 
 class TableCreateView(generics.CreateAPIView):
+    authentication_classes = [IsAuthenticated]
     serializer_class = TableSerializer
 
     def get_queryset(self):
@@ -56,6 +63,7 @@ class TableCreateView(generics.CreateAPIView):
     
 
 class TableListView(generics.ListAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Table.objects.all()
     serializer_class = TableSerializer
 
@@ -64,6 +72,7 @@ class TableListView(generics.ListAPIView):
         return Table.objects.filter(zone__restaurant__user=user.pk)
     
 class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Table.objects.all()
     serializer_class = TableSerializer
 
@@ -77,6 +86,7 @@ class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
         return context
 
 class VacationCreateView(generics.CreateAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
 
@@ -85,6 +95,7 @@ class VacationCreateView(generics.CreateAPIView):
 
 
 class VacationListView(generics.ListAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
 
@@ -93,6 +104,7 @@ class VacationListView(generics.ListAPIView):
         return Vacation.objects.filter(restaurant__user=user.pk)
     
 class VacationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
 
@@ -101,6 +113,7 @@ class VacationDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Vacation.objects.filter(restaurant__user=user.pk)
 
 class BookingPeriodCreateView(generics.CreateAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = BookingPeriod.objects.all()
     serializer_class = BookingPeriodSerializer
 
@@ -108,6 +121,7 @@ class BookingPeriodCreateView(generics.CreateAPIView):
         serializer.save(restaurant=self.request.user.restaurant)
 
 class BookingPeriodListView(generics.ListAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = BookingPeriod.objects.all()
     serializer_class = BookingPeriodSerializer
 
@@ -116,6 +130,7 @@ class BookingPeriodListView(generics.ListAPIView):
         return BookingPeriod.objects.filter(restaurant__user=user.pk)
     
 class BookingPeriodDetailView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = BookingPeriod.objects.all()
     serializer_class = BookingPeriodSerializer
         

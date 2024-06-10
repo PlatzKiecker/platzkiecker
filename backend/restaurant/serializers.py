@@ -2,6 +2,8 @@
 from rest_framework import serializers
 from .models import Restaurant, Zone, Table, Vacation, BookingPeriod
 from datetime import datetime, date
+from rest_framework import serializers
+from .models import BookingPeriod
 
 class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,10 +17,6 @@ class ZoneSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'bookable', 'restaurant']
         extra_kwargs = {'restaurant': {'read_only': True}}
 
-#class TableSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = Table
-#        fields = ['id', 'capacity', 'bookable', 'combinable', 'zone']
 
 class TableSerializer(serializers.ModelSerializer):
     zone = serializers.PrimaryKeyRelatedField(queryset=Zone.objects.none())
@@ -35,13 +33,12 @@ class TableSerializer(serializers.ModelSerializer):
             self.fields['zone'].queryset = zones
 
     def validate_zone(self, value):
-        """
-        Check that the zone belongs to the user's restaurant.
-        """
+        ## Check that the zone belongs to the user's restaurant.
         user = self.context['request'].user
         if not Zone.objects.filter(id=value.id, restaurant__user=user).exists():
             raise serializers.ValidationError("You can only create tables in zones belonging to your restaurant.")
         return value
+
 
 class VacationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,8 +46,6 @@ class VacationSerializer(serializers.ModelSerializer):
         fields = ['id', 'start', 'end', 'restaurant']
         extra_kwargs = {'restaurant': {'read_only': True}}
 
-from rest_framework import serializers
-from .models import BookingPeriod
 
 class BookingPeriodSerializer(serializers.ModelSerializer):
     class Meta:

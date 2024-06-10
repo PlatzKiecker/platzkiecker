@@ -4,6 +4,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.shortcuts import redirect
 from .serializers import UserRegistrationSerializer, UserLoginSerializer
 from .models import User
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -21,7 +22,6 @@ class UserRegisterView(generics.CreateAPIView):
 
 class UserLoginView(generics.GenericAPIView):
     serializer_class = UserLoginSerializer
-    authentication_classes = [authentication.SessionAuthentication]
     
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

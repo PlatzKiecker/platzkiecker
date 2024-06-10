@@ -1,16 +1,19 @@
 from django.shortcuts import render
-
-# Create your views here.
-# booking/views.py
 from rest_framework import generics
 from .models import Booking
 from .serializers import BookingSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class BookingCreateView(generics.CreateAPIView):
-    queryset = Booking.objects.all()
+    permission_classes = [AllowAny]
     serializer_class = BookingSerializer
 
+    def perform_create(self, serializer):
+        restaurant_id = self.kwargs.get('restaurant_id')
+        serializer.save(restaurant_id=restaurant_id)
+
 class BookingListView(generics.ListAPIView):
+    authentication_classes = [IsAuthenticated]
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
