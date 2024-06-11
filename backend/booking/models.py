@@ -1,3 +1,4 @@
+#booking/models.py
 from django.db import models
 from restaurant.models import Restaurant, Table
 
