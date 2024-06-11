@@ -1,12 +1,7 @@
-from django.shortcuts import render
 from rest_framework import generics
 from .models import Booking
 from .serializers import BookingSerializer, BookingListSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.utils import timezone
-from restaurant.models import Table, BookingPeriod, Vacation
 
 
 class BookingCreateView(generics.CreateAPIView):

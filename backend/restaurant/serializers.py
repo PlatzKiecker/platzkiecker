@@ -1,8 +1,6 @@
 # restaurant/serializers.py
 from rest_framework import serializers
 from .models import Restaurant, Zone, Table, Vacation, BookingPeriod, DefaultBookingDuration
-from datetime import datetime, date
-from rest_framework import serializers
 from .models import BookingPeriod
 from restaurant.models import Table, BookingPeriod, Vacation
 from django.core.exceptions import ObjectDoesNotExist
