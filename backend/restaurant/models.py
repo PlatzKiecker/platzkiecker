@@ -83,7 +83,7 @@ class DefaultBookingDuration(models.Model):
     Model representing the default duration for bookings.
     """
     duration = models.TimeField(help_text="The default duration for bookings.")
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, help_text="The restaurant this zone belongs to.")
+    restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE, help_text="The restaurant this default booking duration belongs to.")
 
     def __str__(self):
         return f"Default Booking Duration: {self.duration}"

@@ -151,26 +151,3 @@ class BookingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
-
-
-class AvailableDaysSerializer(serializers.Serializer):
-    available_days = serializers.ListField(child=serializers.DateField())
-
-    
-#1 Guest Count: GET + param
-    # - TableCapacity abfragen
-#2 Dates: GET
-    # Daten
-    # - an denen geöffnet ist und
-    # - an denen keine Betriebsferien sind und
-    # - an denen Tische mit ausreichend Kapazität frei sind
-#3 Date: GET + param
-    # - Datum für die Reservierung
-#4 Timeslots GET
-    # Timeslots mit Liste an Tischen für gewünschtes Datum an denen diese Tisch(e)
-    # - frei sind und
-    # - kein Betriebsurlaub ist und
-    # - Kapazität ausreicht und
-    # - innerhalb der Öffnungszeiten
-    # - in 15-Minuten-Intervallen 
-    # - mit default_duration als Endzeitpunkt

@@ -36,12 +36,14 @@ class TableSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can only create tables in zones belonging to your restaurant.")
         return value
 
+
 class ZoneSerializer(serializers.ModelSerializer):
     tables = TableSerializer(many=True, read_only=True, source='table_set')
     class Meta:
         model = Zone
         fields = ['id', 'name', 'bookable', 'restaurant', 'tables']
         extra_kwargs = {'restaurant': {'read_only': True}}
+
 
 class VacationSerializer(serializers.ModelSerializer):
     class Meta:

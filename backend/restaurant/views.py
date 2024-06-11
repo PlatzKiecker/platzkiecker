@@ -31,6 +31,7 @@ class ZoneCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(restaurant=self.request.user.restaurant)
 
+
 class ZoneListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Zone.objects.all()
@@ -39,6 +40,7 @@ class ZoneListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Zone.objects.filter(restaurant__user=user.pk)
+
 
 class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
@@ -53,7 +55,6 @@ class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
         context['tables'] = Table.objects.filter(zone__restaurant__user=self.request.user)
         return context
     
-
 
 class TableCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -77,7 +78,8 @@ class TableListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Table.objects.filter(zone__restaurant__user=user.pk)
-    
+
+
 class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Table.objects.all()
@@ -91,6 +93,7 @@ class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
         context = super().get_serializer_context()
         context['zones'] = Zone.objects.filter(restaurant__user=self.request.user)
         return context
+
 
 class VacationCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -109,7 +112,8 @@ class VacationListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Vacation.objects.filter(restaurant__user=user.pk)
-    
+
+
 class VacationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Vacation.objects.all()
@@ -127,6 +131,7 @@ class DefaultBookingDurationCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(restaurant=self.request.user.restaurant)
+
 
 class DefaultBookingDurationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
@@ -150,6 +155,7 @@ class BookingPeriodCreateView(generics.CreateAPIView):
         user = self.request.user
         return BookingPeriod.objects.filter(restaurant__user=user)
 
+
 class BookingPeriodListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = BookingPeriod.objects.all()
@@ -158,6 +164,7 @@ class BookingPeriodListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return BookingPeriod.objects.filter(restaurant__user=user.pk)    
+
 
 class BookingPeriodDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
