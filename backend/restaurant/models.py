@@ -46,8 +46,8 @@ class Vacation(models.Model):
     """
     Model representing a vacation period for a restaurant.
     """
-    start = models.DateTimeField(help_text="The start date and time of the vacation.")
-    end = models.DateTimeField(help_text="The end date and time of the vacation.")
+    start = models.DateField(help_text="The start date and time of the vacation.")
+    end = models.DateField(help_text="The end date and time of the vacation.")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='vacations', help_text="The restaurant this vacation belongs to.")
 
     def __str__(self):

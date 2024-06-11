@@ -1,14 +1,12 @@
 from rest_framework import generics
-from .models import Booking
-from .serializers import BookingSerializer, BookingListSerializer, AvailableDaysSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.exceptions import ValidationError
-from datetime import datetime, timedelta
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from restaurant.models import BookingPeriod, DefaultBookingDuration, Table
-
-
+from restaurant.models import BookingPeriod, DefaultBookingDuration, Table, Restaurant, Vacation
+from .models import Booking
+from .serializers import BookingSerializer, BookingListSerializer
+from django.http import JsonResponse
+import calendar
+from datetime import datetime, timedelta
 
 
 class BookingCreateView(generics.CreateAPIView):
@@ -35,26 +33,22 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
         user = self.request.user
         return Booking.objects.filter(restaurant__user=user.pk)
 
-from datetime import datetime, timedelta
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
-from restaurant.models import Restaurant, Vacation, BookingPeriod, DefaultBookingDuration
-from .serializers import AvailableDaysSerializer
 
-class AvailableDaysView(generics.ListAPIView):
+class AvailableDaysView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = AvailableDaysSerializer
-    queryset = Restaurant.objects.all()
 
     def is_table_available(self, restaurant_id, table, day, guest_count):
-        print("table top")
         reservations = Booking.objects.filter(table=table, start__date=day)
         restaurant = Restaurant.objects.get(id=restaurant_id)
-        
+        weekday = calendar.day_name[day.weekday()][:2].upper()
+
         # Define the start and end of the day and the minimum duration
-        day_start = BookingPeriod.objects.get(restaurant_id=restaurant_id, weekday=day.weekday()).open
-        day_end = BookingPeriod.objects.filter(restaurant=restaurant, weekday=day.weekday()).close
-        min_duration = DefaultBookingDuration.objects.get(restaurant=table.zone.restaurant).duration
+        day_start = BookingPeriod.objects.filter(restaurant_id=restaurant_id, weekday=weekday).values('open')
+        day_end = BookingPeriod.objects.filter(restaurant_id=restaurant_id, weekday=weekday).values('close')
+        default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
+
+        if not reservations:
+            return True
 
         # Parse and sort the reservations by start time
         reservations = sorted(reservations, key=lambda x: datetime.fromisoformat(x["start"]))
@@ -62,37 +56,34 @@ class AvailableDaysView(generics.ListAPIView):
         # Find free slots
         free_slots = []
 
-        # Check the time before the first reservation
-        first_res_start = datetime.fromisoformat(reservations[0]["start"])
-        if first_res_start - day_start >= min_duration:
-            free_slots.append((day_start, first_res_start))
+        for i in day_start:
+            # Check the time before the first reservation
+            first_res_start = datetime.fromisoformat(reservations[0]["start"])
+            if first_res_start - day_start >= default_duration:
+                free_slots.append((day_start, first_res_start))
 
-        # Check the time between reservations
-        for i in range(len(reservations) - 1):
-            current_end = datetime.fromisoformat(reservations[i]["end"])
-            next_start = datetime.fromisoformat(reservations[i + 1]["start"])
-            if next_start - current_end >= min_duration:
-                free_slots.append((current_end, next_start))
+            # Check the time between reservations
+            for i in range(len(reservations) - 1):
+                current_end = datetime.fromisoformat(reservations[i]["end"])
+                next_start = datetime.fromisoformat(reservations[i + 1]["start"])
+                if next_start - current_end >= default_duration:
+                    free_slots.append((current_end, next_start))
 
-        # Check the time after the last reservation
-        last_res_end = datetime.fromisoformat(reservations[-1]["end"])
-        if day_end - last_res_end >= min_duration:
-            free_slots.append((last_res_end, day_end))
-        if free_slots:
-            print("table func" + free_slots)
-            return free_slots
-        else:
-            print("table func" + False)
+            # Check the time after the last reservation
+            last_res_end = datetime.fromisoformat(reservations[-1]["end"])
+            if day_end - last_res_end >= default_duration:
+                free_slots.append((last_res_end, day_end))
+            if free_slots:
+                return free_slots
             return False
 
     def is_day_available(self, restaurant_id, day, guest_count):
+        
         # Check if the day is within the booking period
-        restaurant = Restaurant.objects.get(id=restaurant_id)
-        weekday = day.strftime('%A').upper()[:2]  # Convert to "MO", "TU", etc.
-        booking_periods = restaurant.bookingperiod_set.filter(weekday=weekday).exists()
-
+        weekday = calendar.day_name[day.weekday()][:2].upper()
+        booking_periods = BookingPeriod.objects.filter(restaurant_id=restaurant_id, weekday=weekday).exists()
+        
         if not booking_periods:
-            print("day with no booking period")
             return False
 
         # Check if the day is not within the vacation period
@@ -101,22 +92,21 @@ class AvailableDaysView(generics.ListAPIView):
             start__lte=day,
             end__gte=day
         ).exists()
-
+        
         if vacation_exists:
-            print("day with vacation")
             return False
 
         # Check if within the day there is at least one table available with the required capacity
         tables = Table.objects.filter(zone__restaurant_id=restaurant_id)
         for table in tables:
-            if self.is_table_available(restaurant_id, table, day, guest_count) == True:
-                print("day func" + day)
-                return day
-            else:
-                print("day func" + False)
-                return False
+            if table.capacity >= guest_count and table.bookable == True:
+                if self.is_table_available(restaurant_id, table, day, guest_count) == True:
+                    return day
+                else:
+                    return False
+            return False
     
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         user = self.request.user
         restaurant = Restaurant.objects.get(user=user.pk)
         restaurant_id = restaurant.pk
@@ -128,6 +118,96 @@ class AvailableDaysView(generics.ListAPIView):
             if self.is_day_available(restaurant_id, current_day, guest_count):
                 available_days.append(current_day.strftime('%Y-%m-%d'))
             current_day += timedelta(days=1)
-        print("list func")
-        print(available_days)
-        return available_days
+        return JsonResponse({'available_days': available_days})
+
+class AvailableTimeSlotsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def is_table_available(self, restaurant_id, table, day, guest_count):
+        reservations = Booking.objects.filter(table=table, start__date=day)
+        weekday = calendar.day_name[day.weekday()][:2].upper()
+
+        # Retrieve all booking periods for the restaurant and weekday
+        booking_periods = BookingPeriod.objects.filter(restaurant_id=restaurant_id, weekday=weekday)
+
+        # Initialize lists to store start and end times of booking periods
+        day_starts = []
+        day_ends = []
+
+        # Populate the lists with start and end times of booking periods
+        for period in booking_periods:
+            day_starts.append(period.open)
+            day_ends.append(period.close)
+
+        # Define the start and end of the day as the minimum and maximum of all booking period times
+        day_start = min(day_starts)
+        day_end = max(day_ends)
+
+        # Define the minimum duration based on default booking duration
+        default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
+
+        # Convert default_duration to minutes
+        default_duration_minutes = default_duration.hour * 60 + default_duration.minute
+
+        # Parse and sort the reservations by start time
+        reservations = sorted(reservations, key=lambda x: x.start)
+
+        # Find free slots
+        free_slots = []
+
+        if not reservations:
+            free_slots.append((day_start, day_end))
+        else:
+            # Check the time before the first reservation
+            first_res_start = reservations[0].start.time()
+            if datetime.combine(day, first_res_start) - datetime.combine(day, day_start) >= timedelta(minutes=default_duration_minutes):
+                free_slots.append((day_start, first_res_start))
+
+            # Check the time between reservations
+            for i in range(len(reservations) - 1):
+                current_end = reservations[i].end.time()
+                next_start = reservations[i + 1].start.time()
+                if datetime.combine(day, next_start) - datetime.combine(day, current_end) >= timedelta(minutes=default_duration_minutes):
+                    free_slots.append((current_end, next_start))
+
+            # Check the time after the last reservation
+            last_res_end = reservations[-1].end.time()
+            if datetime.combine(day, day_end) - datetime.combine(day, last_res_end) >= timedelta(minutes=default_duration_minutes):
+                free_slots.append((last_res_end, day_end))
+
+        # Break down free slots into 15-minute intervals
+        interval_slots = []
+        for start, end in free_slots:
+            start_time = datetime.combine(day, start)
+            end_time = datetime.combine(day, end)
+
+            while start_time + timedelta(minutes=default_duration_minutes) <= end_time:
+                slot_end_time = start_time + timedelta(minutes=default_duration_minutes)
+                interval_slots.append({
+                    "start": start_time.strftime('%H:%M'),
+                    "end": slot_end_time.strftime('%H:%M')
+                })
+                start_time += timedelta(minutes=15)
+
+        if interval_slots:
+            return interval_slots
+        return False
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        restaurant = Restaurant.objects.get(user=user.pk)
+        restaurant_id = restaurant.pk
+        guest_count = int(self.request.query_params.get('guest_count'))
+        day = datetime.strptime(self.request.query_params.get('day'), '%Y-%m-%d').date()
+        tables = Table.objects.filter(zone__restaurant_id=restaurant_id)
+
+        free_slots = []
+
+        for table in tables:
+            if table.capacity >= guest_count and table.bookable:
+                free_slots.append(self.is_table_available(restaurant_id, table, day, guest_count))
+
+        # Remove duplicates
+        free_slots = [slot for slot in free_slots if slot]
+
+        return JsonResponse({'free_slots': free_slots})
