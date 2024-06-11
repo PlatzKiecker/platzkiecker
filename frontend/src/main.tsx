@@ -4,6 +4,9 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Shell from "./components/Shell.tsx";
+import Settings from "./pages/Settings.tsx";
+import NewBooking from "./pages/NewBooking.tsx";
+import Booking from "./pages/Booking.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -23,6 +26,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Dashboard />,
+      },
+      {
+        path: "/booking",
+        element: <NewBooking />,
+      },
+      {
+        path: "/booking/view",
+        element: <Booking />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       },
     ],
   },
