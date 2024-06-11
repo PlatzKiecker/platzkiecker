@@ -5,6 +5,7 @@ from .models import Restaurant, Zone, Table, Vacation, BookingPeriod, DefaultBoo
 from .serializers import RestaurantSerializer, ZoneSerializer, TableSerializer, VacationSerializer, BookingPeriodSerializer, DefaultBookingDurationSerializer
 from rest_framework.permissions import IsAuthenticated
 
+
 class RestaurantCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = RestaurantSerializer
