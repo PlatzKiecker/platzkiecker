@@ -15,13 +15,20 @@ class BookingSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         # Check if the booking start time is in the future
-        if data['start'] < timezone.now():
+        if data['start'] < timezone.localtime():
             raise serializers.ValidationError('Booking time must be in the future.')
 
         guest_count = data.get('guest_count')
         table = data.get('table')
         restaurant_id = self.context['view'].kwargs.get('restaurant_id')
-        restaurant = Restaurant.objects.get(id=restaurant_id)
+        
+        try:
+            restaurant = Restaurant.objects.get(id=restaurant_id)
+        except Restaurant.DoesNotExist:
+            try:
+                restaurant = data['restaurant']
+            except KeyError:
+                raise serializers.ValidationError('Restaurant not found.')
 
         # Check if the table has sufficient capacity
         if guest_count and table:

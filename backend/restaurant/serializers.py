@@ -72,6 +72,22 @@ class BookingPeriodSerializer(serializers.ModelSerializer):
         # Ensure the opening time is before the closing time
         if open_time >= close_time:
             raise serializers.ValidationError("Opening time must be before closing time.")
+    
+        # Ensure the opening and closing times are in 15-minute intervals
+        if open_time.minute % 15 != 0 or close_time.minute % 15 != 0:
+            raise serializers.ValidationError("Opening and closing times must be in 15-minute intervals.")
+        
+        # Ensure there are no overlapping booking periods for the same weekday
+        weekday = attrs.get('weekday')
+        open_time = attrs.get('open')
+        close_time = attrs.get('close')
+        restaurant = self.context['request'].user.restaurant
+        existing_booking_periods = BookingPeriod.objects.filter(weekday=weekday, restaurant=restaurant).exclude(id=self.instance.id)
+        
+        for booking_period in existing_booking_periods:
+            if (open_time >= booking_period.open and open_time < booking_period.close) or (close_time > booking_period.open and close_time <= booking_period.close):
+                raise serializers.ValidationError("There is an overlapping booking period for this weekday.")
+
 
         # Fetch the default duration for the restaurant
         restaurant = self.context['request'].user.restaurant

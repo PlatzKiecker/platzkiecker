@@ -219,6 +219,11 @@ class AvailableTimeSlotsView(APIView):
                 })
                 start_time += timedelta(minutes=15)
 
+        # Remove timeslots that are in the past
+        current_time = datetime.localtime()
+        interval_slots = [slot for slot in interval_slots if datetime.strptime(slot['start'], '%H:%M') > current_time]
+        
+
         if interval_slots:
             return interval_slots
         return False
