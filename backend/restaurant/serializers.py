@@ -68,9 +68,10 @@ class BookingPeriodSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         open_time = attrs.get('open')
         close_time = attrs.get('close')
-        restaurant = self.context['request'].user.restaurant
+        user = self.context['request'].user
+        restaurant = Restaurant.objects.get(user=user)
         weekday = attrs.get('weekday')
-        existing_booking_periods = BookingPeriod.objects.filter(weekday=weekday, restaurant=restaurant).exclude(id=self.instance.id)
+        existing_booking_periods = BookingPeriod.objects.filter(weekday=weekday, restaurant=restaurant).exclude(id=attrs.get('id'))
 
         # Ensure the opening time is before the closing time
         if open_time >= close_time:

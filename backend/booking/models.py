@@ -29,3 +29,4 @@ class Booking(models.Model):
     
     def calculate_booking_endtime(self):
         return self.start + self.restaurant.default_duration.duration
+
