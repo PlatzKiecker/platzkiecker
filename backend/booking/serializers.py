@@ -6,7 +6,6 @@ from .models import Booking, Table, Restaurant
 from restaurant.models import DefaultBookingDuration
 from restaurant.models import Zone
 
-
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
@@ -142,7 +141,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Calculate the booking end time
-        restaurant_id = self.context['view'].kwargs.get('restaurant_id')
+        restaurant_id = instance.restaurant_id
         restaurant = Restaurant.objects.get(id=restaurant_id)
         try:
             default_duration = DefaultBookingDuration.objects.get(restaurant=restaurant).duration
@@ -152,12 +151,19 @@ class BookingSerializer(serializers.ModelSerializer):
         default_duration_timedelta = timedelta(hours=default_duration.hour, 
                                                minutes=default_duration.minute, 
                                                seconds=default_duration.second)
-
-        instance.end = instance.start + default_duration_timedelta
+        
+        validated_data['end'] = validated_data['start'] + default_duration_timedelta
         return super().update(instance, validated_data)
+
 
 
 class BookingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
+
+class BookingDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
+        read_only_fields = ['restaurant', 'table', 'start', 'end']
