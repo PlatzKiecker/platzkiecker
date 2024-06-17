@@ -150,5 +150,4 @@ class BookingDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
-        read_only_fields = ['restaurant', 'table', 'start', 'end']
-    
+        read_only_fields = ['restaurant', 'table', 'start', 'end', 'guest_count']
