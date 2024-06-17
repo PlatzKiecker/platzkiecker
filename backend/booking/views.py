@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from restaurant.models import BookingPeriod, DefaultBookingDuration, Table, Restaurant, Vacation
 from .models import Booking
-from .serializers import BookingSerializer, BookingListSerializer
+from .serializers import BookingSerializer, BookingListSerializer, BookingDetailSerializer
 from django.http import JsonResponse
 import calendar
 from datetime import datetime, timedelta
@@ -29,7 +29,7 @@ class BookingListView(generics.ListAPIView):
 
 class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
+    serializer_class = BookingDetailSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -39,7 +39,7 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
 class AvailableDaysView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def is_table_available(self, restaurant_id, table, day, guest_count):
+    def is_table_available(self, restaurant_id, table, day):
         reservations = Booking.objects.filter(table=table, start__date=day)
         weekday = calendar.day_name[day.weekday()][:2].upper()
 
@@ -130,7 +130,7 @@ class AvailableDaysView(APIView):
         # Check if there is at least one available table with the required capacity
         tables = Table.objects.filter(zone__restaurant_id=restaurant_id, capacity__gte=guest_count, bookable=True)
         for table in tables:
-            if self.is_table_available(restaurant_id, table, day, guest_count):
+            if self.is_table_available(restaurant_id, table, day):
                 return True
         return False
 
@@ -222,7 +222,7 @@ class AvailableTimeSlotsView(APIView):
         # Remove timeslots that are in the past
         current_time = datetime.localtime()
         interval_slots = [slot for slot in interval_slots if datetime.strptime(slot['start'], '%H:%M') > current_time]
-        
+
 
         if interval_slots:
             return interval_slots

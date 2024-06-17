@@ -139,22 +139,6 @@ class BookingSerializer(serializers.ModelSerializer):
         validated_data['end'] = validated_data['start'] + default_duration_timedelta
         return super().create(validated_data)
 
-    def update(self, instance, validated_data):
-        # Calculate the booking end time
-        restaurant_id = instance.restaurant_id
-        restaurant = Restaurant.objects.get(id=restaurant_id)
-        try:
-            default_duration = DefaultBookingDuration.objects.get(restaurant=restaurant).duration
-        except DefaultBookingDuration.DoesNotExist:
-            raise serializers.ValidationError('No default booking duration found for the restaurant.')
-
-        default_duration_timedelta = timedelta(hours=default_duration.hour, 
-                                               minutes=default_duration.minute, 
-                                               seconds=default_duration.second)
-        
-        validated_data['end'] = validated_data['start'] + default_duration_timedelta
-        return super().update(instance, validated_data)
-
 
 
 class BookingListSerializer(serializers.ModelSerializer):
@@ -167,3 +151,4 @@ class BookingDetailSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
         read_only_fields = ['restaurant', 'table', 'start', 'end']
+    
