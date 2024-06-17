@@ -22,12 +22,15 @@ class BookingSerializer(serializers.ModelSerializer):
         table = data.get('table')
         restaurant_id = self.context['view'].kwargs.get('restaurant_id')
         
+        restaurant = None
         try:
             restaurant = Restaurant.objects.get(id=restaurant_id)
         except Restaurant.DoesNotExist:
             try:
                 restaurant = data['restaurant']
             except KeyError:
+                restaurant = self.instance.restaurant
+            if not restaurant:
                 raise serializers.ValidationError('Restaurant not found.')
 
         # Check if the table has sufficient capacity
