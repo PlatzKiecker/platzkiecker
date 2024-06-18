@@ -1,7 +1,29 @@
-import InputField from "../components/input/InputField";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLogin } from '../hooks/useLogin';
+import InputField from '../components/input/InputField';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, error } = useLogin();
+  const navigate = useNavigate(); // Hook für Navigation
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const data = await login(username, password);
+      console.log('Login successful:', data);
+      // Speichere den Token im Local Storage oder im Kontext
+      localStorage.setItem('token', data.token);
+      // Navigiere zur Dashboard-Seite
+      navigate('/');
+    } catch (err: any) {
+      console.error('Login failed:', err.message);
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -11,10 +33,10 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
-            <InputField label="Email" />
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <InputField label="Email" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
 
-            <InputField label="Passwort" />
+            <InputField label="Passwort" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <div>
               <button
@@ -24,6 +46,8 @@ export default function Login() {
               </button>
             </div>
           </form>
+
+          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{" "}
