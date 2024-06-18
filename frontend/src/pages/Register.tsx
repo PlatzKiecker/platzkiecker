@@ -7,10 +7,9 @@ import { Link } from 'react-router-dom';
 // Hauptkomponente für das Registrierungsformular
 export default function Register() {
   // Lokale State-Variablen für die Eingabefelder
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
 
   // Custom Hook zum Registrieren und Abfangen von Fehlern
   const { register, error } = useRegister();
@@ -18,7 +17,7 @@ export default function Register() {
   // Hook für die Navigation nach der Registrierung
   const navigate = useNavigate();
 
-  // Event-Handler für das Formular-Submit-Event
+  // Event-Handler für das Fo nurrmular-Submit-Event
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Überprüfen, ob die Passwörter übereinstimmen
@@ -28,7 +27,7 @@ export default function Register() {
     }
     try {
       // Versuche, den Benutzer zu registrieren
-      const data = await register(username, password, email);
+      const data = await register(email, password);
       console.log('Registration successful:', data);
       // Navigiere zur Login-Seite nach erfolgreicher Registrierung
       navigate('/login');
@@ -52,8 +51,7 @@ export default function Register() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           {/* Formular für die Registrierung */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Eingabefelder für Benutzername, Email, Passwort und Passwortbestätigung */}
-            <InputField label="Username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            {/* Eingabefelder für Email, Passwort und Passwortbestätigung */}
 
             <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
