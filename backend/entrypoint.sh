@@ -12,6 +12,9 @@ then
 fi
 
 python manage.py flush --no-input
+python manage.py makemigrations user
+python manage.py makemigrations restaurant
+python manage.py makemigrations booking
 python manage.py migrate
 
 exec "$@"
