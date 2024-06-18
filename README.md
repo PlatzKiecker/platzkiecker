@@ -49,7 +49,7 @@ To set up the development environment, follow these steps:
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.dev` file in the project root directory and add the necessary environment variables for development.
     ```bash
-    DEBUG=1
+    DEBUG=True
     SECRET_KEY=change_me
     DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
     CORS_ALLOW_ALL_ORIGINS=True
@@ -81,15 +81,16 @@ To set up the production environment, follow these steps:
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.prod` file in the project root directory and add the necessary environment variables for production.
     ```bash
+    DEBUG=False
     SECRET_KEY=change_me
-    DJANGO_ALLOWED_HOSTS=your-backend-domain.com,your-frontend-domain.com,127.0.0.1,localhost
-    DJANGO_CORS_ALLOWED_ORIGINS=https://your-frontend-domain.com,https://another-allowed-domain.com
+    DJANGO_ALLOWED_HOSTS=api.platzkiecker.de,platzkiecker.de,127.0.0.1,localhost
+    DJANGO_CORS_ALLOWED_ORIGINS=https://platzkiecker.de,https://platzkiecker.com,https://www.platzkiecker.online
     DJANGO_CORS_ALLOW_ALL_ORIGINS=False
     SQL_ENGINE=django.db.backends.postgresql
-    SQL_DATABASE=backend_dev
+    SQL_DATABASE=backend_prod
     SQL_USER=backend
     SQL_PASSWORD=backend
-    SQL_HOST=db-dev
+    SQL_HOST=db
     SQL_PORT=5432
     DATABASE=postgres
     ```
