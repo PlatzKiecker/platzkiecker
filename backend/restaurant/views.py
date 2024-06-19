@@ -1,4 +1,3 @@
-# restaurant/views.py
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Restaurant, Zone, Table, Vacation, BookingPeriod, DefaultBookingDuration
@@ -97,7 +96,6 @@ class TableDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class VacationCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
 
     def perform_create(self, serializer):
@@ -116,31 +114,25 @@ class VacationListView(generics.ListAPIView):
 
 class VacationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Vacation.objects.all()
     serializer_class = VacationSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        return Vacation.objects.filter(restaurant__user=user.pk)
+        return Vacation.objects.filter(restaurant__user=self.request.user)
 
 
 class DefaultBookingDurationCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = DefaultBookingDuration.objects.all()
     serializer_class = DefaultBookingDurationSerializer
 
     def perform_create(self, serializer):
         serializer.save(restaurant=self.request.user.restaurant)
 
-
 class DefaultBookingDurationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = DefaultBookingDuration.objects.all()
     serializer_class = DefaultBookingDurationSerializer
 
     def get_queryset(self):
-        user = self.request.user
-        return DefaultBookingDuration.objects.filter(restaurant__user=user.pk)
+        return DefaultBookingDuration.objects.filter(restaurant__user=self.request.user)
 
 
 class BookingPeriodCreateView(generics.CreateAPIView):

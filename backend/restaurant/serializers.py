@@ -54,17 +54,16 @@ class VacationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         start_date = attrs.get('start')
         end_date = attrs.get('end')
-        user = self.context['request'].user
-        restaurant = Restaurant.objects.get(user=user)
-        existing_vacations = Vacation.objects.filter(restaurant=restaurant).exclude(id=attrs.get('id'))
-
-        # Ensure the start date is before the end date
         if start_date >= end_date:
             raise serializers.ValidationError("The start date must be before the end date.")
 
         # Ensure there are no overlapping vacations
+        user = self.context['request'].user
+        restaurant = Restaurant.objects.get(user=user)
+        existing_vacations = Vacation.objects.filter(restaurant=restaurant).exclude(id=self.instance.id if self.instance else None)
+
         for vacation in existing_vacations:
-            if (start_date >= vacation.start and start_date < vacation.end) or (end_date > vacation.start and end_date <= vacation.end):
+            if (start_date >= vacation.start and start_date <= vacation.end) or (end_date >= vacation.start and end_date <= vacation.end):
                 raise serializers.ValidationError("There is an overlapping vacation.")
 
         return attrs
@@ -75,6 +74,13 @@ class DefaultBookingDurationSerializer(serializers.ModelSerializer):
         model = DefaultBookingDuration
         fields = ['id', 'duration', 'restaurant']
         extra_kwargs = {'restaurant': {'read_only': True}}
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        restaurant = Restaurant.objects.get(user=user)
+        if DefaultBookingDuration.objects.filter(restaurant=restaurant).exclude(id=self.instance.id if self.instance else None).exists():
+            raise serializers.ValidationError("There is already a default booking duration for this restaurant.")
+        return attrs
 
 
 class BookingPeriodSerializer(serializers.ModelSerializer):
@@ -122,5 +128,9 @@ class BookingPeriodSerializer(serializers.ModelSerializer):
         # Ensure the default duration does not exceed the time slot duration
         if booking_period_duration < default_duration_timedelta:
             raise serializers.ValidationError("The default booking duration cannot exceed the booking period duration.")
+
+        # Ensure DefaultBookingDuration exists for the restaurant
+        if not DefaultBookingDuration.objects.filter(restaurant=restaurant).exists():
+            raise serializers.ValidationError("No default booking duration found for the restaurant.")
 
         return attrs

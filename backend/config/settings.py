@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,8 +39,9 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
 }
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default session engine
 SESSION_COOKIE_AGE = 1209600  # 2 weeks, or specify your desired session lifetime
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # If True, session will expire when the user closes the browser
@@ -53,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.admindocs",
     "corsheaders",
     "rest_framework",
     "psycopg2",
@@ -107,6 +110,11 @@ DATABASES = {
     }
 }
 
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
