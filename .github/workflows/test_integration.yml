@@ -21,19 +21,19 @@ jobs:
       - name: Run user integration tests
         id: user-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web  "python manage.py test user"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test user"
         continue-on-error: false
 
       - name: Run restaurant integration tests
         id: restaurant-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test restaurant"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test restaurant"
         continue-on-error: false
 
       - name: Run booking integration tests
         id: booking-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test booking"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test booking"
         continue-on-error: false
 
       - name: Cleanup
