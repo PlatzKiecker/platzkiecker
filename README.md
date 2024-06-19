@@ -52,7 +52,7 @@ To set up the development environment, follow these steps:
     ```bash
     DEBUG=True
     SECRET_KEY=change_me
-    DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
     CORS_ALLOW_ALL_ORIGINS=True
     SQL_ENGINE=django.db.backends.postgresql
     SQL_DATABASE=backend_dev
