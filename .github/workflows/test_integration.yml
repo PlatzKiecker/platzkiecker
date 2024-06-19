@@ -13,64 +13,48 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build and run Docker Compose
+      - name: build and run Docker Compose
         run: |
           docker compose -f docker-compose.test.yml up -d --build
-
+        continue-on-error: false
+      
       - name: Run user integration tests
         id: user-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "python3 manage.py test user" > user_test_output.log 2>&1
+          docker compose -f docker-compose.test.yml exec web sh -c "test user" | tee user_test_output.log
+        continue-on-error: false
 
       - name: Run restaurant integration tests
         id: restaurant-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "python3 manage.py test restaurant" > restaurant_test_output.log 2>&1
+          docker compose -f docker-compose.test.yml exec web sh -c "test restaurant" | tee restaurant_test_output.log
+        continue-on-error: false
 
       - name: Run booking integration tests
         id: booking-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "python3 manage.py test booking" > booking_test_output.log 2>&1
+          docker compose -f docker-compose.test.yml exec web sh -c "test booking" | tee booking_test_output.log
+        continue-on-error: false
 
-      - name: Cleanup
+      - name: Display user test log
+        if: always()
+        run: cat user_test_output.log
+
+      - name: Display restaurant test log
+        if: always()
+        run: cat restaurant_test_output.log
+
+      - name: Display booking test log
+        if: always()
+        run: cat booking_test_output.log
+
+      - name: cleanup
         run: |
           docker compose -f docker-compose.test.yml down
+        continue-on-error: true
 
       - name: Print test outcomes
         run: |
           echo "User tests: ${{ steps['user-tests'].outcome }}"
           echo "Restaurant tests: ${{ steps['restaurant-tests'].outcome }}"
           echo "Booking tests: ${{ steps['booking-tests'].outcome }}"
-
-      - name: Upload user test logs
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: user_test_logs
-          path: user_test_output.log
-
-      - name: Upload restaurant test logs
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: restaurant_test_logs
-          path: restaurant_test_output.log
-
-      - name: Upload booking test logs
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: booking_test_logs
-          path: booking_test_output.log
-
-      - name: Print user test logs
-        if: always()
-        run: cat user_test_output.log
-
-      - name: Print restaurant test logs
-        if: always()
-        run: cat restaurant_test_output.log
-
-      - name: Print booking test logs
-        if: always()
-        run: cat booking_test_output.log
