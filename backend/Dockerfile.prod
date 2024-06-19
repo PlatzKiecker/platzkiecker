@@ -55,6 +55,11 @@ COPY ./entrypoint.prod.sh .
 RUN sed -i 's/\r$//g'  /backend/entrypoint.prod.sh
 RUN chmod +x  /backend/entrypoint.prod.sh
 
+# copy test.sh
+COPY ./test.sh .
+RUN sed -i 's/\r$//g' /backend/test.sh
+RUN chmod +x /backend/test.sh
+
 # copy project
 COPY . .
 
