@@ -58,7 +58,5 @@ RUN chmod +x  /backend/entrypoint.prod.sh
 # copy project
 COPY . .
 
-#EXPOSE 8000
-
 # run entrypoint.prod.sh
 ENTRYPOINT ["/backend/entrypoint.prod.sh"]
