@@ -47,6 +47,27 @@ jobs:
           echo "Restaurant tests: ${{ steps['restaurant-tests'].outcome }}"
           echo "Booking tests: ${{ steps['booking-tests'].outcome }}"
 
+      - name: Upload user test logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: user_test_logs
+          path: user_test_output.log
+
+      - name: Upload restaurant test logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: restaurant_test_logs
+          path: restaurant_test_output.log
+
+      - name: Upload booking test logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: booking_test_logs
+          path: booking_test_output.log
+
       - name: Print user test logs
         if: always()
         run: cat user_test_output.log
