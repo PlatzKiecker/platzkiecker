@@ -11,6 +11,10 @@ services:
       - SQL_USER=user
       - SQL_PASSWORD=password
     restart: always
+    deploy:
+      ressources:
+        limits:
+          memory: 1g
   frontend:
     build:
       context: ./frontend
