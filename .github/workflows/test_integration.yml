@@ -21,20 +21,32 @@ jobs:
       - name: Run user integration tests
         id: user-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test user"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test user" > user_test_output.log 2>&1 || (cat user_test_output.log && exit 1)
         continue-on-error: false
 
       - name: Run restaurant integration tests
         id: restaurant-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test restaurant"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test restaurant" > restaurant_test_output.log 2>&1 || (cat restaurant_test_output.log && exit 1)
         continue-on-error: false
 
       - name: Run booking integration tests
         id: booking-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test booking"
+          docker compose -f docker-compose.test.yml exec web "python manage.py test booking" > booking_test_output.log 2>&1 || (cat booking_test_output.log && exit 1)
         continue-on-error: false
+
+      - name: Display user test log
+        if: always()
+        run: cat user_test_output.log
+
+      - name: Display restaurant test log
+        if: always()
+        run: cat restaurant_test_output.log
+
+      - name: Display booking test log
+        if: always()
+        run: cat booking_test_output.log
 
       - name: Cleanup
         run: |
