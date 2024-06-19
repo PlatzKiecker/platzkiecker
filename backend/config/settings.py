@@ -39,7 +39,7 @@ if not CORS_ALLOWED_ORIGINS:
     CORS_ALLOWED_ORIGINS = ['http://localhost:8000']  # Default allowed origins
 
 if not CORS_ALLOW_ALL_ORIGINS:
-    CORS_ALLOW_ALL_ORIGINS = False  # Default allow all origins setting
+    CORS_ALLOW_ALL_ORIGINS = True  # Default allow all origins setting
 
 AUTH_USER_MODEL = "user.User"
 
