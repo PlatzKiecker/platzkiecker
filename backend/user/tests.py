@@ -20,7 +20,7 @@ class UserTests(TestCase):
             'email': 'newuser@example.com',
             'password': 'newpassword123'
         })
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('email', response.data)
 
     def test_login_user(self):
