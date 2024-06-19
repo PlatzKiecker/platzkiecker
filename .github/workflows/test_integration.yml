@@ -21,7 +21,7 @@ jobs:
       - name: Run integration tests
         id: integration-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web sh -c "/usr/src/app/test.sh" > integration_test_output.log 2>&1 || (cat integration_test_output.log && exit 1)
+          docker compose -f docker-compose.test.yml exec web sh -c "/backend/test.sh" > integration_test_output.log 2>&1 || (cat integration_test_output.log && exit 1)
         continue-on-error: false
 
       - name: Display integration test log
