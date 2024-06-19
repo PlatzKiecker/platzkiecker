@@ -7,7 +7,7 @@ services:
     volumes:  
       - static_volume:/backend/staticfiles
     environment:
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=changeme
       - SQL_USER=user
       - SQL_PASSWORD=password
 #    depends_on:
