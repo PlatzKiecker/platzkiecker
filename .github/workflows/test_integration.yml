@@ -22,21 +22,18 @@ jobs:
         id: user-tests
         run: |
           docker compose -f docker-compose.test.yml exec web  "python manage.py test user"
-        save_logs: true
         continue-on-error: false
 
       - name: Run restaurant integration tests
         id: restaurant-tests
         run: |
           docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test restaurant"
-        save_logs: true
         continue-on-error: false
 
       - name: Run booking integration tests
         id: booking-tests
         run: |
           docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test booking"
-        save_logs: true
         continue-on-error: false
 
       - name: Cleanup
