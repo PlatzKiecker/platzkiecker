@@ -13,27 +13,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: build and run Docker Compose
+      - name: Build and run Docker Compose
         run: |
           docker compose -f docker-compose.test.yml up -d --build
         continue-on-error: false
-      
+
+      - name: Verify Python manage.py script
+        run: |
+          docker compose -f docker-compose.test.yml exec web ls -l manage.py
+          docker compose -f docker-compose.test.yml exec web sh -c "which python"
+        continue-on-error: false
+
       - name: Run user integration tests
         id: user-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test user" > user_test_output.log
+          docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test user" > user_test_output.log 2>&1
         continue-on-error: false
 
       - name: Run restaurant integration tests
         id: restaurant-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test restaurant" > restaurant_test_output.log
+          docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test restaurant" > restaurant_test_output.log 2>&1
         continue-on-error: false
 
       - name: Run booking integration tests
         id: booking-tests
         run: |
-          docker compose -f docker-compose.test.yml exec web "python manage.py test booking" > booking_test_output.log
+          docker compose -f docker-compose.test.yml exec web sh -c "python manage.py test booking" > booking_test_output.log 2>&1
         continue-on-error: false
 
       - name: Display user test log
@@ -48,7 +54,7 @@ jobs:
         if: always()
         run: cat booking_test_output.log
 
-      - name: cleanup
+      - name: Cleanup
         run: |
           docker compose -f docker-compose.test.yml down
         continue-on-error: true
