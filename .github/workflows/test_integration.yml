@@ -18,17 +18,17 @@ jobs:
           docker compose -f docker-compose.test.yml up -d --build
         continue-on-error: false
       
-      - name: Run integration tests: user
+      - name: Run user integration tests
         run: |
           docker compose -f docker-compose.test.yml exec web test user
         continue-on-error: false
 
-      - name: Run integration tests: restaurant
+      - name: Run restaurant integration tests
         run: |
           docker compose -f docker-compose.test.yml exec web test restaurant
         continue-on-error: false
 
-      - name_ run integration tests: booking
+      - name: Run booking integration tests
         run: |
           docker compose -f docker-compose.test.yml exec web test booking
         continue-on-error: false
