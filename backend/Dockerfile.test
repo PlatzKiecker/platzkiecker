@@ -50,10 +50,10 @@ COPY --from=builder /backend/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-# copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
-RUN sed -i 's/\r$//g'  /backend/entrypoint.prod.sh
-RUN chmod +x  /backend/entrypoint.prod.sh
+# copy entrypoint.test.sh
+COPY ./entrypoint.test.sh .
+RUN sed -i 's/\r$//g'  /backend/entrypoint.test.sh
+RUN chmod +x  /backend/entrypoint.test.sh
 
 # copy project
 COPY . .
@@ -61,4 +61,4 @@ COPY . .
 #EXPOSE 8000
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/backend/entrypoint.prod.sh"]
+ENTRYPOINT ["/backend/entrypoint.test.sh"]

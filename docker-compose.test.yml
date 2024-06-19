@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: ./backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.test
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     volumes:  
       - static_volume:/backend/staticfiles
@@ -10,28 +10,7 @@ services:
       - SECRET_KEY=changeme
       - SQL_USER=user
       - SQL_PASSWORD=password
-#    depends_on:
-#      - db
     restart: always
-#  db:
-#    image: postgres:15
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data/
-#    environment:
-#      - POSTGRES_USER=${POSTGRES_USER}
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#      - POSTGRES_DB=${POSTGRES_DB}
-#    restart: always
-#  proxy:
-#    build: ./proxy
-#    volumes:
-#      - static_volume:/staticfiles
-#    ports:
-#      - 443:8080
-#      - 80:8080
-#    depends_on:
-#      - web
-#    restart: always
   frontend:
     build:
       context: ./frontend
