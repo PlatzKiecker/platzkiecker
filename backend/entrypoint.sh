@@ -17,4 +17,8 @@ python manage.py makemigrations restaurant
 python manage.py makemigrations booking
 python manage.py migrate
 
+python manage.py test user
+python manage.py test restaurant
+python manage.py test booking
+
 exec "$@"

@@ -3,8 +3,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from rest_framework import serializers
 from .models import Booking, Table, Restaurant
-from restaurant.models import DefaultBookingDuration
-from restaurant.models import Zone
+from restaurant.models import DefaultBookingDuration, Zone
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +14,7 @@ class BookingSerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Check if the booking start time is in the future
         if data['start'] < timezone.localtime():
-            raise serializers.ValidationError('Booking time must be in the future.')
+            raise serializers.ValidationError({'start': 'Booking time must be in the future.'})
 
         guest_count = data.get('guest_count')
         table = data.get('table')
@@ -35,11 +34,11 @@ class BookingSerializer(serializers.ModelSerializer):
         # Check if the table has sufficient capacity
         if guest_count and table:
             if table.capacity < guest_count:
-                raise serializers.ValidationError('Table capacity must be equal or greater than the number of guests.')
+                raise serializers.ValidationError({'guest_count': 'Table capacity must be equal or greater than the number of guests.'})
 
         # Check if the booking time is in 15-minute intervals
         if data['start'].minute % 15 != 0:
-            raise serializers.ValidationError('Booking time must be in 15-minute intervals.')
+            raise serializers.ValidationError({'start': 'Booking time must be in 15-minute intervals.'})
 
         # Calculate the default duration for the booking
         try:
@@ -69,11 +68,11 @@ class BookingSerializer(serializers.ModelSerializer):
                 break
 
         if not in_booking_period:
-            raise serializers.ValidationError('Booking time must be within the restaurant\'s booking periods.')
+            raise serializers.ValidationError({'start': 'Booking time must be within the restaurant\'s booking periods.'})
 
         # Ensure the booking time does not overlap with the restaurant's vacations
         if restaurant and restaurant.vacations.filter(start__lte=data['start'], end__gte=data['start']).exists():
-            raise serializers.ValidationError('Booking time must not be within the restaurant\'s vacations.')
+            raise serializers.ValidationError({'start': 'Booking time must not be within the restaurant\'s vacations.'})
 
         # If table is not provided in the data, find an available table with closest capacity
         if not data.get('table'):
@@ -108,7 +107,7 @@ class BookingSerializer(serializers.ModelSerializer):
 
             # Raise validation error if no suitable table is found
             if not closest_table:
-                raise serializers.ValidationError('No available table with sufficient capacity for the booking.')
+                raise serializers.ValidationError({'guest_count': 'No available table with sufficient capacity for the booking.'})
 
             # Set the closest table found as the chosen table for the booking
             data['table'] = closest_table
@@ -119,7 +118,7 @@ class BookingSerializer(serializers.ModelSerializer):
             start__lt=booking_end_time, 
             start__gte=data['start']
         ).exists():
-            raise serializers.ValidationError('Booking time must not overlap with another booking.')
+            raise serializers.ValidationError({'start': 'Booking time must not overlap with another booking.'})
 
         return data
 
@@ -138,6 +137,7 @@ class BookingSerializer(serializers.ModelSerializer):
         
         validated_data['end'] = validated_data['start'] + default_duration_timedelta
         return super().create(validated_data)
+
 
 
 

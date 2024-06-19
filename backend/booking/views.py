@@ -1,3 +1,4 @@
+# booking/views.py
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
@@ -5,6 +6,7 @@ from restaurant.models import BookingPeriod, DefaultBookingDuration, Table, Rest
 from .models import Booking
 from .serializers import BookingSerializer, BookingListSerializer, BookingDetailSerializer
 from django.http import JsonResponse
+from django.utils import timezone  # Import timezone
 import calendar
 from datetime import datetime, timedelta
 
@@ -220,9 +222,8 @@ class AvailableTimeSlotsView(APIView):
                 start_time += timedelta(minutes=15)
 
         # Remove timeslots that are in the past
-        current_time = datetime.localtime()
-        interval_slots = [slot for slot in interval_slots if datetime.strptime(slot['start'], '%H:%M') > current_time]
-
+        current_time = timezone.localtime()
+        interval_slots = [slot for slot in interval_slots if timezone.make_aware(datetime.combine(day, datetime.strptime(slot['start'], '%H:%M').time()), timezone.get_current_timezone()) > current_time]
 
         if interval_slots:
             return interval_slots
@@ -240,9 +241,11 @@ class AvailableTimeSlotsView(APIView):
 
         for table in tables:
             if table.capacity >= guest_count and table.bookable:
-                free_slots.append(self.is_table_available(restaurant_id, table, day, guest_count))
+                slots = self.is_table_available(restaurant_id, table, day, guest_count)
+                if slots:
+                    free_slots.extend(slots)
 
         # Remove duplicates
-        free_slots = [slot for slot in free_slots if slot]
+        free_slots = [dict(t) for t in {tuple(slot.items()) for slot in free_slots}]
 
         return JsonResponse({'free_slots': free_slots})
