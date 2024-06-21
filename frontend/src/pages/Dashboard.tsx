@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Page from "../components/Page";
 import DatePickerSimple from "../components/input/DatePickerSimple";
 import Badge from "../components/feedback/Badge";
+import { useState } from "react";
 
 export default function Dashboard() {
   //TODO: Alle Bookings für einen bestimmten tag
@@ -10,6 +11,7 @@ export default function Dashboard() {
 
     // More people...
   ];
+  const [date, setDate] = useState(new Date());
 
   return (
     <Page
@@ -23,7 +25,7 @@ export default function Dashboard() {
           </button>
         </Link>
       }>
-      <DatePickerSimple />
+      <DatePickerSimple date={date} setDate={setDate} />
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

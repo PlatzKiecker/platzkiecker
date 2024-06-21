@@ -1,9 +1,6 @@
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
-export default function DatePickerSimple() {
-  const [date, setDate] = useState(new Date());
-
+export default function DatePickerSimple({ date, setDate }: { date: Date; setDate: (date: Date) => void }) {
   const handleNext = () => {
     const nextDate = new Date(date);
     nextDate.setDate(nextDate.getDate() + 1);
