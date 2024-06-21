@@ -14,10 +14,10 @@ export default function DatePickerSimple({ date, setDate }: { date: Date; setDat
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <ChevronLeftIcon onClick={handlePrev} className="h-4 w-4 cursor-pointer" />
-      <p className="text-sm">{getRelativeDate(date)}</p>
-      <ChevronRightIcon onClick={handleNext} className="h-4 w-4 cursor-pointer" />
+    <div className="flex items-center gap-3 text-gray-700 ">
+      <ChevronLeftIcon onClick={handlePrev} className="h-7 w-7 cursor-pointer p-1.5 hover:text-black hover:bg-gray-200 rounded" />
+      <p className="text-sm text-black">{getRelativeDate(date)}</p>
+      <ChevronRightIcon onClick={handleNext} className="h-7 w-7 cursor-pointer p-1.5 hover:text-black hover:bg-gray-200 rounded" />
     </div>
   );
 }
