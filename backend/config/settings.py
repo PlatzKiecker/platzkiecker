@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.admindocs",
+    "rest_framework_swagger",
+    "drf_yasg",
     "corsheaders",
     "rest_framework",
     "psycopg2",

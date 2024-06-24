@@ -71,7 +71,7 @@ class BookingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'start': 'Booking time must be within the restaurant\'s booking periods.'})
 
         # Ensure the booking time does not overlap with the restaurant's vacations
-        if restaurant and restaurant.vacations.filter(start__lte=data['start'], end__gte=data['start']).exists():
+        if restaurant and restaurant.vacations.filter(start__lte=data['start'], end__gt=data['start']).exists():
             raise serializers.ValidationError({'start': 'Booking time must not be within the restaurant\'s vacations.'})
 
         # If table is not provided in the data, find an available table with closest capacity
