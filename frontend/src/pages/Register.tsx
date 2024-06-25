@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
+import { useLogin } from '../hooks/useLogin';
 import InputField from '../components/input/InputField';
 import { Link } from 'react-router-dom';
+import { mutate } from 'swr';
 
 // Hauptkomponente für das Registrierungsformular
 export default function Register() {
@@ -13,6 +15,7 @@ export default function Register() {
 
   // Custom Hook zum Registrieren und Abfangen von Fehlern
   const { register, error } = useRegister();
+  const { login } = useLogin();
   
   // Hook für die Navigation nach der Registrierung
   const navigate = useNavigate();
@@ -29,8 +32,11 @@ export default function Register() {
       // Versuche, den Benutzer zu registrieren
       const data = await register(email, password);
       console.log('Registration successful:', data);
-      // Navigiere zur Login-Seite nach erfolgreicher Registrierung
-      navigate('/login');
+      // Versuche, den Benutzer automatisch einzuloggen nach erfolgreicher Registrierung
+      const loginData = await login(email, password);
+      console.log('Login successful after registration:', loginData);
+      // Speichere den Token im Local Storage oder im Kontext
+      navigate('/');
     } catch (err: any) {
       // Fehlerbehandlung bei fehlgeschlagener Registrierung
       console.error('Registration failed:', err.message);
