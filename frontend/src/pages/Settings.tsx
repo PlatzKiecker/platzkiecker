@@ -11,7 +11,7 @@ export default function Settings() {
           <InputField label="Name" />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Booking periods" description="Set when ypur restaurant can be booked">
-          <DateRangePicker label="Select date" date={new Date()} />
+          <DateRangePicker />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Vacations" description="Set when your restaurant is on vacation">
           test
