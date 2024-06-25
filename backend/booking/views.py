@@ -133,12 +133,14 @@ class AvailableDaysView(generics.ListAPIView):
         if day < timezone.localtime().date():
             return False
 
+        # Check if the day is in the past
+        if day < timezone.localtime().date():
+            return False
         
         # Check if the day is today and the time is in the past
         if day == timezone.localtime().date() and (datetime.combine(day, current_time) + timedelta(minutes=default_duration_minutes)) > datetime.combine(day, booking_periods.get(weekday=weekday).close):
             return False
-
-
+          
         # Check if there is at least one available table with the required capacity
         tables = Table.objects.filter(zone__restaurant_id=restaurant_id, capacity__gte=guest_count, bookable=True)
         for table in tables:
