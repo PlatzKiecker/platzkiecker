@@ -61,6 +61,8 @@ To set up the development environment, follow these steps:
     SQL_HOST=db-dev
     SQL_PORT=5432
     DATABASE=postgres
+    DJANGO_SUPERUSER_EMAIL=admin@example.com
+    DJANGO_SUPERUSER_PASSWORD=verysecret
     ```
 4. Build and run the Docker containers using the production configuration:
     ```bash
@@ -94,6 +96,8 @@ To set up the production environment, follow these steps:
     SQL_HOST=db
     SQL_PORT=5432
     DATABASE=postgres
+    DJANGO_SUPERUSER_EMAIL=admin@example.com
+    DJANGO_SUPERUSER_PASSWORD=verysecret
     ```
 4. Create a `.env.prod.db` file in the project root directory and add the necessary environment variables for the production database.
     ```bash

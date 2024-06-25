@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth import logout, login
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserLogoutSerializer
 from .models import User
 
 
@@ -29,7 +29,9 @@ class UserLoginView(generics.GenericAPIView):
 
 class UserLogoutView(generics.DestroyAPIView):
     queryset = User.objects.all()
+    serializer_class = UserLogoutSerializer
     
     def get(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)
+
