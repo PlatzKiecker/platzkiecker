@@ -67,13 +67,13 @@ class BookingTests(TestCase):
 
     def test_available_days(self):
         start_day = timezone.localtime().strftime('%Y-%m-%d')
-        response = self.client.get(reverse('available-days'), {'start_day': start_day, 'guest_count': 4})
+        response = self.client.get(reverse('available-days', kwargs={'restaurant_id': self.restaurant.id}), {'start_day': start_day, 'guest_count': 4})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('available_days', response.json())
 
     def test_available_time_slots(self):
         start_day = (timezone.localtime() + timedelta(days=7 - timezone.localtime().weekday())).strftime('%Y-%m-%d')
-        response = self.client.get(reverse('available-timeslots'), {'day': start_day, 'guest_count': 4})
+        response = self.client.get(reverse('available-timeslots', kwargs={'restaurant_id': self.restaurant.id}), {'day': start_day, 'guest_count': 4})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('free_slots', response.json())
 

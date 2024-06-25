@@ -3,14 +3,14 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from restaurant.models import BookingPeriod, DefaultBookingDuration, Table, Restaurant, Vacation
 from .models import Booking
-from .serializers import BookingSerializer, BookingListSerializer, BookingDetailSerializer
+from .serializers import BookingSerializer, BookingListSerializer, BookingDetailSerializer, AvailableDaysSerializer, AvailableTimeSlotsSerializer
 from django.http import JsonResponse
 from django.utils import timezone
 import calendar
 from datetime import datetime, timedelta
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+import pytz
 
 
 class BookingCreateView(generics.CreateAPIView):
@@ -45,6 +45,7 @@ class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class AvailableDaysView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = AvailableDaysSerializer
 
     def is_table_available(self, restaurant_id, table, day, booking_periods, default_duration_minutes):
         reservations = Booking.objects.filter(table=table, start__date=day)
@@ -112,8 +113,12 @@ class AvailableDaysView(generics.ListAPIView):
 
     def is_day_available(self, restaurant_id, day, guest_count, booking_periods, default_duration_minutes):
         # Check if the day is within the booking period
+
         weekday = calendar.day_name[day.weekday()][:2].upper()
         booking_period_exists = booking_periods.filter(weekday=weekday).exists()
+        current_time = timezone.localtime(timezone=pytz.timezone('Europe/Berlin')).time()
+        default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
+        default_duration_minutes = default_duration.hour * 60 + default_duration.minute
 
         # Check if a booking period exists for the restaurant
         if not booking_period_exists:
@@ -121,14 +126,18 @@ class AvailableDaysView(generics.ListAPIView):
 
         # Check if the day is not within the vacation period
         vacation_exists = Vacation.objects.filter(restaurant_id=restaurant_id, start__lte=day, end__gt=day).exists()
+        if vacation_exists:
+            return False
 
         # Check if the day is in the past
         if day < timezone.localtime().date():
             return False
 
-        # Check if the day is not within the vacation period
-        if vacation_exists:
+        
+        # Check if the day is today and the time is in the past
+        if day == timezone.localtime().date() and (datetime.combine(day, current_time) + timedelta(minutes=default_duration_minutes)) > datetime.combine(day, booking_periods.get(weekday=weekday).close):
             return False
+
 
         # Check if there is at least one available table with the required capacity
         tables = Table.objects.filter(zone__restaurant_id=restaurant_id, capacity__gte=guest_count, bookable=True)
@@ -136,15 +145,10 @@ class AvailableDaysView(generics.ListAPIView):
             if self.is_table_available(restaurant_id, table, day, booking_periods, default_duration_minutes):
                 return True
         return False
+
     @swagger_auto_schema(
         operation_description="Get available days for a given guest count and start day",
         manual_parameters=[
-            openapi.Parameter(
-                'restaurant_id',
-                openapi.IN_QUERY,
-                description="The ID of the restaurant",
-                type=openapi.TYPE_INTEGER
-            ),
             openapi.Parameter(
                 'guest_count',
                 openapi.IN_QUERY,
@@ -160,27 +164,37 @@ class AvailableDaysView(generics.ListAPIView):
         ]
     )
     def get(self, request, *args, **kwargs):
-        user = self.request.user
-        restaurant = Restaurant.objects.get(user=user.pk)
-        restaurant_id = restaurant.pk
-        guest_count = int(self.request.query_params.get('guest_count'))
-        default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
-        default_duration_minutes = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration.hour * 60 + default_duration.minute
+        # Get the restaurant ID, guest count, and start day from the query parameters
+        try:
+            restaurant_id = self.kwargs.get('restaurant_id')
+            guest_count = int(self.request.query_params.get('guest_count'))
+            #start_day = datetime.strptime(self.request.query_params.get('start_day'), '%Y-%m-%d').date()
+            day_str = self.request.query_params.get('start_day', '').strip()
+            start_day = datetime.strptime(day_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError) as e:
+            return JsonResponse({'error': 'Invalid input parameters'}, status=400)
+        
+        # Get the default booking duration for the restaurant
+        try:
+            default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
+            default_duration_minutes = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration.hour * 60 + default_duration.minute
+        except DefaultBookingDuration.DoesNotExist:
+            return JsonResponse({'error': 'Default booking duration not found for the given restaurant'}, status=404)
         available_days = []
-        current_day = datetime.strptime(self.request.query_params.get('start_day'), '%Y-%m-%d').date()
 
         booking_periods = BookingPeriod.objects.filter(restaurant_id=restaurant_id)
 
         for _ in range(30):
-            if self.is_day_available(restaurant_id, current_day, guest_count, booking_periods, default_duration_minutes):
-                available_days.append(current_day.strftime('%Y-%m-%d'))
-            current_day += timedelta(days=1)
+            if self.is_day_available(restaurant_id, start_day, guest_count, booking_periods, default_duration_minutes):
+                available_days.append(start_day.strftime('%Y-%m-%d'))
+            start_day += timedelta(days=1)
 
         return JsonResponse({'available_days': available_days})
 
 
 class AvailableTimeSlotsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = AvailableTimeSlotsSerializer
 
     def is_table_available(self, restaurant_id, table, day, booking_periods, default_duration_minutes):
         reservations = Booking.objects.filter(table=table, start__date=day)
@@ -243,14 +257,14 @@ class AvailableTimeSlotsView(generics.ListAPIView):
                 })
                 start_time += timedelta(minutes=15)
 
-        # Remove timeslots that are in the past
-        current_time = timezone.localtime()
+        # Get the current datetime in the specified timezone
+        current_datetime = timezone.localtime(timezone=pytz.timezone('Europe/Berlin'))
 
-        # Convert combined datetime to the same timezone
+        # Remove timeslots that are in the past
         interval_slots = [
             slot for slot in interval_slots
-            if timezone.make_aware(datetime.combine(day, datetime.strptime(slot['start'], '%H:%M').time()), current_time.tzinfo) > current_time
-            ]
+            if timezone.make_aware(datetime.combine(day, datetime.strptime(slot['start'], '%H:%M').time()), current_datetime.tzinfo) > current_datetime
+        ]
 
         if interval_slots:
             return interval_slots
@@ -260,12 +274,6 @@ class AvailableTimeSlotsView(generics.ListAPIView):
     @swagger_auto_schema(
         operation_description="Get available time slots for a given day and guest count",
         manual_parameters=[
-            openapi.Parameter(
-                'restaurant_id',
-                openapi.IN_QUERY,
-                description="The ID of the restaurant",
-                type=openapi.TYPE_INTEGER
-            ),
             openapi.Parameter(
                 'guest_count',
                 openapi.IN_QUERY,
@@ -281,22 +289,33 @@ class AvailableTimeSlotsView(generics.ListAPIView):
         ]
     )
     def get(self, request, *args, **kwargs):
-        user = self.request.user
-        restaurant = Restaurant.objects.get(user=user.pk)
-        restaurant_id = restaurant.pk
-        tables = Table.objects.filter(zone__restaurant_id=restaurant_id)
-        booking_periods = BookingPeriod.objects.filter(restaurant_id=restaurant_id)
-        default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
-        default_duration_minutes = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration.hour * 60 + default_duration.minute
-
-        guest_count = int(self.request.query_params.get('guest_count'))
-        day = datetime.strptime(self.request.query_params.get('day'), '%Y-%m-%d').date()
+        # Get the restaurant ID, guest count, and start day from the query parameters
+        try:
+            restaurant_id = int(self.kwargs.get('restaurant_id'))
+            guest_count = int(self.request.query_params.get('guest_count', '').strip())
+            day_str = self.request.query_params.get('start_day', '').strip()
+            start_day = datetime.strptime(day_str, '%Y-%m-%d').date()
+        except (ValueError, TypeError) as e:
+            return JsonResponse({'error': 'Invalid input parameters'}, status=400)
+        
+        # Get the tables, booking periods, and default booking duration for the restaurant
+        try:
+            tables = Table.objects.filter(zone__restaurant_id=restaurant_id)
+            booking_periods = BookingPeriod.objects.filter(restaurant_id=restaurant_id)
+            default_duration = DefaultBookingDuration.objects.get(restaurant_id=restaurant_id).duration
+            default_duration_minutes = default_duration.hour * 60 + default_duration.minute
+        except Table.DoesNotExist:
+            return JsonResponse({'error': 'Tables not found for the given restaurant'}, status=404)
+        except BookingPeriod.DoesNotExist:
+            return JsonResponse({'error': 'Booking periods not found for the given restaurant'}, status=404)
+        except DefaultBookingDuration.DoesNotExist:
+            return JsonResponse({'error': 'Default booking duration not found for the given restaurant'}, status=404)
 
         free_slots = []
 
         for table in tables:
             if table.capacity >= guest_count and table.bookable:
-                slots = self.is_table_available(restaurant_id, table, day, booking_periods, default_duration_minutes)
+                slots = self.is_table_available(restaurant_id, table, start_day, booking_periods, default_duration_minutes)
                 if slots:
                     free_slots.extend(slots)
 

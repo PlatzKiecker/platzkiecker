@@ -151,3 +151,13 @@ class BookingDetailSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
         read_only_fields = ['restaurant', 'table', 'start', 'end', 'guest_count']
+
+class AvailableDaysSerializer(serializers.Serializer):
+    available_days = serializers.ListField(
+        child=serializers.DateField(format='%Y-%m-%d')
+    )
+
+class AvailableTimeSlotsSerializer(serializers.Serializer):
+    time_slots = serializers.ListField(
+        child=serializers.TimeField(format='%H:%M')
+    )

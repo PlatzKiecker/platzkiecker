@@ -52,6 +52,11 @@ class ZoneDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['tables'] = Table.objects.filter(zone__restaurant__user=self.request.user)
+    
+    def get_serializer_context(self, restaurant_id=None):
+        context = super().get_serializer_context()
+        context['tables'] = Table.objects.filter(zone__restaurant=restaurant_id)
+
         return context
     
 
