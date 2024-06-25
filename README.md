@@ -1,6 +1,7 @@
 ### Service Status
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
-![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de&logo=django&logoColor=white&label=backend)
+![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de%2Fregister%2F&logo=django&logoColor=white&label=backend)
+
 ### Testing Status
 [![Code Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql)
 [![Version Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/dependabot/dependabot-updates)
@@ -49,9 +50,9 @@ To set up the development environment, follow these steps:
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.dev` file in the project root directory and add the necessary environment variables for development.
     ```bash
-    DEBUG=1
+    DEBUG=True
     SECRET_KEY=change_me
-    DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
     CORS_ALLOW_ALL_ORIGINS=True
     SQL_ENGINE=django.db.backends.postgresql
     SQL_DATABASE=backend_dev
@@ -81,10 +82,11 @@ To set up the production environment, follow these steps:
 2. Navigate to the project directory: `cd platzkiecker`
 3. Create a `.env.prod` file in the project root directory and add the necessary environment variables for production.
     ```bash
-    DEBUG=0
+    DEBUG=False
     SECRET_KEY=change_me
-    DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
-    CORS_ALLOW_ALL_ORIGINS=False
+    DJANGO_ALLOWED_HOSTS=api.platzkiecker.de,platzkiecker.de,127.0.0.1,localhost
+    DJANGO_CORS_ALLOWED_ORIGINS=https://platzkiecker.de,https://platzkiecker.com,https://www.platzkiecker.online
+    DJANGO_CORS_ALLOW_ALL_ORIGINS=False
     SQL_ENGINE=django.db.backends.postgresql
     SQL_DATABASE=backend_prod
     SQL_USER=backend
