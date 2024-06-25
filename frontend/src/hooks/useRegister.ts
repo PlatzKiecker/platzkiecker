@@ -1,21 +1,19 @@
-import useSWR, { mutate } from 'swr';
+import { useState } from "react";
 
-// Basis-URL des Backends
+// Base URL of the backend
 const BASE_URL = 'http://localhost:8000';
 
-// Die Fetcher-Funktion nimmt eine URL und Optionen entgegen und gibt die Antwort als JSON zurück
-const fetcher = (url: string, options: any) => {
-  return fetch(url, options).then(res => res.json());
-};
 
 export const useRegister = () => {
-  const { data, error } = useSWR('/api/register', fetcher, { revalidateOnFocus: false });
 
+  const [error, setError] = useState<Error | null>(null);
+
+  // Function to register a new user with the provided email and password
   const register = async (email: string, password: string) => {
     try {
       const requestData = { email, password };
-      console.log('Sending JSON data:', requestData); // Logging der zu sendenden Daten
 
+      // Sending a POST request to the backend to register the user
       const response = await fetch(`${BASE_URL}/register/`, {
         method: 'POST',
         headers: {
@@ -26,21 +24,22 @@ export const useRegister = () => {
 
       const data = await response.json();
 
+      // Throw an error if registration fails
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to register');
+        setError(data.message || 'Failed to register');
       }
 
-      mutate('/api/register');
+
+
       return data;
-    } catch (error) {
-      console.error('Error registering:', error);
-      throw error; // Weiterhin den Fehler nach außen werfen, damit er in der Komponente behandelt werden kann
+    } catch (error: any) {
+      setError(error.message);
     }
   };
 
+  // Expose the register function, along with SWR's data and error states
   return {
     register,
-    data,
-    error,
+    error
   };
 };

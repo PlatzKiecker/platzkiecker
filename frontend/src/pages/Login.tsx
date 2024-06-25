@@ -4,6 +4,8 @@ import { useLogin } from '../hooks/useLogin';
 import InputField from '../components/input/InputField';
 import { Link } from 'react-router-dom';
 
+//TODO: Meldung wenn Login Daten falsch sind
+
 export default function Login() {
   // Local state variables for input fields
   const [username, setUsername] = useState('');
@@ -63,7 +65,9 @@ export default function Login() {
           </form>
 
           {/* Display error message if login fails */}
-          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-500">{error}</p>
+          )}
 
           {/* Link to register page for new users */}
           <p className="mt-10 text-center text-sm text-gray-500">

@@ -5,17 +5,20 @@ import { useLogin } from '../hooks/useLogin';
 import InputField from '../components/input/InputField';
 import { Link } from 'react-router-dom';
 
+// TODO: Meldung wenn Email Adresse schon existiert + Meldung wenn Passwort nicht lang genug
+
 // Main component for the registration form
 export default function Register() {
   // Local state variables for input fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  //const [error, setError] = useState<Error | null>(null);
 
   // Custom hook for registering and handling errors
-  const { register, error } = useRegister();
+  const { register, error} = useRegister();
   const { login } = useLogin();
-  
+
   // Hook for navigation after registration
   const navigate = useNavigate();
 
@@ -72,8 +75,11 @@ export default function Register() {
             </div>
           </form>
 
-          {/* Display error message if there is an error */}
-          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+          {/* Display error message if registration fails */}
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-500">{error}</p>
+          )}
+
 
           {/* Link to the login page for already registered members */}
           <p className="mt-10 text-center text-sm text-gray-500">
