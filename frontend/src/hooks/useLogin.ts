@@ -1,9 +1,9 @@
 import useSWR, { mutate } from "swr";
 
-// Basis-URL des Backends
+// Base URL of the backend
 const BASE_URL = 'http://localhost:8000';
 
-// Die Fetcher-Funktion nimmt eine URL und Optionen entgegen und gibt die Antwort als JSON zurück
+// The fetcher function takes a URL and options, returning the response as JSON
 const fetcher = (url: string, options: any) => {
   return fetch(url, options).then(res => res.json());
 };
@@ -11,11 +11,12 @@ const fetcher = (url: string, options: any) => {
 export const useLogin = () => {
   const { data, error } = useSWR('/api/login', fetcher, { revalidateOnFocus: false });
 
+  // Function to log in the user with the provided email and password
   const login = async (email: string, password: string) => {
     try {
       const requestData = { email, password };
-      console.log('Sending JSON data:', requestData); // Logging der zu sendenden Daten
 
+      // Sending a POST request to the backend to log in the user
       const response = await fetch(`${BASE_URL}/login/`, {
         method: 'POST',
         headers: {
@@ -24,22 +25,25 @@ export const useLogin = () => {
         body: JSON.stringify(requestData),
       });
 
-    const data = await response.json();
-    if (response.ok) {
-      mutate('/api/login', data, false);
-      return data;
-    } else {
-      throw new Error(data.message || 'Failed to login');
-    }
-  } catch (error) {
-    console.error('Error logging in:', error);
-    throw error; // Weiterhin den Fehler nach außen werfen, damit er in der Komponente behandelt werden kann
-  }
-};
+      const data = await response.json();
 
+      // Invalidate the SWR cache for the login endpoint after successful login
+      if (response.ok) {
+        mutate('/api/login', data, false);
+        return data;
+      } else {
+        throw new Error(data.message || 'Failed to login');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      throw error; // Continue to propagate the error for handling in components
+    }
+  };
+
+  // Expose the login function, along with SWR's data and error states
   return {
     login,
     data,
-    error
+    error,
   };
 };

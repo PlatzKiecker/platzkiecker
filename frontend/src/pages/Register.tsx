@@ -4,68 +4,65 @@ import { useRegister } from '../hooks/useRegister';
 import { useLogin } from '../hooks/useLogin';
 import InputField from '../components/input/InputField';
 import { Link } from 'react-router-dom';
-import { mutate } from 'swr';
 
-// Hauptkomponente für das Registrierungsformular
+// Main component for the registration form
 export default function Register() {
-  // Lokale State-Variablen für die Eingabefelder
+  // Local state variables for input fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // Custom Hook zum Registrieren und Abfangen von Fehlern
+  // Custom hook for registering and handling errors
   const { register, error } = useRegister();
   const { login } = useLogin();
   
-  // Hook für die Navigation nach der Registrierung
+  // Hook for navigation after registration
   const navigate = useNavigate();
 
-  // Event-Handler für das Fo nurrmular-Submit-Event
+  // Event handler for the form submit event
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Überprüfen, ob die Passwörter übereinstimmen
+    // Check if passwords match
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
     try {
-      // Versuche, den Benutzer zu registrieren
+      // Attempt to register the user
       const data = await register(email, password);
-      console.log('Registration successful:', data);
-      // Versuche, den Benutzer automatisch einzuloggen nach erfolgreicher Registrierung
+
+      // Attempt to login the user immediately after successful registration
       const loginData = await login(email, password);
-      console.log('Login successful after registration:', loginData);
-      // Speichere den Token im Local Storage oder im Kontext
+      localStorage.setItem('token', loginData.token);
+
+      // Navigate to home page after successful registration and login
       navigate('/');
     } catch (err: any) {
-      // Fehlerbehandlung bei fehlgeschlagener Registrierung
+      // Error handling for failed registration
       console.error('Registration failed:', err.message);
     }
   };
 
-  // Rendering der Komponente
+  // Rendering the component
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* Logo */}
           <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-          {/* Titel */}
+          {/* Title */}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create your account</h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          {/* Formular für die Registrierung */}
+          {/* Registration form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Eingabefelder für Email, Passwort und Passwortbestätigung */}
-
+            {/* Input fields for Email, Password, and Confirm Password */}
             <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
             <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-
             <InputField label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
-            {/* Registrierungs-Button */}
+            {/* Registration button */}
             <div>
               <button
                 type="submit"
@@ -75,10 +72,10 @@ export default function Register() {
             </div>
           </form>
 
-          {/* Anzeige einer Fehlermeldung, falls vorhanden */}
+          {/* Display error message if there is an error */}
           {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
 
-          {/* Link zur Login-Seite für bereits registrierte Benutzer */}
+          {/* Link to the login page for already registered members */}
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{" "}
             <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
