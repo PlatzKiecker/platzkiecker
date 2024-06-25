@@ -15,4 +15,5 @@ export default function InputField({ label, type = "text", placeholder = "Enter 
       </div>
     </div>
   );
+
 }
