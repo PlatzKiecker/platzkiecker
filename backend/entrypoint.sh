@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo " ____  _  __ "
+echo "|  _ \| |/ / "
+echo "| |_) | ' /  "
+echo "|  __/| . \  "
+echo "|_|   |_|\_\ "
+
 if [ "$DATABASE" = "postgres" ]
 then
     echo "Waiting for postgres..."

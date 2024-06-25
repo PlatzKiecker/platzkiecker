@@ -40,6 +40,5 @@ urlpatterns = [
     path("", include("booking.urls")),
     path("api/docs/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
 ]
-
-if settings.DEBUG == False:
+if settings.DEBUG == True:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
