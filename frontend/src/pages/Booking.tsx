@@ -1,4 +1,5 @@
 import InputField from "../components/input/InputField";
+import Button from "../components/input/Button";
 
 export default function Booking() {
   return (
@@ -16,11 +17,7 @@ export default function Booking() {
       </div>
 
       <div className="mt-10">
-        <button
-          type="button"
-          className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-          Update booking
-        </button>
+        <Button>Update booking</Button>
       </div>
     </div>
   );

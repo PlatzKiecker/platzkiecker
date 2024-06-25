@@ -3,6 +3,7 @@ import Page from "../components/Page";
 import DatePickerSimple from "../components/input/DatePickerSimple";
 import Badge from "../components/feedback/Badge";
 import { useState } from "react";
+import Button from "../components/input/Button";
 
 export default function Dashboard() {
   //TODO: Alle Bookings für einen bestimmten tag
@@ -18,11 +19,7 @@ export default function Dashboard() {
       title="Dashboard"
       actionItems={
         <Link to="/booking" className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            New booking
-          </button>
+          <Button>New booking</Button>
         </Link>
       }>
       <DatePickerSimple date={date} setDate={setDate} />
