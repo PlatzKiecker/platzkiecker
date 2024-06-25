@@ -1,4 +1,5 @@
-import Page from "../components/Page";
+import Page from "../components/Layout/Page";
+import SettingsLayout from "../components/Layout/SettingsLayout";
 
 export default function Settings() {
   return (

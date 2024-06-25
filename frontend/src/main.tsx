@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import Shell from "./components/Shell.tsx";
+import Shell from "./components/Layout/Shell.tsx";
 import Settings from "./pages/Settings.tsx";
 import NewBooking from "./pages/NewBooking.tsx";
 import Booking from "./pages/Booking.tsx";
