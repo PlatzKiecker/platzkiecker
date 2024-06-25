@@ -283,7 +283,7 @@ class AvailableTimeSlotsView(generics.ListAPIView):
                 type=openapi.TYPE_INTEGER
             ),
             openapi.Parameter(
-                'day',
+                'start_day',
                 openapi.IN_QUERY,
                 description="The date in the format 'YYYY-MM-DD'",
                 type=openapi.TYPE_STRING
