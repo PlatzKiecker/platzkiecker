@@ -140,6 +140,12 @@ class AvailableDaysView(generics.ListAPIView):
         operation_description="Get available days for a given guest count and start day",
         manual_parameters=[
             openapi.Parameter(
+                'restaurant_id',
+                openapi.IN_QUERY,
+                description="The ID of the restaurant",
+                type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
                 'guest_count',
                 openapi.IN_QUERY,
                 description="The number of guests",
@@ -254,6 +260,12 @@ class AvailableTimeSlotsView(generics.ListAPIView):
     @swagger_auto_schema(
         operation_description="Get available time slots for a given day and guest count",
         manual_parameters=[
+            openapi.Parameter(
+                'restaurant_id',
+                openapi.IN_QUERY,
+                description="The ID of the restaurant",
+                type=openapi.TYPE_INTEGER
+            ),
             openapi.Parameter(
                 'guest_count',
                 openapi.IN_QUERY,
