@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
 import { useLogin } from '../hooks/useLogin';
-import InputField from '../components/input/InputField';
+import InputFieldLogin from '../components/input/InputFieldLogin';
 import { Link } from 'react-router-dom';
+
+// TODO: Meldung wenn Email Adresse schon existiert + Meldung wenn Passwort nicht lang genug
 
 // Main component for the registration form
 export default function Register() {
@@ -11,11 +13,12 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  //const [error, setError] = useState<Error | null>(null);
 
   // Custom hook for registering and handling errors
-  const { register, error } = useRegister();
+  const { register, error} = useRegister();
   const { login } = useLogin();
-  
+
   // Hook for navigation after registration
   const navigate = useNavigate();
 
@@ -58,9 +61,9 @@ export default function Register() {
           {/* Registration form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Input fields for Email, Password, and Confirm Password */}
-            <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <InputField label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <InputFieldLogin label="Email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <InputFieldLogin label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <InputFieldLogin label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
             {/* Registration button */}
             <div>
@@ -72,8 +75,11 @@ export default function Register() {
             </div>
           </form>
 
-          {/* Display error message if there is an error */}
-          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+          {/* Display error message if registration fails */}
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-500">{error}</p>
+          )}
+
 
           {/* Link to the login page for already registered members */}
           <p className="mt-10 text-center text-sm text-gray-500">
