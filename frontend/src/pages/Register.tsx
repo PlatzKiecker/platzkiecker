@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRegister } from '../hooks/useRegister';
-import { useLogin } from '../hooks/useLogin';
-import InputField from '../components/input/InputField';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister";
+import { useLogin } from "../hooks/useLogin";
+import InputField from "../components/input/InputField";
+import { Link } from "react-router-dom";
 
 // Main component for the registration form
 export default function Register() {
   // Local state variables for input fields
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // Custom hook for registering and handling errors
   const { register, error } = useRegister();
   const { login } = useLogin();
-  
+
   // Hook for navigation after registration
   const navigate = useNavigate();
 
@@ -24,22 +24,22 @@ export default function Register() {
     e.preventDefault();
     // Check if passwords match
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
     try {
       // Attempt to register the user
-      const data = await register(email, password);
+      await register(email, password);
 
       // Attempt to login the user immediately after successful registration
       const loginData = await login(email, password);
-      localStorage.setItem('token', loginData.token);
+      localStorage.setItem("token", loginData.token);
 
       // Navigate to home page after successful registration and login
-      navigate('/');
+      navigate("/");
     } catch (err: any) {
       // Error handling for failed registration
-      console.error('Registration failed:', err.message);
+      console.error("Registration failed:", err.message);
     }
   };
 
@@ -58,9 +58,9 @@ export default function Register() {
           {/* Registration form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Input fields for Email, Password, and Confirm Password */}
-            <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <InputField label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <InputField label="Email" type="email" />
+            <InputField label="Password" type="password" />
+            <InputField label="Confirm Password" type="password" />
 
             {/* Registration button */}
             <div>

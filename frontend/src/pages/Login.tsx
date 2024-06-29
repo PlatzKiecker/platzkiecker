@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
-import InputField from '../components/input/InputField';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import InputField from "../components/input/InputField";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   // Local state variables for input fields
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   // Custom hook for logging in and handling errors
   const { login, error } = useLogin();
@@ -21,16 +21,16 @@ export default function Login() {
     try {
       // Attempt to log in using provided username and password
       const data = await login(username, password);
-      console.log('Login successful:', data);
-      
+      console.log("Login successful:", data);
+
       // Store the token in localStorage or context for authenticated sessions
-      localStorage.setItem('token', data.token);
-      
+      localStorage.setItem("token", data.token);
+
       // Navigate to the dashboard page upon successful login
-      navigate('/');
+      navigate("/");
     } catch (err: any) {
       // Handle login failure and log the error message
-      console.error('Login failed:', err.message);
+      console.error("Login failed:", err.message);
     }
   };
 
@@ -48,9 +48,9 @@ export default function Login() {
           {/* Login form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Input fields for username (email) and password */}
-            <InputField label="Email" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <InputField label="Email" />
 
-            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <InputField label="Password" type="password" />
 
             {/* Sign-in button */}
             <div>
