@@ -8,12 +8,12 @@ import { Link } from "react-router-dom";
 // Main component for the registration form
 export default function Register() {
   // Local state variables for input fields
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Custom hook for registering and handling errors
-  const { register, error } = useRegister();
+  const { register, error} = useRegister();
   const { login } = useLogin();
 
   // Hook for navigation after registration
@@ -58,9 +58,9 @@ export default function Register() {
           {/* Registration form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Input fields for Email, Password, and Confirm Password */}
-            <InputField label="Email" type="email" />
-            <InputField label="Password" type="password" />
-            <InputField label="Confirm Password" type="password" />
+            <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <InputField label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
             {/* Registration button */}
             <div>
@@ -72,8 +72,11 @@ export default function Register() {
             </div>
           </form>
 
-          {/* Display error message if there is an error */}
-          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+          {/* Display error message if registration fails */}
+          {error && (
+            <p className="mt-2 text-center text-sm text-red-500">{error}</p>
+          )}
+
 
           {/* Link to the login page for already registered members */}
           <p className="mt-10 text-center text-sm text-gray-500">
