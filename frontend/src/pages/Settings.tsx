@@ -80,19 +80,37 @@ function VacationPeriods() {
   ]);
 
   const handleValueChange = (value: DateValueType, id: number) => {
-    setPeriods((prevPeriods: Period[]) => {
-      const updatedPeriods = prevPeriods.map((period) => {
-        if (period.id === id && value)
-          return {
-            id: period.id,
-            value: {
-              startDate: value.startDate,
-              endDate: value.endDate,
-            },
-          };
-        return period;
+    console.log(value);
+
+    if (!value?.startDate || !value?.endDate) {
+      // TODO: delete period
+      setPeriods((prevPeriods: Period[]) => {
+        const updatedPeriods = prevPeriods.filter((period) => period.id !== id);
+        return updatedPeriods;
       });
-      return updatedPeriods;
+    } else {
+      // TODO: update period
+      setPeriods((prevPeriods: Period[]) => {
+        const updatedPeriods = prevPeriods.map((period) => {
+          if (period.id === id && value)
+            return {
+              id: period.id,
+              value: {
+                startDate: value.startDate,
+                endDate: value.endDate,
+              },
+            };
+          return period;
+        });
+        return updatedPeriods;
+      });
+    }
+  };
+
+  const handleAddPeriod = () => {
+    setPeriods((prev) => {
+      const newPeriod = { id: prev.length + 1, value: { startDate: new Date(), endDate: new Date() } };
+      return [...prev, newPeriod];
     });
   };
 
@@ -103,10 +121,6 @@ function VacationPeriods() {
       </div>
     );
   });
-
-  const handleAddPeriod = () => {
-    // add a new period
-  };
 
   return (
     <div className="space-y-4">
