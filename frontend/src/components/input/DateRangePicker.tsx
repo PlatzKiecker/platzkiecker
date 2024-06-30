@@ -1,15 +1,14 @@
 import { useState } from "react";
-import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import Datepicker, { DateValueType, DateType } from "react-tailwindcss-datepicker";
 
-export default function DateRangePicker() {
-  const [value, setValue] = useState<DateValueType>({
-    startDate: new Date(),
-    endDate: new Date(),
-  });
-
-  const handleValueChange = (newValue: DateValueType) => {
-    setValue(newValue);
+type DateRangePickerProps = {
+  value: {
+    startDate: DateType;
+    endDate: DateType;
   };
+  onChange: (value: DateValueType) => void;
+};
 
-  return <Datepicker primaryColor="indigo" showShortcuts={false} value={value} onChange={handleValueChange} />;
+export default function DateRangePicker({ value, onChange }: DateRangePickerProps) {
+  return <Datepicker primaryColor="indigo" showShortcuts={false} value={value} onChange={onChange} />;
 }
