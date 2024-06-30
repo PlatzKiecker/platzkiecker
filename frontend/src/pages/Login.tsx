@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
-import InputField from '../components/input/InputField';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import InputField from "../components/input/InputField";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   // Local state variables for input fields
@@ -48,9 +48,9 @@ export default function Login() {
           {/* Login form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Input fields for username (email) and password */}
-            <InputField label="Email" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <InputField label="Email" />
 
-            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <InputField label="Password" type="password" />
 
             {/* Sign-in button */}
             <div>
