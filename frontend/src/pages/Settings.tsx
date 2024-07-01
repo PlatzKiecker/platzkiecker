@@ -1,5 +1,5 @@
-import Page from "../components/Layout/Page";
-import SettingsLayout from "../components/Layout/SettingsLayout";
+import Page from "../components/layout/Page";
+import SettingsLayout from "../components/layout/SettingsLayout";
 import InputField from "../components/input/InputField";
 import DateRangePicker from "../components/input/DateRangePicker";
 import { useState } from "react";
@@ -59,9 +59,17 @@ function BookingPeriods() {
     console.log(value);
   };
 
+  const handleAddPeriod = (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
+    setPeriods((prev) => {
+      // POST to backend
+      const newPeriod = { id: 1, value: { startDate: new Date(), endDate: new Date() } };
+      return { ...prev, [day]: [...prev[day], newPeriod] };
+    });
+  };
+
   const dayJSX = Object.entries(days).map(([day, value]) => {
     return (
-      <div key={day}>
+      <div key={day} className="space-y-1">
         <h3 className="font-medium">{day}</h3>
         {value.map(
           (period: Period) =>
@@ -77,6 +85,9 @@ function BookingPeriods() {
               />
             )
         )}
+        <Button variant="secondary" onClick={() => handleAddPeriod(day as keyof BookingPeriods)}>
+          +
+        </Button>
       </div>
     );
   });
@@ -151,7 +162,9 @@ function VacationPeriods() {
   return (
     <div className="space-y-4">
       {periodJSX}
-      <Button onClick={handleAddPeriod}>Add period</Button>
+      <Button variant="secondary" onClick={handleAddPeriod}>
+        +
+      </Button>
     </div>
   );
 }

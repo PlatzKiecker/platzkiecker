@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import Shell from "./components/Layout/Shell.tsx";
+import Shell from "./components/layout/Shell.tsx";
 import Settings from "./pages/Settings.tsx";
 import NewBooking from "./pages/NewBooking.tsx";
 import Booking from "./pages/Booking.tsx";
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  
+
   {
     path: "/",
     element: <Shell />,
