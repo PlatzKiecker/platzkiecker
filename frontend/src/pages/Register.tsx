@@ -25,7 +25,7 @@ export default function Register() {
     e.preventDefault();
     // Überprüfen, ob die Passwörter übereinstimmen
     if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
     try {
@@ -79,6 +79,7 @@ export default function Register() {
 
           {/* Anzeige einer Fehlermeldung, falls vorhanden */}
           {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+
 
           {/* Link zur Login-Seite für bereits registrierte Benutzer */}
           <p className="mt-10 text-center text-sm text-gray-500">

@@ -4,12 +4,12 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Shell from "./components/Layout/Shell.tsx";
-//import Settings from "./pages/Settings.tsx";
-//import NewBooking from "./pages/NewBooking.tsx";
-//import Booking from "./pages/Booking.tsx";
 import GuestBooking from "./pages/GuestBooking.tsx";
 import GuestBookingTable from "./pages/GuestBookingTable.tsx";
 import GuestConfirmation from "./pages/GuestConfirmation.tsx";
+import Settings from "./pages/Settings.tsx";
+import NewBooking from "./pages/NewBooking.tsx";
+import Booking from "./pages/Booking.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -35,8 +35,6 @@ const router = createBrowserRouter([
     path: "/confirmation",
     element: <GuestConfirmation />,
 },
-  
- 
   {
     path: "/",
     element: <Shell />,
@@ -44,6 +42,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Dashboard />,
+      },
+      {
+        path: "/booking",
+        element: <NewBooking />,
+      },
+      {
+        path: "/booking/view",
+        element: <Booking />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       },
     ],
   },

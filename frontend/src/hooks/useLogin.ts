@@ -1,4 +1,4 @@
-import useSWR, { mutate } from "swr";
+import { useState } from "react";
 
 // Basis-URL des Backends
 const BASE_URL = 'http://localhost:8000';
@@ -9,7 +9,7 @@ const fetcher = (url: string, options: any) => {
 };
 
 export const useLogin = () => {
-  const { data, error } = useSWR('/api/login', fetcher, { revalidateOnFocus: false });
+  const [error, setError] = useState<Error | null>(null);
 
   const login = async (email: string, password: string) => {
     try {
@@ -17,9 +17,9 @@ export const useLogin = () => {
       console.log('Sending JSON data:', requestData); // Logging der zu sendenden Daten
 
       const response = await fetch(`${BASE_URL}/login/`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestData),
       });
