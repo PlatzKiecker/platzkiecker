@@ -29,6 +29,7 @@ DEBUG = os.environ.get("DEBUG", 'False') == 'True'
 
 #ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+CORS_ALLOW_CREDENTIALS = True
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_CORS_ALLOWED_ORIGINS', '').split(',')
