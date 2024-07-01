@@ -9,26 +9,9 @@ export default function VacationPeriodsSection() {
   const { data, error, loading } = mySWR(`/vacations/list/`);
   console.log(data, loading, error);
 
-  const [periods, setPeriods] = useState<VacationPeriod[]>([
-    {
-      id: 1,
-      value: {
-        startDate: new Date(),
-        endDate: new Date(),
-      },
-    },
-    {
-      id: 2,
-      value: {
-        startDate: new Date(),
-        endDate: new Date(),
-      },
-    },
-  ]);
+  const [periods, setPeriods] = useState<VacationPeriod[]>(data || []);
 
   const handleValueChange = (value: DateValueType, id: number) => {
-    console.log(value);
-
     if (!value?.startDate || !value?.endDate) {
       // TODO: delete period
       setPeriods((prevPeriods: VacationPeriod[]) => {

@@ -19,8 +19,6 @@ export default function TableSection() {
   const cleanupDelete = (id: number) => {
     setTables((prev) => {
       // TODO: DELETE to backend
-      console.log("DELETE to backend", id);
-
       return prev.filter((table) => table.id !== id);
     });
   };
@@ -37,14 +35,18 @@ export default function TableSection() {
   return (
     <div className="space-y-4 w-full">
       <table className="w-full">
-        <tr>
-          <th>Table ID</th>
-          <th>Chairs</th>
-          <th>Action</th>
-        </tr>
-        {tables.map((table) => (
-          <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
-        ))}
+        <thead>
+          <tr>
+            <th>Table ID</th>
+            <th>Chairs</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tables.map((table) => (
+            <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
+          ))}
+        </tbody>
       </table>
       <Button variant="secondary" onClick={handleAddTable}>
         +
