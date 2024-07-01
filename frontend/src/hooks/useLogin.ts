@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Base URL of the backend
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = "http://localhost:8000";
 
 export const useLogin = () => {
   const [error, setError] = useState<Error | null>(null);
@@ -13,9 +13,9 @@ export const useLogin = () => {
 
       // Sending a POST request to the backend to log in the user
       const response = await fetch(`${BASE_URL}/login/`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestData),
       });
@@ -24,7 +24,7 @@ export const useLogin = () => {
 
       // Throw an error if registration fails
       if (!response.ok) {
-        setError(data.message || 'Failed to login');
+        setError(data.message || "Failed to login");
       }
       return data;
     } catch (error: any) {

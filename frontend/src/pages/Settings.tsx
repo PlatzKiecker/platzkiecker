@@ -25,9 +25,27 @@ export default function Settings() {
   );
 }
 
+type BookingPeriods = {
+  monday: Period[];
+  tuesday: Period[];
+  wednesday: Period[];
+  thursday: Period[];
+  friday: Period[];
+  saturday: Period[];
+  sunday: Period[];
+};
+
+type Period = {
+  id: number;
+  value: {
+    startDate: DateType;
+    endDate: DateType;
+  };
+};
+
 function BookingPeriods() {
   const { data, error, loading } = mySWR(`/booking-periods/list/`);
-  const [days, setPeriods] = useState({
+  const [days, setPeriods] = useState<BookingPeriods>({
     monday: [],
     tuesday: [],
     wednesday: [],
@@ -37,31 +55,34 @@ function BookingPeriods() {
     sunday: [],
   });
 
+  const handleValueChange = (value: DateValueType, id: number) => {
+    console.log(value);
+  };
+
   const dayJSX = Object.entries(days).map(([day, value]) => {
     return (
       <div key={day}>
         <h3 className="font-medium">{day}</h3>
-        <DateRangePicker
-          value={{
-            startDate: new Date(),
-            endDate: new Date(),
-          }}
-          onChange={(newValue) => {}}
-        />
+        {value.map(
+          (period: Period) =>
+            period.value.startDate &&
+            period.value.endDate && (
+              <DateRangePicker
+                key={period.value?.startDate.toString()}
+                value={{
+                  startDate: period.value.startDate,
+                  endDate: period.value.endDate,
+                }}
+                onChange={(newValue) => handleValueChange(newValue, period.id)}
+              />
+            )
+        )}
       </div>
     );
   });
 
   return <div className="space-y-4">{dayJSX}</div>;
 }
-
-type Period = {
-  id: number;
-  value: {
-    startDate: DateType;
-    endDate: DateType;
-  };
-};
 
 function VacationPeriods() {
   const { data, error, loading } = mySWR(`/vacations/list/`);
