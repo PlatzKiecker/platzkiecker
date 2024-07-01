@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ProgressTracker from '../components/Layout/ProgressTracker';
-//import InputField from '../components/input/InputField';
 import GuestCountDropdown from '../components/input/GuestCountDropdown';
 import { useNavigate } from 'react-router-dom';
 
