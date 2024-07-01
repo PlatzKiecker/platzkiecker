@@ -3,10 +3,12 @@ import SettingsLayout from "../components/layout/SettingsLayout";
 import InputField from "../components/input/InputField";
 import DateRangePicker from "../components/input/DateRangePicker";
 import { useState } from "react";
-import { DateValueType, DateType } from "react-tailwindcss-datepicker";
+import { DateValueType } from "react-tailwindcss-datepicker";
 import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
 import TimeRangePicker from "../components/input/TimeRangePicker";
+import { BookingPeriod, BookingPeriods } from "../types/bookings";
+import { VacationPeriod } from "../types/vacations";
 
 export default function Settings() {
   return (
@@ -16,35 +18,17 @@ export default function Settings() {
           <InputField label="Name" />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Booking periods" description="Set when ypur restaurant can be booked">
-          <BookingPeriods />
+          <BookingPeriodsSection />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Vacations" description="Set when your restaurant is on vacation">
-          <VacationPeriods />
+          <VacationPeriodsSection />
         </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
   );
 }
 
-type BookingPeriods = {
-  monday: BookingPeriod[];
-  tuesday: BookingPeriod[];
-  wednesday: BookingPeriod[];
-  thursday: BookingPeriod[];
-  friday: BookingPeriod[];
-  saturday: BookingPeriod[];
-  sunday: BookingPeriod[];
-};
-
-type BookingPeriod = {
-  id: number;
-  value: {
-    startTime: Date;
-    endTime: Date;
-  };
-};
-
-function BookingPeriods() {
+function BookingPeriodsSection() {
   const { data, error, loading } = mySWR(`/booking-periods/list/`);
   const [days, setPeriods] = useState<BookingPeriods>({
     monday: [],
@@ -85,18 +69,11 @@ function BookingPeriods() {
   return <div className="space-y-4">{dayJSX}</div>;
 }
 
-type Period = {
-  id: number;
-  value: {
-    startDate: DateType;
-    endDate: DateType;
-  };
-};
-function VacationPeriods() {
+function VacationPeriodsSection() {
   const { data, error, loading } = mySWR(`/vacations/list/`);
   console.log(data, loading, error);
 
-  const [periods, setPeriods] = useState<Period[]>([
+  const [periods, setPeriods] = useState<VacationPeriod[]>([
     {
       id: 1,
       value: {
@@ -118,13 +95,13 @@ function VacationPeriods() {
 
     if (!value?.startDate || !value?.endDate) {
       // TODO: delete period
-      setPeriods((prevPeriods: Period[]) => {
+      setPeriods((prevPeriods: VacationPeriod[]) => {
         const updatedPeriods = prevPeriods.filter((period) => period.id !== id);
         return updatedPeriods;
       });
     } else {
       // TODO: update period
-      setPeriods((prevPeriods: Period[]) => {
+      setPeriods((prevPeriods: VacationPeriod[]) => {
         const updatedPeriods = prevPeriods.map((period) => {
           if (period.id === id && value)
             return {

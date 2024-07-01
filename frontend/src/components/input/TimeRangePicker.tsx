@@ -1,12 +1,5 @@
 import InputField from "./InputField";
-
-type BookingPeriod = {
-  id: number;
-  value: {
-    startTime: Date;
-    endTime: Date;
-  };
-};
+import { BookingPeriod } from "../../types/bookings";
 
 export default function TimeRangePicker({ value }: { value: BookingPeriod }) {
   return (
