@@ -1,5 +1,5 @@
-import Page from "../components/Layout/Page";
-import SettingsLayout from "../components/Layout/SettingsLayout";
+import Page from "../components/layout/Page";
+import SettingsLayout from "../components/layout/SettingsLayout";
 import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
@@ -8,6 +8,7 @@ import mySWR from "../utils/mySWR";
 import { useState, useEffect } from "react";
 import axios from 'axios';
 import { mutate } from "swr";
+import { getCookie } from "../utils/csrf";
 
 export default function Settings() {
   return (
@@ -31,7 +32,7 @@ export default function Settings() {
 }
 function RestaurantSection() {
   const { data: restaurant, error, loading } = mySWR(`/restaurant/detail/`);
-  const [restaurantName, setRestaurantName] = useState(restaurant?.name || "");
+  const [restaurantName, setRestaurantName] = useState(restaurant?.name ?? "");
 
   useEffect(() => {
     if (restaurant) {
@@ -41,8 +42,17 @@ function RestaurantSection() {
 
   const handleRestaurantUpdate = async (value: string) => {
     setRestaurantName(value);
-    const response = await axios.put(`/restaurant/detail/`, { name: value });
-    console.log(response.data);
+    const response = await axios.put(
+      `http://localhost:8000/restaurant/detail/`,
+      { name: value },
+      {
+        withCredentials: true,
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      }
+    );
+    console.log(response);
     mutate(`/restaurant/detail/`, response.data, false); // false means revalidate the cache after updating
   };
 

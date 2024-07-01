@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProgressTracker from "../components/Layout/ProgressTracker";
+import ProgressTracker from "../components/layout/ProgressTracker";
 import GuestCountDropdown from "../components/input/GuestCountDropdown";
 
 export default function GuestDetails() {

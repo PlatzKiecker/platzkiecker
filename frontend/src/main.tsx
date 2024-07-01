@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import Shell from "./components/Layout/Shell.tsx";
+import Shell from "./components/layout/Shell.tsx";
 import GuestBooking from "./pages/GuestBooking.tsx";
 import GuestBookingTable from "./pages/GuestBookingTable.tsx";
 import GuestConfirmation from "./pages/GuestConfirmation.tsx";
