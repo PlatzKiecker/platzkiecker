@@ -6,6 +6,7 @@ import { useState } from "react";
 import { DateValueType, DateType } from "react-tailwindcss-datepicker";
 import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
+import TimeRangePicker from "../components/input/TimeRangePicker";
 
 export default function Settings() {
   return (
@@ -26,20 +27,20 @@ export default function Settings() {
 }
 
 type BookingPeriods = {
-  monday: Period[];
-  tuesday: Period[];
-  wednesday: Period[];
-  thursday: Period[];
-  friday: Period[];
-  saturday: Period[];
-  sunday: Period[];
+  monday: BookingPeriod[];
+  tuesday: BookingPeriod[];
+  wednesday: BookingPeriod[];
+  thursday: BookingPeriod[];
+  friday: BookingPeriod[];
+  saturday: BookingPeriod[];
+  sunday: BookingPeriod[];
 };
 
-type Period = {
+type BookingPeriod = {
   id: number;
   value: {
-    startDate: DateType;
-    endDate: DateType;
+    startTime: Date;
+    endTime: Date;
   };
 };
 
@@ -71,20 +72,7 @@ function BookingPeriods() {
     return (
       <div key={day} className="space-y-1">
         <h3 className="font-medium">{day}</h3>
-        {value.map(
-          (period: Period) =>
-            period.value.startDate &&
-            period.value.endDate && (
-              <DateRangePicker
-                key={period.value?.startDate.toString()}
-                value={{
-                  startDate: period.value.startDate,
-                  endDate: period.value.endDate,
-                }}
-                onChange={(newValue) => handleValueChange(newValue, period.id)}
-              />
-            )
-        )}
+        {value.map((period: BookingPeriod) => period.value.startTime && period.value.endTime && <TimeRangePicker key={period.value.startTime.toLocaleString()} value={period} />)}
         <Button variant="secondary" onClick={() => handleAddPeriod(day as keyof BookingPeriods)}>
           +
         </Button>
@@ -95,6 +83,13 @@ function BookingPeriods() {
   return <div className="space-y-4">{dayJSX}</div>;
 }
 
+type Period = {
+  id: number;
+  value: {
+    startDate: DateType;
+    endDate: DateType;
+  };
+};
 function VacationPeriods() {
   const { data, error, loading } = mySWR(`/vacations/list/`);
   console.log(data, loading, error);

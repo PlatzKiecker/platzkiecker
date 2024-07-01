@@ -1,11 +1,14 @@
-export default function InputField({ label, type = "text", placeholder = "Enter value" }: { label: string; type?: string; placeholder?: string }) {
+export default function InputField({ label, value, type = "text", placeholder = "Enter value" }: { label?: string; value?: string; type?: string; placeholder?: string }) {
   return (
     <div>
-      <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-        {label}
-      </label>
+      {label ?? (
+        <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+          {label}
+        </label>
+      )}
       <div className="mt-2">
         <input
+          value={value}
           type={type}
           name={label}
           id={label}
@@ -15,5 +18,4 @@ export default function InputField({ label, type = "text", placeholder = "Enter 
       </div>
     </div>
   );
-
 }
