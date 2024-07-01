@@ -2,35 +2,42 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
 import { useLogin } from '../hooks/useLogin';
+<<<<<<< Updated upstream
 import InputField from '../components/input/InputField';
 import { Link } from 'react-router-dom';
 
 // TODO: Meldung wenn Email Adresse schon existiert + Meldung wenn Passwort nicht lang genug
+=======
+import InputFieldLogin from '../components/input/InputFieldLogin';
+import { Link } from 'react-router-dom';
+import { mutate } from 'swr';
+>>>>>>> Stashed changes
 
-// Main component for the registration form
+// Hauptkomponente für das Registrierungsformular
 export default function Register() {
-  // Local state variables for input fields
+  // Lokale State-Variablen für die Eingabefelder
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   //const [error, setError] = useState<Error | null>(null);
 
-  // Custom hook for registering and handling errors
-  const { register, error} = useRegister();
+  // Custom Hook zum Registrieren und Abfangen von Fehlern
+  const { register, error } = useRegister();
   const { login } = useLogin();
-
-  // Hook for navigation after registration
+  
+  // Hook für die Navigation nach der Registrierung
   const navigate = useNavigate();
 
-  // Event handler for the form submit event
+  // Event-Handler für das Fo nurrmular-Submit-Event
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Check if passwords match
+    // Überprüfen, ob die Passwörter übereinstimmen
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
     try {
+<<<<<<< Updated upstream
       // Attempt to register the user
       const data = await register(email, password);
 
@@ -42,30 +49,47 @@ export default function Register() {
       navigate('/');
     } catch (err: any) {
       // Error handling for failed registration
+=======
+      // Versuche, den Benutzer zu registrieren
+      const data = await register(email, password);
+      console.log('Registration successful:', data);
+      // Versuche, den Benutzer automatisch einzuloggen nach erfolgreicher Registrierung
+      const loginData = await login(email, password);
+      console.log('Login successful after registration:', loginData);
+      // Speichere den Token im Local Storage oder im Kontext
+      const token = loginData.token; // Annahme: loginData enthält das Token
+      localStorage.setItem('token', token); // Speichern im Local Storage
+      navigate('/');
+    } catch (err: any) {
+      // Fehlerbehandlung bei fehlgeschlagener Registrierung
+>>>>>>> Stashed changes
       console.error('Registration failed:', err.message);
     }
   };
 
-  // Rendering the component
+  // Rendering der Komponente
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           {/* Logo */}
           <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-          {/* Title */}
+          {/* Titel */}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create your account</h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          {/* Registration form */}
+          {/* Formular für die Registrierung */}
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Input fields for Email, Password, and Confirm Password */}
-            <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <InputField label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            {/* Eingabefelder für Email, Passwort und Passwortbestätigung */}
 
-            {/* Registration button */}
+            <InputFieldLogin label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+
+            <InputFieldLogin label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+            <InputFieldLogin label="Confirm Password" name="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+
+            {/* Registrierungs-Button */}
             <div>
               <button
                 type="submit"
@@ -75,13 +99,10 @@ export default function Register() {
             </div>
           </form>
 
-          {/* Display error message if registration fails */}
-          {error && (
-            <p className="mt-2 text-center text-sm text-red-500">{error}</p>
-          )}
+          {/* Anzeige einer Fehlermeldung, falls vorhanden */}
+          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
 
-
-          {/* Link to the login page for already registered members */}
+          {/* Link zur Login-Seite für bereits registrierte Benutzer */}
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{" "}
             <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
