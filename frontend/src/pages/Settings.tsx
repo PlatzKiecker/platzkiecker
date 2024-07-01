@@ -7,6 +7,7 @@ import TableSection from "../components/pages/settings/TableSection";
 import mySWR from "../utils/mySWR";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { mutate } from "swr";
 
 export default function Settings() {
   return (
@@ -36,11 +37,13 @@ function RestaurantSection() {
     if (restaurant) {
       setRestaurantName(restaurant.name);
     }
-    // PUT to backend
   }, [restaurant]);
 
-  const handleRestaurantUpdate = (value: string) => {
+  const handleRestaurantUpdate = async (value: string) => {
     setRestaurantName(value);
+    const response = await axios.put(`/restaurant/detail/`, { name: value });
+    console.log(response.data);
+    mutate(`/restaurant/detail/`, response.data, false); // false means revalidate the cache after updating
   };
 
   const { data: bookingDuration, error: bookingDurationError, loading: bookingDurationLoading } = mySWR(`/default-duration/1/`);
