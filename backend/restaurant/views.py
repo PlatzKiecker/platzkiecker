@@ -20,7 +20,6 @@ class RestaurantDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         user = self.request.user
-        print("USER: ", user.pk)
         return Restaurant.objects.get(user=user.pk)
 
 
