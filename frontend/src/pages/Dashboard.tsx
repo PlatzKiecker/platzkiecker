@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Page from "../components/layout/Page";
+import Page from "../components/Layout/Page";
 import DatePickerSimple from "../components/input/DatePickerSimple";
 import Badge from "../components/feedback/Badge";
 import { useState } from "react";
