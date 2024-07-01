@@ -6,6 +6,7 @@ import VacationPeriodsSection from "../components/pages/settings/VacationPeriods
 import TableSection from "../components/pages/settings/TableSection";
 import mySWR from "../utils/mySWR";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Settings() {
   return (
