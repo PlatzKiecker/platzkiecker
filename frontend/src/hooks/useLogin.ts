@@ -8,6 +8,7 @@ export const useLogin = () => {
 
   const login = async (email: string, password: string) => {
     try {
+      setError(null); // Fehler zurücksetzen, bevor die Anfrage gesendet wird.
       const requestData = { email, password };
 
       const response = await fetch(`${BASE_URL}/login/`, {

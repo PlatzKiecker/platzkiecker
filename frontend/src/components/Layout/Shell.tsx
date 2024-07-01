@@ -20,8 +20,10 @@ export default function Shell() {
     try {
       await logout();
       navigate('/login');
+      
     } catch (error) {
       console.error('Failed to logout', error);
+      alert(error);
     }
   };
 

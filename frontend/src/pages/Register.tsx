@@ -10,8 +10,7 @@ export default function Register() {
   // Lokale State-Variablen für die Eingabefelder
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  //const [error, setError] = useState<Error | null>(null);
+  const [confirmPassword, setConfirmPassword] = useState('');;
 
   // Custom Hook zum Registrieren und Abfangen von Fehlern
   const { register, error } = useRegister();
@@ -23,25 +22,18 @@ export default function Register() {
   // Event-Handler für das Fo nurrmular-Submit-Event
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = await register(email, password);
     // Überprüfen, ob die Passwörter übereinstimmen
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    try {
-      // Versuche, den Benutzer zu registrieren
-      const data = await register(email, password);
-      console.log('Registration successful:', data);
-      // Versuche, den Benutzer automatisch einzuloggen nach erfolgreicher Registrierung
+    if (data) {
       const loginData = await login(email, password);
       console.log('Login successful after registration:', loginData);
-      // Speichere den Token im Local Storage oder im Kontext
-      const token = loginData.token; // Annahme: loginData enthält das Token
-      localStorage.setItem('token', token); // Speichern im Local Storage
       navigate('/');
-    } catch (err: any) {
-      // Fehlerbehandlung bei fehlgeschlagener Registrierung
-      console.error('Registration failed:', err.message);
+    } else {
+      console.error("Registration failed:", error?.message);
     }
   };
 

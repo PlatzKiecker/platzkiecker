@@ -1,5 +1,5 @@
 import InputField from "../components/input/InputField";
-import Page from "../components/layout/Page";
+import Page from "../components/Layout/Page";
 import Button from "../components/input/Button";
 
 export default function NewBooking() {

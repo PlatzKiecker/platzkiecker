@@ -12,12 +12,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const data = await login(username, password);
+    const data = await login(username, password);
+    if (data) {
       console.log("Login successful:", data);
       navigate("/");
-    } catch (err: any) {
-      console.error("Login failed:", err.message);
+    } else {
+      console.error("Login failed:", error?.message);
     }
   };
 
