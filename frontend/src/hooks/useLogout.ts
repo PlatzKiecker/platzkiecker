@@ -34,6 +34,10 @@ export const useLogout = () => {
       if (response.ok) {
         // Remove the token from local storage (or cookies)
         localStorage.removeItem('authToken'); // Adjust 'authToken' based on how you store your token
+        localStorage.removeItem('userData');
+        sessionStorage.removeItem('userData');
+        sessionStorage.removeItem('auth');
+        console.log('Logout erfolgreich');
         
         // Invalidate the SWR cache for the user data endpoint after successful logout
         mutate('/api/userData'); // Assuming this is the endpoint for user data

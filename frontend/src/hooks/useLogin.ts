@@ -28,6 +28,8 @@ export const useLogin = () => {
       if (response.ok) {
         // Benutzerdaten im localStorage speichern
         sessionStorage.setItem("userData", JSON.stringify(responseData));
+        sessionStorage.setItem('auth', JSON.stringify(responseData));
+        localStorage.setItem('authToken', JSON.stringify(responseData.sessionId));
 
         // SWR-Daten aktualisieren
         return responseData;
