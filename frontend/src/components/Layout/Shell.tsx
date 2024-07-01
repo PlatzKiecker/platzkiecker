@@ -1,5 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useLogout } from "../../hooks/useLogout";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -12,6 +13,18 @@ function classNames(...classes: Array<String>) {
 }
 
 export default function Shell() {
+  const navigate = useNavigate();
+  const { logout } = useLogout();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to logout', error);
+    }
+  };
+
   return (
     <>
       <div className="min-h-full">
@@ -56,9 +69,12 @@ export default function Shell() {
                       {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
                           {({ focus }: { focus: boolean }) => (
-                            <a href={item.href} className={classNames(focus ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                            <button
+                              onClick={handleLogout}
+                              className={classNames(focus ? "bg-gray-100" : "", "block w-full text-left px-4 py-2 text-sm text-gray-700")}
+                            >
                               {item.name}
-                            </a>
+                            </button>
                           )}
                         </MenuItem>
                       ))}

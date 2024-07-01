@@ -1,17 +1,21 @@
 import { useState } from "react";
 
-// Base URL of the backend
-const BASE_URL = "http://localhost:8000";
+// Basis-URL des Backends
+const BASE_URL = 'http://localhost:8000';
+
+// Die Fetcher-Funktion nimmt eine URL und Optionen entgegen und gibt die Antwort als JSON zurück
+const fetcher = (url: string, options: any) => {
+  return fetch(url, options).then(res => res.json());
+};
 
 export const useLogin = () => {
   const [error, setError] = useState<Error | null>(null);
 
-  // Function to log in the user with the provided email and password
   const login = async (email: string, password: string) => {
     try {
       const requestData = { email, password };
+      console.log('Sending JSON data:', requestData); // Logging der zu sendenden Daten
 
-      // Sending a POST request to the backend to log in the user
       const response = await fetch(`${BASE_URL}/login/`, {
         method: "POST",
         headers: {
@@ -20,21 +24,26 @@ export const useLogin = () => {
         body: JSON.stringify(requestData),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
+      if (response.ok) {
+        // Benutzerdaten im localStorage speichern
+        sessionStorage.setItem('userData', JSON.stringify(responseData));
 
-      // Throw an error if registration fails
-      if (!response.ok) {
-        setError(data.message || "Failed to login");
+        // SWR-Daten aktualisieren
+        mutate('/api/login', responseData, false);
+        return responseData;
+      } else {
+        throw new Error(responseData.message || 'Failed to login');
       }
-      return data;
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      console.error('Error logging in:', error);
+      throw error; // Fehler weitergeben, um ihn in der Komponente behandeln zu können
     }
   };
 
-  // Expose the login function, along with SWR's data and error states
   return {
     login,
-    error,
+    data,
+    error
   };
 };
