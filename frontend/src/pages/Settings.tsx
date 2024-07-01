@@ -5,6 +5,7 @@ import DateRangePicker from "../components/input/DateRangePicker";
 import { useState } from "react";
 import { DateValueType, DateType } from "react-tailwindcss-datepicker";
 import Button from "../components/input/Button";
+import mySWR from "../utils/mySWR";
 
 export default function Settings() {
   return (
@@ -25,6 +26,7 @@ export default function Settings() {
 }
 
 function BookingPeriods() {
+  const { data, error, loading } = mySWR(`/booking-periods/list/`);
   const [days, setPeriods] = useState({
     monday: [],
     tuesday: [],
@@ -62,6 +64,9 @@ type Period = {
 };
 
 function VacationPeriods() {
+  const { data, error, loading } = mySWR(`/vacations/list/`);
+  console.log(data, loading, error);
+
   const [periods, setPeriods] = useState<Period[]>([
     {
       id: 1,
