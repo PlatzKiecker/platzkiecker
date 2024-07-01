@@ -1,26 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
-import InputFieldLogin from '../components/input/InputFieldLogin';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import InputFieldLogin from "../components/input/InputFieldLogin";
+import { Link } from "react-router-dom";
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { login, error } = useLogin();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const data = await login(username, password);
-      console.log('Login successful:', data);
-      // Speichere den Token im Local Storage oder im Kontext
-      localStorage.setItem('token', data.token);     
-      // Navigiere zur Dashboard-Seite
-      navigate('/');
+      console.log("Login successful:", data);
+      navigate("/");
     } catch (err: any) {
-      console.error('Login failed:', err.message);
+      console.error("Login failed:", err.message);
     }
   };
 
