@@ -4,13 +4,15 @@ import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
 import TableSection from "../components/pages/settings/TableSection";
+import mySWR from "../utils/mySWR";
+import { useState, useEffect } from "react";
 
 export default function Settings() {
   return (
     <Page title="Settings">
       <SettingsLayout>
         <SettingsLayout.Section title="Restaurant" description="Information about your restaurant">
-          <InputField label="Name" />
+          <RestaurantSection />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Tables" description="Set the tables for your restaurants">
           <TableSection />
@@ -23,5 +25,42 @@ export default function Settings() {
         </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
+  );
+}
+function RestaurantSection() {
+  const { data: restaurant, error, loading } = mySWR(`/restaurant/detail/`);
+  const [restaurantName, setRestaurantName] = useState(restaurant?.name || "");
+
+  useEffect(() => {
+    if (restaurant) {
+      setRestaurantName(restaurant.name);
+    }
+    // PUT to backend
+  }, [restaurant]);
+
+  const handleRestaurantUpdate = (value: string) => {
+    setRestaurantName(value);
+  };
+
+  const { data: bookingDuration, error: bookingDurationError, loading: bookingDurationLoading } = mySWR(`/default-duration/1/`);
+  const [defaultBookingDuration, setDefaultBookingDuration] = useState(bookingDuration?.duration || 0);
+
+  useEffect(() => {
+    if (bookingDuration) {
+      setDefaultBookingDuration(parseInt(bookingDuration.duration));
+    }
+    // PUT to backend
+  }, [bookingDuration]);
+
+  const handleBookingDurationUpdate = (value: string) => {
+    // TODO: PUT to backend
+    setDefaultBookingDuration(value);
+  };
+
+  return (
+    <div className="space-y-4">
+      <InputField label="Name" value={restaurantName} onChange={handleRestaurantUpdate} />
+      <InputField label="Default booking duration (in hours)" type="number" value={defaultBookingDuration.toString()} onChange={handleBookingDurationUpdate} />
+    </div>
   );
 }

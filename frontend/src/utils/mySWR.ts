@@ -12,5 +12,5 @@ export default function mySWR(path: string) {
 }
 
 async function fetcher(args: any) {
-  return fetch(args).then((res) => res.json());
+  return fetch(args, { credentials: "include" }).then((res) => res.json());
 }
