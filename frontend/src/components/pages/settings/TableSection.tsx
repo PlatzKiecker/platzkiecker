@@ -16,12 +16,21 @@ export default function TableSection() {
     });
   };
 
-  const handleDeleteTable = (id: number) => {
+  const cleanupDelete = (id: number) => {
     setTables((prev) => {
       // TODO: DELETE to backend
       console.log("DELETE to backend", id);
 
       return prev.filter((table) => table.id !== id);
+    });
+  };
+
+  const handleUpdateTable = (id: number, chairs: number) => {
+    setTables((prev) => {
+      // PUT to backend
+      console.log("PUT to backend", id, chairs);
+
+      return prev.map((table) => (table.id === id ? { ...table, chairs } : table));
     });
   };
 
@@ -34,7 +43,7 @@ export default function TableSection() {
           <th>Action</th>
         </tr>
         {tables.map((table) => (
-          <TableRow key={table.id} cleanupDelete={handleDeleteTable} table={table} />
+          <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
         ))}
       </table>
       <Button variant="secondary" onClick={handleAddTable}>
@@ -44,33 +53,19 @@ export default function TableSection() {
   );
 }
 
-function TableRow({ table, cleanupDelete }: { table: Table; cleanupDelete: (id: number) => void }) {
+function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handleUpdate: (id: number, chairs: number) => void; cleanupDelete: (id: number) => void }) {
   const deleteTable = () => {
     // DELETE to backend
     console.log("DELETE to backend", table.id);
-  };
-  const updateTable = (chairs: number) => {
-    // PUT to backend
-    console.log("PUT to backend", table.id, chairs);
     cleanupDelete(table.id);
   };
-
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    return () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        updateTable(table.chairs);
-      }, 1000);
-    };
-  }, [table.chairs]);
 
   return (
     <tr>
       <td>{table.id}</td>
       <td>
         <div className="w-32">
-          <InputField value={table.chairs.toString()} onChange={(value) => updateTable(parseInt(value))} type="number" />
+          <InputField value={table.chairs.toString()} onChange={(value) => handleUpdate(table.id, parseInt(value))} type="number" />
         </div>
       </td>
       <td className="mr-0">
