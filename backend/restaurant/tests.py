@@ -242,19 +242,20 @@ class DefaultBookingDurationTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
     def test_get_default_booking_duration(self):
-        response = self.client.get(reverse('default-duration-detail', kwargs={'pk': self.default_duration.pk}))
+        response = self.client.get(reverse('default-duration-detail'))
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['duration'], '01:00:00')
     
     def test_update_default_booking_duration(self):
-        response = self.client.put(reverse('default-duration-detail', kwargs={'pk': self.default_duration.pk}), {
+        response = self.client.put(reverse('default-duration-detail'), {
             'duration': '03:00:00'
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['duration'], '03:00:00')
     
     def test_delete_default_booking_duration(self):
-        response = self.client.delete(reverse('default-duration-detail', kwargs={'pk': self.default_duration.pk}))
+        response = self.client.delete(reverse('default-duration-detail'))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
     
     def test_add_second_default_booking_duration(self):
