@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import ProgressTracker from '../components/Layout/ProgressTracker';
-import GuestCountDropdown from '../components/input/GuestCountDropdown';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import ProgressTracker from "../components/layout/ProgressTracker";
+import GuestCountDropdown from "../components/input/GuestCountDropdown";
+import { useNavigate } from "react-router-dom";
 
 export default function TableDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -14,9 +14,9 @@ export default function TableDetails() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      navigate('/GuestBooking'); // Navigate to '/GuestBooking'
+      navigate("/GuestBooking"); // Navigate to '/GuestBooking'
     } catch (err: any) {
-      console.error('Navigation failed:', err.message);
+      console.error("Navigation failed:", err.message);
     }
   };
 
@@ -28,9 +28,11 @@ export default function TableDetails() {
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Please fill in more details for your reservation.</p>
         </div>
-        
+
         {/* Form Section */}
-        <form onSubmit={handleSubmit}> {/* Add onSubmit to the form */}
+        <form onSubmit={handleSubmit}>
+          {" "}
+          {/* Add onSubmit to the form */}
           <div className="mt-6 border-t border-gray-200">
             <dl className="divide-y divide-gray-200">
               {/* Guest Count Dropdown */}
@@ -45,7 +47,6 @@ export default function TableDetails() {
               {/* Date Input */}
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">Date</dt>
-                
               </div>
 
               {/* Time Input */}
@@ -61,7 +62,6 @@ export default function TableDetails() {
                   Submit Table Information
                 </button>
               </div>
-
             </dl>
           </div>
         </form>
@@ -71,7 +71,6 @@ export default function TableDetails() {
 
         {/* Progress Tracker */}
         <ProgressTracker progress={33.3} />
-
       </div>
     </div>
   );

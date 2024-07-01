@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import ProgressTracker from '../components/Layout/ProgressTracker';
-import InputFieldLogin from '../components/input/InputFieldLogin';
-import { useNavigate } from 'react-router-dom';
-import { useCreateBooking } from '../hooks/useCreateBooking';
+import React, { useState } from "react";
+import ProgressTracker from "../components/layout/ProgressTracker";
+import InputFieldLogin from "../components/input/InputFieldLogin";
+import { useNavigate } from "react-router-dom";
+import { useCreateBooking } from "../hooks/useCreateBooking";
 
 export default function GuestDetails() {
-  const [fullName, setFullName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [reservationDetails, setReservationDetails] = useState('');
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [reservationDetails, setReservationDetails] = useState("");
   const navigate = useNavigate();
   const { createBooking } = useCreateBooking();
 
@@ -18,17 +18,17 @@ export default function GuestDetails() {
         guest_name: fullName,
         guest_phone: phoneNumber,
         notes: reservationDetails,
-        start: '2022-12-24T18:00:00Z',  // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
-        guest_count: 1,  // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
+        start: "2022-12-24T18:00:00Z", // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
+        guest_count: 1, // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
         // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
       };
 
       const response = await createBooking(bookingData);
-      console.log('Booking created:', response);  // Hier kannst du die Antwort der API weiterverarbeiten
+      console.log("Booking created:", response); // Hier kannst du die Antwort der API weiterverarbeiten
 
-      navigate('/confirmation');
+      navigate("/confirmation");
     } catch (err: any) {
-      console.error('Navigation failed:', err.message);
+      console.error("Navigation failed:", err.message);
     }
   };
 
@@ -52,7 +52,7 @@ export default function GuestDetails() {
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Please fill in more details for your reservation.</p>
         </div>
-        
+
         {/* Form Section */}
         <form onSubmit={handleSubmit} className="mt-6 border-t border-gray-200">
           <dl className="divide-y divide-gray-200">
@@ -60,12 +60,7 @@ export default function GuestDetails() {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Full name</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                <InputFieldLogin
-                  label=""
-                  name="fullName"
-                  value={fullName}
-                  onChange={handleFullNameChange}
-                />
+                <InputFieldLogin label="" name="fullName" value={fullName} onChange={handleFullNameChange} />
               </dd>
             </div>
 
@@ -73,12 +68,7 @@ export default function GuestDetails() {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Phone Number</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                <InputFieldLogin
-                  label=""
-                  name="phoneNumber"
-                  value={phoneNumber}
-                  onChange={handlePhoneNumberChange}
-                />
+                <InputFieldLogin label="" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
               </dd>
             </div>
 
@@ -86,12 +76,7 @@ export default function GuestDetails() {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Comment/ Reservation Details</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                <InputFieldLogin
-                  label=""
-                  name="reservationDetails"
-                  value={reservationDetails}
-                  onChange={handleReservationDetailsChange}
-                />
+                <InputFieldLogin label="" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} />
               </dd>
             </div>
 
