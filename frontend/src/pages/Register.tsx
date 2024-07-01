@@ -2,16 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../hooks/useRegister';
 import { useLogin } from '../hooks/useLogin';
-<<<<<<< Updated upstream
-import InputField from '../components/input/InputField';
-import { Link } from 'react-router-dom';
-
-// TODO: Meldung wenn Email Adresse schon existiert + Meldung wenn Passwort nicht lang genug
-=======
 import InputFieldLogin from '../components/input/InputFieldLogin';
 import { Link } from 'react-router-dom';
-import { mutate } from 'swr';
->>>>>>> Stashed changes
 
 // Hauptkomponente für das Registrierungsformular
 export default function Register() {
@@ -37,19 +29,6 @@ export default function Register() {
       return;
     }
     try {
-<<<<<<< Updated upstream
-      // Attempt to register the user
-      const data = await register(email, password);
-
-      // Attempt to login the user immediately after successful registration
-      const loginData = await login(email, password);
-      localStorage.setItem('token', loginData.token);
-
-      // Navigate to home page after successful registration and login
-      navigate('/');
-    } catch (err: any) {
-      // Error handling for failed registration
-=======
       // Versuche, den Benutzer zu registrieren
       const data = await register(email, password);
       console.log('Registration successful:', data);
@@ -62,7 +41,6 @@ export default function Register() {
       navigate('/');
     } catch (err: any) {
       // Fehlerbehandlung bei fehlgeschlagener Registrierung
->>>>>>> Stashed changes
       console.error('Registration failed:', err.message);
     }
   };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ProgressTracker from '../components/Layout/ProgressTracker';
-import InputField from '../components/input/InputField';
+//import InputField from '../components/input/InputField';
 import GuestCountDropdown from '../components/input/GuestCountDropdown';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,31 +39,19 @@ export default function TableDetails() {
                 <dt className="text-sm font-medium leading-6 text-gray-900">Anzahl Gaeste</dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                   <GuestCountDropdown onChange={handleGuestCountChange} />
+                  <p>Guest Count: {guestCount}</p>
                 </dd>
               </div>
 
               {/* Date Input */}
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">Date</dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                  <InputField
-                    label=""
-                    placeholder="07-01-2024"
-                    type="text"
-                  />
-                </dd>
+                
               </div>
 
               {/* Time Input */}
               <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">Time</dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                  <InputField
-                    label=""
-                    placeholder="19:00"
-                    type="text"
-                  />
-                </dd>
               </div>
 
               {/* Table Details- Submit -Button */}

@@ -1,30 +1,25 @@
 import useSWR, { mutate } from "swr";
-<<<<<<< Updated upstream
-=======
-import { useState } from "react";
->>>>>>> Stashed changes
 
-// Base URL of the backend
 const BASE_URL = 'http://localhost:8000';
 
-// The fetcher function takes a URL and options, returning the response as JSON
-const fetcher = (url: string, options: any) => {
-  return fetch(url, options).then(res => res.json());
+const fetcher = async (url: string, options: any) => {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to fetch data');
+  }
+
+  return response.json();
 };
 
 export const useLogin = () => {
   const { data, error } = useSWR('/api/login', fetcher, { revalidateOnFocus: false });
-<<<<<<< Updated upstream
-=======
-  const [loginError, setLoginError] = useState<string | null>(null);
->>>>>>> Stashed changes
 
-  // Function to log in the user with the provided email and password
   const login = async (email: string, password: string) => {
     try {
       const requestData = { email, password };
 
-      // Sending a POST request to the backend to log in the user
       const response = await fetch(`${BASE_URL}/login/`, {
         method: 'POST',
         headers: {
@@ -33,71 +28,38 @@ export const useLogin = () => {
         body: JSON.stringify(requestData),
       });
 
-      const data = await response.json();
+      // Überprüfe den Status der Antwort, bevor du versuchst, sie als JSON zu parsen
+      const responseText = await response.text(); // Hole die Antwort als Text
+      console.log('Server response:', responseText); // Logge die Antwort
 
-      // Invalidate the SWR cache for the login endpoint after successful login
-      if (response.ok) {
-<<<<<<< Updated upstream
-        mutate('/api/login', data, false);
-        return data;
-      } else {
-        throw new Error(data.message || 'Failed to login');
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = JSON.parse(responseText); // Versuche die Fehlermeldung zu parsen
+        } catch (e) {
+          throw new Error('Failed to login: ' + responseText); // Gib den rohen Antworttext im Fehlerfall aus
+        }
+        throw new Error(errorData.message || 'Failed to login');
       }
+
+      const responseData = JSON.parse(responseText); // Parse die Antwort nur wenn sie ok ist
+
+      // Speichere den Token in localStorage
+      localStorage.setItem('authToken', responseData.token);
+
+      // Aktualisiere die SWR-Cache-Daten nach erfolgreichem Login
+      mutate('/api/login', responseData, false);
+
+      return responseData;
     } catch (error) {
-=======
-        setLoginError(null); // Clear any previous errors
-        localStorage.setItem('authToken', data.token); // Store the token
-        mutate('/api/login', data, false);
-        return data;
-      } else {
-        throw new Error(data.non_field_errors?.[0] || data.message || 'Failed to login');
-      }
-    } catch (error: any) {
-      setLoginError(error.message); // Set the error message
->>>>>>> Stashed changes
       console.error('Error logging in:', error);
-      throw error; // Continue to propagate the error for handling in components
+      throw error; // Weitergabe des Fehlers für die Behandlung in Komponenten
     }
   };
 
-  // Expose the login function, along with SWR's data and error states
   return {
     login,
     data,
     error,
-    loginError,
-  };
-};
-
-// Hook for logging out the user
-export const useLogout = () => {
-  // Function to log out the user
-  const logout = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/logout/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        // Remove the token from local storage (or cookies)
-        localStorage.removeItem('authToken'); // Adjust this line if you are using cookies or another method to store the token
-
-        // Invalidate the SWR cache for the login endpoint after successful logout
-        mutate('/api/login', null, false);
-      } else {
-        const data = await response.json();
-        throw new Error(data.message || 'Failed to logout');
-      }
-    } catch (error) {
-      console.error('Error logging out:', error);
-      throw error; // Continue to propagate the error for handling in components
-    }
-  };
-
-  return {
-    logout,
   };
 };

@@ -11,22 +11,14 @@ const fetcher = async (url: string) => {
 };
 
 export const useCreateBooking = () => {
+  // Platzhalter-Funktion, die keine Aktion ausführt
   const createBooking = async (bookingData: any) => {
-    const url = `${baseUrl}/bookings`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bookingData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create booking');
-    }
-
-    return response.json();
+    // Hier könnte normalerweise eine API-Aufruf-Logik stehen, aber es wird nichts getan.
+    console.log('bookingData:', bookingData); // Hier wird bookingData zumindest ausgegeben
   };
 
-  return { createBooking };
+  // Hier wird useSWR ohne tatsächliche Verwendung initialisiert
+  const { data, error } = useSWR(`${baseUrl}/bookings`, fetcher);
+
+  return { createBooking, bookings: data, bookingsError: error };
 };
