@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ProgressTracker from "../components/Layout/ProgressTracker";
+import ProgressTracker from "../components/layout/ProgressTracker";
 import InputFieldLogin from "../components/input/InputFieldLogin";
 import { useNavigate } from "react-router-dom";
 import { useCreateBooking } from "../hooks/useCreateBooking";
