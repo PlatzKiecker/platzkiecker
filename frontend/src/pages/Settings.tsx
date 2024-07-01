@@ -1,5 +1,5 @@
-import Page from "../components/Layout/Page";
-import SettingsLayout from "../components/Layout/SettingsLayout";
+import Page from "../components/layout/Page";
+import SettingsLayout from "../components/layout/SettingsLayout";
 import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";

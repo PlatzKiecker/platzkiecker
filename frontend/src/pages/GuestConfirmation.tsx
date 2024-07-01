@@ -1,4 +1,4 @@
-import ProgressTracker from "../components/Layout/ProgressTracker";
+import ProgressTracker from "../components/layout/ProgressTracker";
 
 export default function GuestConfirmation() {
   return (
