@@ -63,7 +63,9 @@ function BookingPeriods() {
   const handleAddPeriod = (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
     setPeriods((prev) => {
       // POST to backend
-      const newPeriod = { id: 1, value: { startDate: new Date(), endDate: new Date() } };
+      console.log("POST to backend", day);
+
+      const newPeriod = { id: 1, value: { startTime: new Date(), endTime: new Date() } };
       return { ...prev, [day]: [...prev[day], newPeriod] };
     });
   };
