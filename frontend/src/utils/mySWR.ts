@@ -46,3 +46,12 @@ export async function putRequest(url: string, data: Record<string, any>) {
     },
   });
 }
+
+export async function deleteRequest(url: string) {
+  return await axios.delete(url, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+  });
+}

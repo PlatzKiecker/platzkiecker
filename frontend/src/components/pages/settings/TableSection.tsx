@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import Button from "../../input/Button";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
-import mySWR, { postRequest, putRequest } from "../../../utils/mySWR";
-import { mutate } from "swr";
+import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 
 export default function TableSection() {
   const [tables, setTables] = useState<Table[]>([]);
@@ -128,12 +127,21 @@ function Zones() {
     putRequest(`http://localhost:8000/zones/${id}/`, { name });
   };
 
+  const handleZoneDelete = (id: number) => {
+    setZones((prev) => {
+      return prev.filter((zone) => zone.id !== id);
+    });
+    deleteRequest(`http://localhost:8000/zones/${id}/`);
+  };
+
   return (
     <div className="space-y-4">
       {zones.map((zone) => (
         <div key={zone.id} className="flex items-center gap-4">
           <InputField placeholder="Enter zone name" value={zone.name} onChange={(value) => handleZoneUpdate(zone.id, value)} />
-          <Button variant="secondary">Delete</Button>
+          <Button variant="secondary" onClick={() => handleZoneDelete(zone.id)}>
+            Delete
+          </Button>
         </div>
       ))}
       <div className="flex gap-2 items-end">
