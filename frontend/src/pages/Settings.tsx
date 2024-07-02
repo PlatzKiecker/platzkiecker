@@ -31,7 +31,7 @@ export default function Settings() {
   );
 }
 function RestaurantSection() {
-  const { data: restaurant, error, loading } = mySWR(`/restaurant/detail/`);
+  const { data: restaurant, error, loading, update: updateRestaurantName } = mySWR(`/restaurant/detail/`);
   const [restaurantName, setRestaurantName] = useState(restaurant?.name ?? "");
 
   useEffect(() => {
@@ -42,26 +42,16 @@ function RestaurantSection() {
 
   const handleRestaurantUpdate = async (value: string) => {
     setRestaurantName(value);
-    const response = await axios.put(
-      `http://localhost:8000/restaurant/detail/`,
-      { name: value },
-      {
-        withCredentials: true,
-        headers: {
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-      }
-    );
-    console.log(response);
-    mutate(`/restaurant/detail/`, response.data, false); // false means revalidate the cache after updating
+    updateRestaurantName({ name: value });
   };
 
-  const { data: bookingDuration, error: bookingDurationError, loading: bookingDurationLoading } = mySWR(`/default-duration/1/`);
+  const { data: bookingDuration, error: bookingDurationError, loading: bookingDurationLoading, update: updateBookingDuration } = mySWR(`/default-duration/detail/`);
   const [defaultBookingDuration, setDefaultBookingDuration] = useState(bookingDuration?.duration || 0);
 
   useEffect(() => {
     if (bookingDuration) {
       setDefaultBookingDuration(parseInt(bookingDuration.duration));
+      updateBookingDuration({ duration: parseInt(bookingDuration.duration) });
     }
     // PUT to backend
   }, [bookingDuration]);
