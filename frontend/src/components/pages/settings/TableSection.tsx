@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Button from "../../input/Button";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
+import mySWR, { postRequest, putRequest } from "../../../utils/mySWR";
+import { mutate } from "swr";
 
 export default function TableSection() {
   const [tables, setTables] = useState<Table[]>([]);
@@ -9,9 +11,8 @@ export default function TableSection() {
   const handleAddTable = () => {
     setTables((prev) => {
       // POST to backend
-      console.log("POST to backend");
+      const newTable = { name: "test", id: 1, chairs: 0 }; // Add the 'chairs' property with a default value
 
-      const newTable = { id: 1, chairs: 0 }; // Add the 'chairs' property with a default value
       return [...prev, newTable];
     });
   };
@@ -100,18 +101,46 @@ type Zone = {
 
 function Zones() {
   const [zones, setZones] = useState<Zone[]>([]);
+  const { data, error, loading, update } = mySWR("/zones/list/");
+
+  useEffect(() => {
+    if (data) {
+      setZones(data);
+    }
+  }, [data]);
+
+  const [newZoneName, setNewZoneName] = useState("");
+
+  const addZone = async () => {
+    const response = await postRequest("http://localhost:8000/zones/", { name: newZoneName });
+
+    setZones((prev) => {
+      // POST to backend
+      const newZone = { id: 1, name: newZoneName };
+      return [...prev, newZone];
+    });
+  };
+
+  const handleZoneUpdate = (id: number, name: string) => {
+    setZones((prev) => {
+      return prev.map((zone) => (zone.id === id ? { ...zone, name: name } : zone));
+    });
+    putRequest(`http://localhost:8000/zones/${id}/`, { name });
+  };
 
   return (
     <div className="space-y-4">
       {zones.map((zone) => (
-        <div key={zone.id} className="flex items-center justify-between">
-          <p>{zone.name}</p>
+        <div key={zone.id} className="flex items-center gap-4">
+          <InputField placeholder="Enter zone name" value={zone.name} onChange={(value) => handleZoneUpdate(zone.id, value)} />
           <Button variant="secondary">Delete</Button>
         </div>
       ))}
       <div className="flex gap-2 items-end">
-        <InputField placeholder="Enter zone name" />
-        <Button variant="secondary">Create a new zone</Button>
+        <InputField placeholder="Enter zone name" value={newZoneName} onChange={setNewZoneName} />
+        <Button variant="secondary" onClick={addZone}>
+          Create a new zone
+        </Button>
       </div>
     </div>
   );

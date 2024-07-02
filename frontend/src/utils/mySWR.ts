@@ -28,3 +28,21 @@ export default function mySWR(path: string) {
 async function fetcher(args: any) {
   return fetch(args, { credentials: "include" }).then((res) => res.json());
 }
+
+export async function postRequest(url: string, data: Record<string, any>) {
+  return await axios.post(url, data, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+  });
+}
+
+export async function putRequest(url: string, data: Record<string, any>) {
+  return await axios.put(url, data, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+  });
+}
