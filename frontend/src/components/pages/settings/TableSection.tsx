@@ -33,24 +33,33 @@ export default function TableSection() {
   };
 
   return (
-    <div className="space-y-4 w-full">
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th>Table ID</th>
-            <th>Chairs</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tables.map((table) => (
-            <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
-          ))}
-        </tbody>
-      </table>
-      <Button variant="secondary" onClick={handleAddTable}>
-        +
-      </Button>
+    <div className="space-y-12">
+      <div className="space-y-4 w-full">
+        {tables.length > 0 && (
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th>Table ID</th>
+                <th>Chairs</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tables.map((table) => (
+                <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        <div className="flex gap-2 items-end">
+          <InputField placeholder="Enter table name" />
+          <Button variant="secondary" onClick={handleAddTable}>
+            Create new table
+          </Button>
+        </div>
+      </div>
+      <Zones />
     </div>
   );
 }
@@ -83,3 +92,27 @@ type Table = {
   id: number;
   chairs: number;
 };
+
+type Zone = {
+  id: number;
+  name: string;
+};
+
+function Zones() {
+  const [zones, setZones] = useState<Zone[]>([]);
+
+  return (
+    <div className="space-y-4">
+      {zones.map((zone) => (
+        <div key={zone.id} className="flex items-center justify-between">
+          <p>{zone.name}</p>
+          <Button variant="secondary">Delete</Button>
+        </div>
+      ))}
+      <div className="flex gap-2 items-end">
+        <InputField placeholder="Enter zone name" />
+        <Button variant="secondary">Create a new zone</Button>
+      </div>
+    </div>
+  );
+}

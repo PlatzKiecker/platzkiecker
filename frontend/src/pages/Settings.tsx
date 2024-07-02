@@ -6,9 +6,6 @@ import VacationPeriodsSection from "../components/pages/settings/VacationPeriods
 import TableSection from "../components/pages/settings/TableSection";
 import mySWR from "../utils/mySWR";
 import { useState, useEffect } from "react";
-import axios from 'axios';
-import { mutate } from "swr";
-import { getCookie } from "../utils/csrf";
 
 export default function Settings() {
   return (
@@ -17,7 +14,7 @@ export default function Settings() {
         <SettingsLayout.Section title="Restaurant" description="Information about your restaurant">
           <RestaurantSection />
         </SettingsLayout.Section>
-        <SettingsLayout.Section title="Tables" description="Set the tables for your restaurants">
+        <SettingsLayout.Section title="Tables & Zones" description="Set the tables & zones for your restaurants">
           <TableSection />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Booking periods" description="Set when your restaurant can be booked">
