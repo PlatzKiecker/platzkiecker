@@ -3,6 +3,7 @@ import Button from "../../input/Button";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
+import Select from "../../input/Select";
 
 export default function TableSection() {
   const [tables, setTables] = useState<Table[]>([]);
@@ -54,8 +55,17 @@ export default function TableSection() {
 
         <div className="flex gap-2 items-end">
           <InputField placeholder="Enter table name" />
+          <InputField placeholder="Enter number of chairs" type="number" />
+          <Select
+            options={[
+              ["key", "value"],
+              ["key", "value"],
+              ["key", "value"],
+            ]}
+            placeholder="Enter zone"
+          />
           <Button variant="secondary" onClick={handleAddTable}>
-            Create new table
+            +
           </Button>
         </div>
       </div>
