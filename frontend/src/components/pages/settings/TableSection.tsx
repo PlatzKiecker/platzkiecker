@@ -5,15 +5,35 @@ import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 import Select from "../../input/Select";
 
+type Zone = { id: number; name: string; bookable: boolean; restaurant: number; tables: number[] };
+
 export default function TableSection() {
   const [tables, setTables] = useState<Table[]>([]);
+  const [newTableName, setNewTableName] = useState("");
+  const [newTableChairs, setNewTableChairs] = useState("4");
+  const { data, error, loading, update } = mySWR("/tables/list/");
 
-  const handleAddTable = () => {
+  const { data: zones, error: zoneError, loading: zoneLoading, update: zoneUpdate } = mySWR("/zones/list/");
+  const [newTableZone, setNewTableZone] = useState(undefined);
+
+  useEffect(() => {
+    if (data) {
+      setTables(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (zones) {
+      setNewTableZone(zones[0].id);
+    }
+  }, [zones]);
+
+  const handleAddTable = async () => {
+    const response = await postRequest("http://localhost:8000/tables/", { name: newTableName, capacity: parseInt(newTableChairs), zone: newTableZone });
+
     setTables((prev) => {
       // POST to backend
-      const newTable = { name: "test", id: 1, chairs: 0 }; // Add the 'chairs' property with a default value
-
-      return [...prev, newTable];
+      return [...prev, response.data];
     });
   };
 
@@ -54,16 +74,9 @@ export default function TableSection() {
         )}
 
         <div className="flex gap-2 items-end">
-          <InputField placeholder="Enter table name" />
-          <InputField placeholder="Enter number of chairs" type="number" />
-          <Select
-            options={[
-              ["key", "value"],
-              ["key", "value"],
-              ["key", "value"],
-            ]}
-            placeholder="Enter zone"
-          />
+          <InputField placeholder="Enter table name" onChange={setNewTableName} />
+          <InputField placeholder="Enter number of chairs" type="number" onChange={setNewTableChairs} />
+          <Select options={zones?.map((zone: Zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
           <Button variant="secondary" onClick={handleAddTable}>
             +
           </Button>
@@ -83,10 +96,10 @@ function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handle
 
   return (
     <tr>
-      <td>{table.id}</td>
       <td>
-        <div className="w-32">
-          <InputField value={table.chairs.toString()} onChange={(value) => handleUpdate(table.id, parseInt(value))} type="number" />
+        <div className="flex gap-4">
+          <InputField value={table.name} onChange={(value) => handleUpdate(table.id, parseInt(value))} />
+          <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, parseInt(value))} type="number" />
         </div>
       </td>
       <td className="mr-0">
@@ -100,12 +113,11 @@ function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handle
 
 type Table = {
   id: number;
-  chairs: number;
-};
-
-type Zone = {
-  id: number;
   name: string;
+  capacity: number;
+  bookable: boolean;
+  combinable: boolean;
+  zone: number;
 };
 
 function Zones() {
@@ -125,7 +137,7 @@ function Zones() {
 
     setZones((prev) => {
       // POST to backend
-      const newZone = { id: 1, name: newZoneName };
+      const newZone = response.data;
       return [...prev, newZone];
     });
   };

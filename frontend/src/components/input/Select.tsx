@@ -28,11 +28,12 @@ export default function Select({
           <option value="" disabled>
             {placeholder}
           </option>
-          {options.map(([key, value]) => (
-            <option key={key} value={value}>
-              {value}
-            </option>
-          ))}
+          {options &&
+            options.map(([key, value]) => (
+              <option key={key} value={value}>
+                {value}
+              </option>
+            ))}
         </select>
       </div>
     </div>
