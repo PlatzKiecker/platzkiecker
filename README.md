@@ -14,6 +14,7 @@
 # PlatzKiecker
 
 PlatzKiecker is a project that aims to implement a table management system for restaurants. 
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -23,11 +24,23 @@ PlatzKiecker is a project that aims to implement a table management system for r
   - [Development Environment Setup](#development-environment-setup)
   - [Production Environment Setup](#production-environment-setup)
 - [Configuration](#configuration)
+- [Docker Configuration](#docker-configuration)
+  - [Overview](#overview)
+  - [Dockerfiles](#dockerfiles)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+    - [Proxy](#proxy)
+  - [Docker Compose Files](#docker-compose-files)
+    - [Development](#development)
+    - [Production](#production)
+    - [Full Production](#full-production)
+    - [Testing](#testing)
+  - [Key Commands](#key-commands)
+  - [Links to Docker Configuration Files](#links-to-docker-configuration-files)
 - [Components](#components)
 - [Security Considerations](#security-considerations)
-- [Monitoring and Logging](#monitoring-and-logging)
-- [Backup and Restore Procedures](#backup-and-restore-procedures)
 - [API Documentation](#api-documentation)
+- [Configuration Management](#configuration-management)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -37,9 +50,7 @@ Provide an overview of the project, its purpose, and any relevant background inf
 
 ## High-Level Architecture
 
-![Architecture Diagram](path/to/diagram.png)
-
-The diagram above shows the overall structure of the PlatzKiecker project, including the Backend (Django), Frontend (React), Proxy (nginx), Database (Postgres), and pgAdmin.
+![Architecture Diagram](/images/platzkiecker_architecture.png)
 
 ## Project Structure
 
@@ -60,9 +71,6 @@ platzkiecker/
 ├── proxy/
 │   ├── nginx.conf
 │   └── Dockerfile
-├── db/
-│   ├── init.sql
-│   └── ... (other database files)
 ├── docker-compose.yml
 └── ... (other root-level files)
 ```
@@ -75,9 +83,6 @@ Contains the React application code, including components, state management, and
 
 ### Proxy (nginx)
 Contains the nginx configuration file and Dockerfile for setting up the reverse proxy.
-
-### Database (Postgres)
-Contains initialization scripts and configuration for the PostgreSQL database.
 
 ## Installation
 
@@ -174,6 +179,125 @@ To use the application, follow these steps:
 
 Configuring the application is mainly achieved by manipulating the ENV variables.
 
+## Docker Configuration
+
+### Overview
+We use Docker and Docker Compose to containerize and manage the development, testing, and production environments of the PlatzKiecker project. Docker ensures consistency across different environments, while Docker Compose orchestrates the various services our application relies on.
+
+### Dockerfiles
+
+#### Backend
+
+- **[Dockerfile](/backend/Dockerfile)**
+  - **Purpose**: Sets up the development environment for the Django backend.
+  - **Key Steps**: 
+    - Uses `python:3.11.4-slim-buster` as the base image.
+    - Installs necessary dependencies.
+    - Copies project files and runs `entrypoint.sh` to start the Django development server.
+
+- **[Dockerfile.prod](/backend/Dockerfile.prod)**
+  - **Purpose**: Sets up the production environment for the Django backend.
+  - **Key Steps**: 
+    - Uses a multi-stage build to optimize the final image.
+    - Installs dependencies and copies project files.
+    - Runs `entrypoint.prod.sh` to start the Gunicorn server.
+
+#### Frontend
+
+- **[Dockerfile](/frontend/Dockerfile)**
+  - **Purpose**: Builds the React frontend for both development and production environments.
+  - **Key Steps**: 
+    - In the `dev` stage, installs dependencies and builds the project.
+    - In the `prod` stage, uses Nginx to serve the
+
+ built files.
+
+#### Proxy
+
+- **[Dockerfile](/proxy/Dockerfile)**
+  - **Purpose**: Configures Nginx to serve as a reverse proxy.
+  - **Key Steps**: 
+    - Removes default configuration.
+    - Copies custom `nginx.conf` for routing traffic.
+
+### Docker Compose Files
+
+#### Development
+
+- **[docker-compose.dev.yml](/docker-compose.yml)**
+  - **Purpose**: Orchestrates services for the development environment.
+  - **Services**:
+    - `web-dev`: Django development server.
+    - `db-dev`: PostgreSQL database.
+    - `pgadmin-dev`: pgAdmin for database management.
+    - `frontend-dev`: React development server.
+
+#### Production
+
+- **[docker-compose.prod.yml](/docker-compose.prod.yml)**
+  - **Purpose**: Orchestrates services for the production environment.
+  - **Services**:
+    - `web`: Django backend with Gunicorn.
+    - `db`: PostgreSQL database.
+    - `proxy`: Nginx reverse proxy.
+    - `frontend`: React frontend served by Nginx.
+
+#### Full Production
+
+- **[docker-compose.full.yml](/docker-compose.full.yml)**
+  - **Purpose**: Similar to `docker-compose.prod.yml`, but includes the frontend service if you do not use a CDN.
+  - **Services**:
+    - `web`: Django backend with Gunicorn.
+    - `db`: PostgreSQL database.
+    - `proxy`: Nginx reverse proxy.
+    - `frontend`: React frontend served by Nginx.
+
+#### Testing
+
+- **[docker-compose.test.yml](/docker-compose.test.yml)**
+  - **Purpose**: Orchestrates services for testing the application.
+  - **Services**:
+    - `web`: Django backend with Gunicorn.
+    - `frontend`: React frontend served by Nginx.
+
+### Key Commands
+
+- **Build and start the development environment:**
+  ```bash
+  docker-compose -f docker-compose.dev.yml up -d --build
+  ```
+
+- **Stop the development environment:**
+  ```bash
+  docker-compose -f docker-compose.dev.yml down
+  ```
+
+- **Build and start the production environment:**
+  ```bash
+  docker-compose -f docker-compose.prod.yml up -d --build
+  ```
+
+- **Stop the production environment:**
+  ```bash
+  docker-compose -f docker-compose.prod.yml down
+  ```
+
+- **View logs for a specific service:**
+  ```bash
+  docker-compose logs -f <service-name>
+  ```
+
+### Links to Docker Configuration Files
+
+- **[Backend Dockerfile](/backend/Dockerfile)**
+- **[Backend Dockerfile.prod](backend/Dockerfile.prod)**
+- **[Frontend Dockerfile](/frontend/Dockerfile)**
+- **[Proxy Dockerfile](/proxy/Dockerfile)**
+- **[docker-compose.dev.yml](/docker-compose.yml)**
+- **[docker-compose.prod.yml](/to/docker-compose.prod.yml)**
+- **[docker-compose.full.yml](/to/docker-compose.full.yml)**
+- **[docker-compose.test.yml](/to/docker-compose.test.yml)**
+
 ## Components
 
 ### Backend (Django)
@@ -191,61 +315,6 @@ The PostgreSQL database stores all persistent data, including user information, 
 ### pgAdmin
 pgAdmin is used for database management during development. It provides a web interface to interact with the PostgreSQL database.
 
-## Docker Configuration
-
-### Dockerfile
-#### Backend (Django)
-```dockerfile
-# Example Dockerfile for Django
-FROM python:3.9
-ENV PYTHONUNBUFFERED 1
-WORKDIR /app
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
-COPY . /app/
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "platzkiecker.wsgi:application"]
-```
-
-### docker-compose.yml
-```yaml
-version: '3.8'
-
-services:
-  web:
-    build: ./backend
-    command: gunicorn platzkiecker.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - ./backend:/app
-    ports:
-      - "8000:800
-
-0"
-    env_file:
-      - .env.prod
-    depends_on:
-      - db
-
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - .env.prod.db
-
-  nginx:
-    build: ./proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - web
-
-volumes:
-  postgres_data:
-```
-
 ## Security Considerations
 
 ### Data Handling
@@ -257,12 +326,11 @@ Nginx handles SSL termination and forwards requests to internal services. Firewa
 ### Authentication and Authorization
 Django's built-in authentication system is used for user management. Additional security measures like JWT or OAuth can be implemented for API security.
 
-
 ## API Documentation
 
 Our API is documented using Swagger. You can access the Swagger documentation at the following endpoint:
 
-[DEV: Swagger API Documentation](http://localhost:8000/api/docs/)
+[DEV: Swagger API Documentation (install it on your machine first)](http://localhost:8000/api/docs/)
 
 [PROD: Swagger API Documentation](http://api.platzkiecker.de/api/docs/)
 
@@ -283,7 +351,6 @@ We welcome contributions to the project. Please follow these steps to contribute
 2. Create a new branch for your feature or bugfix.
 3. Commit your changes and push them to your fork.
 4. Open a pull request against the main repository.
-
 
 ## License
 
