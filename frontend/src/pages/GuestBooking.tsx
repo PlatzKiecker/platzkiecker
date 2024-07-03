@@ -9,7 +9,7 @@ export default function GuestDetails() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [reservationDetails, setReservationDetails] = useState("");
   const navigate = useNavigate();
-  const { createBooking } = useCreateBooking();
+  const { newBooking, error } = useCreateBooking(); // Verwende den korrekten Hook und Funktionsname
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,14 +17,16 @@ export default function GuestDetails() {
       const bookingData = {
         guest_name: fullName,
         guest_phone: phoneNumber,
+        start: "2024-07-04T14:15:00.000Z",
+        guest_count: 2,
         notes: reservationDetails,
-        start: "2022-12-24T18:00:00Z", // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
-        guest_count: 1, // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
-        // In einem richtigen Szenario müsstest du auch Datum und Gästeanzahl hinzufügen
       };
 
-      const response = await createBooking(bookingData);
-      console.log("Booking created:", response); // Hier kannst du die Antwort der API weiterverarbeiten
+      const response = await newBooking(bookingData.guest_name, bookingData.guest_phone, bookingData.start, bookingData.guest_count, bookingData.notes);
+      console.log("Booking created:", response); 
+
+      // Hier speichern wir die Antwort im Local Storage
+      sessionStorage.setItem('bookingResponse', JSON.stringify(response));
 
       navigate("/confirmation");
     } catch (err: any) {
