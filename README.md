@@ -13,8 +13,7 @@
 
 # PlatzKiecker
 
-PlatzKiecker is a project that aims to implement a table management system for restaurants.
-
+PlatzKiecker is a project that aims to implement a table management system for restaurants. 
 ## Table of Contents
 
 - [Introduction](#introduction)
