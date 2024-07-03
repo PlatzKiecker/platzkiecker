@@ -264,12 +264,12 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 
 - **Build and start the development environment:**
   ```bash
-  docker-compose -f docker-compose.dev.yml up -d --build
+  docker-compose up -d --build
   ```
 
 - **Stop the development environment:**
   ```bash
-  docker-compose -f docker-compose.dev.yml down
+  docker-compose down
   ```
 
 - **Build and start the production environment:**
@@ -284,7 +284,7 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 
 - **View logs for a specific service:**
   ```bash
-  docker-compose logs -f <service-name>
+  docker-compose logs -f <docker-compose-file> <service-name>
   ```
 
 ### Links to Docker Configuration Files
