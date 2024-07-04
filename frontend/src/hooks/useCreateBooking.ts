@@ -1,24 +1,39 @@
 import useSWR from 'swr';
+import { useState } from 'react';
 
-const baseUrl = 'http://localhost:8000';  // Setze hier deine API-Basis-URL ein
 
-const fetcher = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
+const BASE_URL = "http://localhost:8000";
 
 export const useCreateBooking = () => {
-  // Platzhalter-Funktion, die keine Aktion ausführt
-  const createBooking = async (bookingData: any) => {
-    // Hier könnte normalerweise eine API-Aufruf-Logik stehen, aber es wird nichts getan.
-    console.log('bookingData:', bookingData); // Hier wird bookingData zumindest ausgegeben
+  const [error, setError] = useState<Error | null>(null);
+
+  const newBooking = async (guest_name: string ,guest_phone: string ,start: string | Date, guest_count : number, notes: string) => {
+    try {
+      setError(null); // Fehler zurücksetzen, bevor die Anfrage gesendet wird.
+      const startISO = (start instanceof Date) ? start.toISOString() : start;
+      const bookingData = {guest_name, guest_phone, start: startISO, guest_count, notes};
+
+      const response = await fetch(`${BASE_URL}/bookings/1/`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      const responseData = await response.json();
+      console.log(responseData);
+      if (response.ok) return responseData;
+      else setError(new Error(responseData.message || "Failed to create booking"));
+    } catch (error) {
+      setError(error as Error);
+      throw error;
+    }
   };
 
-  // Hier wird useSWR ohne tatsächliche Verwendung initialisiert
-  const { data, error } = useSWR(`${baseUrl}/bookings`, fetcher);
-
-  return { createBooking, bookings: data, bookingsError: error };
-};
+  return {
+    newBooking,
+    error,
+  };
+}

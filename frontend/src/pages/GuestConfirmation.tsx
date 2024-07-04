@@ -1,6 +1,11 @@
+import React from "react";
 import ProgressTracker from "../components/layout/ProgressTracker";
 
 export default function GuestConfirmation() {
+  // Buchungsinformationen aus dem Session Storage abrufen
+  const bookingResponse = sessionStorage.getItem('bookingResponse');
+  const bookingData = bookingResponse ? JSON.parse(bookingResponse) : null;
+
   return (
     <div className="flex items-center justify-center w-full h-screen p-4">
       <div className="bg-gray-100 p-6 w-full max-w-4xl h-auto max-h-screen overflow-auto mx-auto">
@@ -17,20 +22,20 @@ export default function GuestConfirmation() {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Guest Information</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                Name: Max Mustermann <br />
-                Phone Number: 0123456789 <br />
-                Comment: This is a test reservation.
+                Name: {bookingData?.guest_name || 'N/A'} <br />
+                Phone Number: {bookingData?.guest_phone || 'N/A'} <br />
+                Comment: {bookingData?.notes || 'N/A'}
               </dd>
             </div>
             {/* Table Information */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Table Information</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                Date: 2022-12-24
+                Date: {new Date(bookingData?.start).toLocaleDateString() || 'N/A'}
                 <br />
-                Time: 18:00
+                Time: {new Date(bookingData?.start).toLocaleTimeString() || 'N/A'}
                 <br />
-                Guest Count: 4
+                Guest Count: {bookingData?.guest_count || 'N/A'}
               </dd>
             </div>
           </dl>

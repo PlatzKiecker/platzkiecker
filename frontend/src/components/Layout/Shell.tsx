@@ -23,7 +23,7 @@ export default function Shell() {
       
     } catch (error) {
       console.error('Failed to logout', error);
-      alert(error);
+      alert("Fail to logout!");
     }
   };
 
