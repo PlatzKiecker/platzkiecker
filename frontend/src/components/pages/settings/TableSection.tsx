@@ -39,7 +39,7 @@ export default function TableSection() {
 
   const cleanupDelete = (id: number) => {
     setTables((prev) => {
-      // TODO: DELETE to backend
+      const response = deleteRequest(`http://localhost:8000/tables/${id}/`);
       return prev.filter((table) => table.id !== id);
     });
   };
