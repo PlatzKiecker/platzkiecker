@@ -45,7 +45,7 @@ Provide an overview of the project, its purpose, and any relevant background inf
 
 ## High-Level Architecture
 
-![Architecture Diagram](/images/platzkiecker_architecture.png)
+![Architecture Diagram](/images/pk_service_architecture.png)
 
 ## Project Structure
 
