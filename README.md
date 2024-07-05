@@ -1,3 +1,6 @@
+Sure, here is the updated README with sections for User Documentation and Technical Documentation for the frontend:
+
+```markdown
 ### Service Status
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
 ![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de%2Fapi%2Fdocs&logo=django&logoColor=white&label=backend)
@@ -41,6 +44,8 @@ PlatzKiecker is a project that aims to implement a table management system for r
 - [Components](#components)
 - [Security Considerations](#security-considerations)
 - [API Documentation](#api-documentation)
+- [User Documentation](#user-documentation)
+- [Frontend Technical Documentation](#frontend-technical-documentation)
 - [Configuration Management](#configuration-management)
 - [Contributing](#contributing)
 - [License](#license)
@@ -208,10 +213,10 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 - **[Dockerfile](/frontend/Dockerfile)**
   - **Purpose**: Builds the React frontend for both development and production environments.
   - **Key Steps**: 
-    - In the `dev` stage, installs dependencies and builds the project.
-    - In the `prod` stage, uses Nginx to serve the
+    - In the `dev` stage, installs dependencies and
 
- built files.
+ builds the project.
+    - In the `prod` stage, uses Nginx to serve the built files.
 
 #### Proxy
 
@@ -295,9 +300,9 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 - **[Frontend Dockerfile](/frontend/Dockerfile)**
 - **[Proxy Dockerfile](/proxy/Dockerfile)**
 - **[docker-compose.dev.yml](/docker-compose.yml)**
-- **[docker-compose.prod.yml](/to/docker-compose.prod.yml)**
-- **[docker-compose.full.yml](/to/docker-compose.full.yml)**
-- **[docker-compose.test.yml](/to/docker-compose.test.yml)**
+- **[docker-compose.prod.yml](/docker-compose.prod.yml)**
+- **[docker-compose.full.yml](/docker-compose.full.yml)**
+- **[docker-compose.test.yml](/docker-compose.test.yml)**
 
 ## Components
 
@@ -335,6 +340,14 @@ Our API is documented using Swagger. You can access the Swagger documentation at
 
 [PROD: Swagger API Documentation](http://api.platzkiecker.de/api/docs/)
 
+## User Documentation
+
+For detailed user documentation, please refer to our [User Documentation Repository](https://github.com/PlatzKiecker/user-documentation).
+
+## Frontend Technical Documentation
+
+For detailed technical documentation of the frontend, please refer to the [Frontend README](frontend/README.md).
+
 ## Configuration Management
 
 ### Environment Variables
@@ -356,3 +369,6 @@ We welcome contributions to the project. Please follow these steps to contribute
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
+```
+
+This updated README includes links to the user documentation and technical documentation for the frontend, as well as a corrected table of contents.
