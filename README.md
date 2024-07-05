@@ -383,7 +383,7 @@ Our API is documented using Swagger. You can access the Swagger documentation at
 
 ## User Documentation
 
-For detailed user documentation, please refer to our [User Documentation Repository](https://github.com/PlatzKiecker/user-documentation).
+For detailed user documentation, please refer to our [User Documentation Repository](https://github.com/PlatzKiecker/docs).
 
 ## Frontend Technical Documentation
 
