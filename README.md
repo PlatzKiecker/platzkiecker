@@ -1,6 +1,3 @@
-Sure, here is the updated README with sections for User Documentation and Technical Documentation for the frontend:
-
-```markdown
 ### Service Status
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
 ![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de%2Fapi%2Fdocs&logo=django&logoColor=white&label=backend)
@@ -369,6 +366,3 @@ We welcome contributions to the project. Please follow these steps to contribute
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
-```
-
-This updated README includes links to the user documentation and technical documentation for the frontend, as well as a corrected table of contents.
