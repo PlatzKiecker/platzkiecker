@@ -41,7 +41,11 @@ PlatzKiecker is a project that aims to implement a table management system for r
 
 ## Introduction
 
-Provide an overview of the project, its purpose, and any relevant background information.
+Welcome to PlatzKiecker, an innovative table management system for restaurants. PlatzKiecker streamlines reservation handling, customer seating, and service efficiency, integrating seamlessly into restaurant operations.
+
+Powered by Django on the backend for secure data handling and React on the frontend for a responsive user experience, PlatzKiecker uses Nginx as a reverse proxy for enhanced performance and scalability.
+
+This documentation provides an overview of PlatzKiecker’s architecture, setup, and usage guidelines, supporting both development and production environments. Explore PlatzKiecker’s features to enhance your restaurant’s operations and customer satisfaction. Thank you for choosing PlatzKiecker.
 
 ## High-Level Architecture
 
@@ -53,21 +57,69 @@ The project is organized into the following directories:
 
 ```
 platzkiecker/
+├── .github/
+│   └── workflows/
+│       ├── build.yml
+│       ├── codeql.yml
+│       ├── prod.yml
+│       └── test_integration.yml
 ├── backend/
+│   ├── booking/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── config/
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── restaurant/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── user/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── Dockerfile
+│   ├── Dockerfile.prod
+│   ├── entrypoint.prod.sh
+│   ├── entrypoint.sh
 │   ├── manage.py
-│   ├── platzkiecker/
-│   ├── requirements.txt
-│   └── ... (other Django files)
+│   └── requirements.txt
 ├── frontend/
 │   ├── public/
 │   ├── src/
 │   ├── package.json
 │   └── ... (other React files)
+├── images/
+│   ├── pk_service_architecture.drawio
+│   └── pk_service_architecture.png
 ├── proxy/
-│   ├── nginx.conf
-│   └── Dockerfile
+│   ├── Dockerfile
+│   └── nginx.conf
+├── docker-compose.full.yml
+├── docker-compose.prod.yml
+├── docker-compose.test.yml
 ├── docker-compose.yml
-└── ... (other root-level files)
+└── README.md
+
 ```
 
 ### Backend (Django)
