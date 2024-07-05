@@ -23,7 +23,8 @@ export const useLogin = () => {
 
       const responseData = await response.json();
       if (response.ok) return responseData;
-      else setError(new Error(responseData.message || "Failed to login"));
+      else 
+      {setError(new Error(responseData.message || "Failed to login"));}
     } catch (error) {
       throw error;
     }

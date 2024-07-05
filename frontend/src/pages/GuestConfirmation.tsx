@@ -12,7 +12,10 @@ export default function GuestConfirmation() {
         {/* Header */}
         <div className="px-4 sm:px-0">
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Thank you for your reservation.</p>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Thank you for your reservation.
+            Please find your booking details below.
+            If you like to make any changes, please contact us.
+          </p>
         </div>
 
         {/* Form Section */}

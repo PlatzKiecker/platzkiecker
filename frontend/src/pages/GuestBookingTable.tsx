@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProgressTracker from "../components/layout/ProgressTracker";
 import GuestCountDropdown from "../components/input/GuestCountDropdown";
+import mySWR from "../utils/mySWR";
 
 export default function GuestDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
   const navigate = useNavigate();
+  const { data, error, loading} = bookablePeriods(guestCount);
 
   const handleGuestCountChange = (count: number) => {
     setGuestCount(count);
+    
   };
 
   const handleSubmit = () => {
@@ -61,4 +64,19 @@ export default function GuestDetails() {
       </div>
     </div>
   );
+}
+
+function bookablePeriods(count: number) {
+  const startDate = new Date();
+  const { data, error, loading} = mySWR(`/available-days/1/?guest_count=2&start_day=2024-07-06`);
+
+  useEffect(() => {
+    if (data) {
+      const setbookableDays = data;
+      console.log("Bookable days:", setbookableDays);
+      
+    }
+  }, [data]);
+
+  return { data, error, loading }; // Return these if needed
 }

@@ -9,7 +9,7 @@ export default function GuestDetails() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [reservationDetails, setReservationDetails] = useState("");
   const navigate = useNavigate();
-  const { newBooking, error } = useCreateBooking(); // Verwende den korrekten Hook und Funktionsname
+  const { newBooking, error } = useCreateBooking(); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +17,7 @@ export default function GuestDetails() {
       const bookingData = {
         guest_name: fullName,
         guest_phone: phoneNumber,
-        start: "2024-07-04T14:15:00.000Z",
+        start: "2024-07-11T14:15:00.000Z",
         guest_count: 2,
         notes: reservationDetails,
       };
