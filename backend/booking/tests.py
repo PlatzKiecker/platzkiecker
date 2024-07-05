@@ -102,6 +102,12 @@ class BookingEdgeCaseTests(TestCase):
             close='17:00:00',
             restaurant=self.restaurant
         )
+        self.booking_period = BookingPeriod.objects.create(
+            weekday='TU',
+            open='09:00:00',
+            close='17:00:00',
+            restaurant=self.restaurant
+        )
         self.vacation = Vacation.objects.create(
             start=(timezone.localtime() + timedelta(days=7 - timezone.localtime().weekday())).date(),
             end=(timezone.localtime() + timedelta(days=8 - timezone.localtime().weekday())).date(),
@@ -120,7 +126,7 @@ class BookingEdgeCaseTests(TestCase):
         self.assertIn('start', response.json())
 
     def test_create_booking_with_invalid_guest_count(self):
-        start_time = (timezone.localtime() + timedelta(days=6 - timezone.localtime().weekday())).replace(hour=10, minute=0, second=0, microsecond=0)
+        start_time = (timezone.localtime() + timedelta(days=8 - timezone.localtime().weekday())).replace(hour=10, minute=0, second=0, microsecond=0)
         response = self.client.post(reverse('booking-create', kwargs={'restaurant_id': self.restaurant.id}), {
             'guest_name': 'John Doe',
             'guest_phone': '1234567890',
