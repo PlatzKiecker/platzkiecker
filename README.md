@@ -30,7 +30,6 @@ PlatzKiecker is a project that aims to implement a table management system for r
   - [Dockerfiles](#dockerfiles)
   - [Docker Compose Files](#docker-compose-files)
   - [Key Commands](#key-commands)
-  - [Links to Docker Configuration Files](#links-to-docker-configuration-files)
 - [Components](#components)
 - [Security Considerations](#security-considerations)
 - [API Documentation](#api-documentation)
