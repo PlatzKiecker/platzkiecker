@@ -1,6 +1,7 @@
 ### Service Status
 ![Website](https://img.shields.io/website?url=https%3A%2F%2Fplatzkiecker.de&logo=react&logoColor=blue&label=frontend)
-![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de%2Fregister%2F&logo=django&logoColor=white&label=backend)
+![Website](https://img.shields.io/website?url=http%3A%2F%2Fapi.platzkiecker.de%2Fapi%2Fdocs&logo=django&logoColor=white&label=backend)
+
 
 ### Testing Status
 [![Code Checks](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql/badge.svg?branch=prod)](https://github.com/PlatzKiecker/platzkiecker/actions/workflows/github-code-scanning/codeql)
@@ -27,19 +28,13 @@ PlatzKiecker is a project that aims to implement a table management system for r
 - [Docker Configuration](#docker-configuration)
   - [Overview](#overview)
   - [Dockerfiles](#dockerfiles)
-    - [Backend](#backend)
-    - [Frontend](#frontend)
-    - [Proxy](#proxy)
   - [Docker Compose Files](#docker-compose-files)
-    - [Development](#development)
-    - [Production](#production)
-    - [Full Production](#full-production)
-    - [Testing](#testing)
   - [Key Commands](#key-commands)
-  - [Links to Docker Configuration Files](#links-to-docker-configuration-files)
 - [Components](#components)
 - [Security Considerations](#security-considerations)
 - [API Documentation](#api-documentation)
+- [User Documentation](#user-documentation)
+- [Frontend Technical Documentation](#frontend-technical-documentation)
 - [Configuration Management](#configuration-management)
 - [Contributing](#contributing)
 - [License](#license)
@@ -207,10 +202,10 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 - **[Dockerfile](/frontend/Dockerfile)**
   - **Purpose**: Builds the React frontend for both development and production environments.
   - **Key Steps**: 
-    - In the `dev` stage, installs dependencies and builds the project.
-    - In the `prod` stage, uses Nginx to serve the
+    - In the `dev` stage, installs dependencies and
 
- built files.
+ builds the project.
+    - In the `prod` stage, uses Nginx to serve the built files.
 
 #### Proxy
 
@@ -264,12 +259,12 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 
 - **Build and start the development environment:**
   ```bash
-  docker-compose -f docker-compose.dev.yml up -d --build
+  docker-compose up -d --build
   ```
 
 - **Stop the development environment:**
   ```bash
-  docker-compose -f docker-compose.dev.yml down
+  docker-compose down
   ```
 
 - **Build and start the production environment:**
@@ -284,7 +279,7 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 
 - **View logs for a specific service:**
   ```bash
-  docker-compose logs -f <service-name>
+  docker-compose logs -f <docker-compose-file> <service-name>
   ```
 
 ### Links to Docker Configuration Files
@@ -294,9 +289,9 @@ We use Docker and Docker Compose to containerize and manage the development, tes
 - **[Frontend Dockerfile](/frontend/Dockerfile)**
 - **[Proxy Dockerfile](/proxy/Dockerfile)**
 - **[docker-compose.dev.yml](/docker-compose.yml)**
-- **[docker-compose.prod.yml](/to/docker-compose.prod.yml)**
-- **[docker-compose.full.yml](/to/docker-compose.full.yml)**
-- **[docker-compose.test.yml](/to/docker-compose.test.yml)**
+- **[docker-compose.prod.yml](/docker-compose.prod.yml)**
+- **[docker-compose.full.yml](/docker-compose.full.yml)**
+- **[docker-compose.test.yml](/docker-compose.test.yml)**
 
 ## Components
 
@@ -333,6 +328,14 @@ Our API is documented using Swagger. You can access the Swagger documentation at
 [DEV: Swagger API Documentation (install it on your machine first)](http://localhost:8000/api/docs/)
 
 [PROD: Swagger API Documentation](http://api.platzkiecker.de/api/docs/)
+
+## User Documentation
+
+For detailed user documentation, please refer to our [User Documentation Repository](https://github.com/PlatzKiecker/user-documentation).
+
+## Frontend Technical Documentation
+
+For detailed technical documentation of the frontend, please refer to the [Frontend README](frontend/README.md).
 
 ## Configuration Management
 
