@@ -22,6 +22,7 @@ export default function Dashboard() {
     guests: string;
     note: string;
     status: string;
+    id: number; // Add the 'id' property
   };
 
   const [date, setDate] = useState(new Date());
@@ -89,9 +90,9 @@ export default function Dashboard() {
                         </Badge>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <Link to="/booking/view" className="text-indigo-600 hover:text-indigo-900">
-                          Edit<span className="sr-only">, {booking.name}</span>
-                        </Link>
+                      <Link to={`/booking/view/${booking.id}`} className="text-indigo-600 hover:text-indigo-900">
+                        Edit<span className="sr-only">, {booking.name}</span>
+                      </Link>
                       </td>
                     </tr>
                   ))

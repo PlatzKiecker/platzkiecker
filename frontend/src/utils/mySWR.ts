@@ -17,11 +17,23 @@ export default function mySWR(path: string) {
     mutate(url, newData, false);
   }
 
+  async function remove() {
+    const response = await axios.delete(url, {
+      withCredentials: true,
+      headers: {
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+    });
+    console.log(response);
+    mutate(url, null, false); // Invalidate the SWR cache
+  }
+
   return {
     data,
     loading: isLoading,
-    error: error,
-    update: update,
+    error,
+    update,
+    remove,
   };
 }
 

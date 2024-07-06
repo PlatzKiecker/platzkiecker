@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProgressTracker from "../components/layout/ProgressTracker";
 import GuestCountDropdown from "../components/input/GuestCountDropdown";
+import mySWR from "../utils/mySWR";
 
 export default function GuestDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
+  const [selectedDate, setSelectedDate] = useState<string>(""); // State für ausgewähltes Datum
   const navigate = useNavigate();
+  const { data, error, loading } = bookablePeriods(guestCount);
 
   const handleGuestCountChange = (count: number) => {
     setGuestCount(count);
@@ -17,6 +20,32 @@ export default function GuestDetails() {
     // Navigate to the /guestbooking route
     navigate("/guestbooking");
   };
+
+  // Funktion, um das heutige Datum im richtigen Format für das min-Attribut zu bekommen
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    // Füge führende Nullen hinzu, wenn der Monat oder der Tag einstellig ist
+    // Funktioniert aus irgendeinem Grund nur wenn das hier als Fehler hinterlegt ist
+    /*if (month < 10) {
+      month = `0${month}`;
+    }
+    if (day < 10) {
+      day = `0${day}`;
+    }*/
+
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    if (data) {
+      const setbookableDays = data;
+      console.log("Bookable days:", setbookableDays);
+    }
+  }, [data]);
 
   return (
     <div className="flex items-center justify-center w-full h-screen p-4">
@@ -40,8 +69,19 @@ export default function GuestDetails() {
             </div>
             {/* Date Input */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Full name</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Date and Time</dd>
+              <dt className="text-sm font-medium leading-6 text-gray-900">Date</dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <input
+                  type="date"
+                  id="bookingDate"
+                  name="bookingDate"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="Enter value"
+                  value={selectedDate}
+                  min={getTodayDate()} // Nur zukünftige Termine sind auswählbar
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                />
+              </dd>
             </div>
             {/* Table Details- Submit -Button */}
             <div className="flex justify-end mt-4">
@@ -61,4 +101,11 @@ export default function GuestDetails() {
       </div>
     </div>
   );
+}
+
+function bookablePeriods(count: number) {
+  const startDate = new Date();
+  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=2&start_day=2024-07-06`);
+
+  return { data, error, loading }; // Return these if needed
 }

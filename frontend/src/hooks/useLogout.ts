@@ -12,18 +12,18 @@ export const useLogout = () => {
       setError(null);
 
       const response = await fetch(`${BASE_URL}/logout/`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        credentials: "include", // Important for sending cookies
+        credentials: 'include',  // Important for sending cookies
       });
 
       if (response.ok) {
         // Clear authentication data from storage
-        sessionStorage.removeItem("userData");
-        sessionStorage.removeItem("auth");
-        localStorage.removeItem("authToken");
+        sessionStorage.removeItem('userData');
+        sessionStorage.removeItem('auth');
+        localStorage.removeItem('authToken');
         document.cookie = "csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       } else {
         const responseData = await response.json();

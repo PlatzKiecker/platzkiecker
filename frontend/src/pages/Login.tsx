@@ -1,23 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../hooks/useLogin";
 import InputFieldLogin from "../components/input/InputFieldLogin";
 import { Link } from "react-router-dom";
+import { postRequest } from "../utils/mySWR";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, error } = useLogin();
+  const [error, setError] = useState<string | null>(null); // Explicitly define the type of error state
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = await login(username, password);
-    if (data) {
-      console.log("Login successful:", data);
-      navigate("/");
-    } else {
-      console.error("Login failed:", error?.message);
+    try {
+      setError(null); // Reset error state before sending the request.
+      const requestData = { email: username, password };
+
+      const response = await postRequest("/login/", requestData);
+      if (response.data) {
+        console.log("Login successful:", response.data);
+        navigate("/");
+      } else {
+        setError("Failed to login"); // Set generic error message
+      }
+    } catch (error: any) { // Catch any type of error
+      console.error("Login failed:", error.message);
+      setError("Failed to login"); // Set generic error message
     }
   };
 
@@ -25,14 +33,13 @@ export default function Login() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <InputFieldLogin label="Email" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <InputFieldLogin label="Passwort" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <InputFieldLogin label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <div>
               <button
@@ -43,7 +50,7 @@ export default function Login() {
             </div>
           </form>
 
-          {error && <p className="mt-2 text-center text-sm text-red-500">{error.message}</p>}
+          {error && <p className="mt-2 text-center text-sm text-red-500">{error}</p>}
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{" "}
