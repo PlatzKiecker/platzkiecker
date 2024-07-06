@@ -37,7 +37,7 @@ export default function Register() {
           }
 
           // Create Zone
-          const zoneData = await postRequest('/zones/', { name: "1", bookable: true });
+          const zoneData = await postRequest('/zones/', { name: "Zone 1", bookable: true });
           if (!zoneData) {
             setError("Failed to create zone");
             return;
