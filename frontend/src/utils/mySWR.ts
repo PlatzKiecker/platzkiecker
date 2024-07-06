@@ -2,8 +2,10 @@ import useSWR, { mutate } from "swr";
 import axios from "axios";
 import { getCookie } from "./csrf";
 
+const BASE_URL = "http://localhost:8000"; // Define your base URL here
+
 export default function mySWR(path: string) {
-  const url = `${import.meta.env.VITE_API_URL}${path}`;
+  const url = `${BASE_URL}${path}`; // Construct the full URL
   const { data, error, isLoading } = useSWR(url, fetcher);
 
   async function update(newData: Record<string, any>) {
@@ -42,7 +44,7 @@ async function fetcher(args: any) {
 }
 
 export async function postRequest(url: string, data: Record<string, any>) {
-  return await axios.post(import.meta.env.VITE_API_URL + url, data, {
+  return await axios.post(`${BASE_URL}${url}`, data, {
     withCredentials: true,
     headers: {
       "X-CSRFToken": getCookie("csrftoken"),
@@ -51,7 +53,7 @@ export async function postRequest(url: string, data: Record<string, any>) {
 }
 
 export async function putRequest(url: string, data: Record<string, any>) {
-  return await axios.put(import.meta.env.VITE_API_URL + url, data, {
+  return await axios.put(`${BASE_URL}${url}`, data, {
     withCredentials: true,
     headers: {
       "X-CSRFToken": getCookie("csrftoken"),
@@ -60,7 +62,7 @@ export async function putRequest(url: string, data: Record<string, any>) {
 }
 
 export async function deleteRequest(url: string) {
-  return await axios.delete(import.meta.env.VITE_API_URL + url, {
+  return await axios.delete(`${BASE_URL}${url}`, {
     withCredentials: true,
     headers: {
       "X-CSRFToken": getCookie("csrftoken"),

@@ -7,6 +7,8 @@ import mySWR from "../utils/mySWR";
 export default function GuestDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
   const [selectedDate, setSelectedDate] = useState<string>(""); // State für ausgewähltes Datum
+  const [bookableDays, setBookableDays] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>(""); // State für Fehlermeldung
   const navigate = useNavigate();
   const { data, error, loading } = bookablePeriods(guestCount);
 
@@ -21,31 +23,39 @@ export default function GuestDetails() {
     navigate("/guestbooking");
   };
 
+  useEffect(() => {
+    if (data && data.available_days) {
+      setBookableDays(data.available_days);
+    }
+  }, [data]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value;
+    if (bookableDays.includes(date)) {
+      setSelectedDate(date);
+      setErrorMessage(""); // Clear error message if the date is valid
+    } else {
+      setSelectedDate(""); // Clear the date if it's not bookable
+      setErrorMessage("Selected date is not available for booking. Please select another day or minimize the number of guests."); // Set error message
+    }
+  };
+
   // Funktion, um das heutige Datum im richtigen Format für das min-Attribut zu bekommen
   const getTodayDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
+    let month: string | number = today.getMonth() + 1;
+    let day: string | number = today.getDate();
 
-    // Füge führende Nullen hinzu, wenn der Monat oder der Tag einstellig ist
-    // Funktioniert aus irgendeinem Grund nur wenn das hier als Fehler hinterlegt ist
-    /*if (month < 10) {
+    if (month < 10) {
       month = `0${month}`;
     }
     if (day < 10) {
       day = `0${day}`;
-    }*/
+    }
 
     return `${year}-${month}-${day}`;
   };
-
-  useEffect(() => {
-    if (data) {
-      const setbookableDays = data;
-      console.log("Bookable days:", setbookableDays);
-    }
-  }, [data]);
 
   return (
     <div className="flex items-center justify-center w-full h-screen p-4">
@@ -64,7 +74,6 @@ export default function GuestDetails() {
               <dt className="text-sm font-medium leading-6 text-gray-900">Number Guest</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 <GuestCountDropdown onChange={handleGuestCountChange} />
-                <p>Guest Count: {guestCount} </p>
               </dd>
             </div>
             {/* Date Input */}
@@ -79,8 +88,9 @@ export default function GuestDetails() {
                   placeholder="Enter value"
                   value={selectedDate}
                   min={getTodayDate()} // Nur zukünftige Termine sind auswählbar
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                  onChange={handleDateChange}
                 />
+                {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
               </dd>
             </div>
             {/* Table Details- Submit -Button */}
@@ -105,7 +115,7 @@ export default function GuestDetails() {
 
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=2&start_day=2024-07-06`);
+  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split('T')[0]}`);
 
   return { data, error, loading }; // Return these if needed
 }

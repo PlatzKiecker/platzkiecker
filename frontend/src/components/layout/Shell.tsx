@@ -8,8 +8,6 @@ const navigation = [
 ];
 const userNavigation = [{ name: "Sign out", href: "#" }];
 
-console.log("url: ", import.meta.env.VITE_API_URL);
-
 function classNames(...classes: Array<String>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -21,9 +19,10 @@ export default function Shell() {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/login");
+      navigate('/login');
+      
     } catch (error) {
-      console.error("Failed to logout", error);
+      console.error('Failed to logout', error);
       alert("Fail to logout!");
     }
   };
@@ -72,7 +71,10 @@ export default function Shell() {
                       {userNavigation.map((item) => (
                         <MenuItem key={item.name}>
                           {({ focus }: { focus: boolean }) => (
-                            <button onClick={handleLogout} className={classNames(focus ? "bg-gray-100" : "", "block w-full text-left px-4 py-2 text-sm text-gray-700")}>
+                            <button
+                              onClick={handleLogout}
+                              className={classNames(focus ? "bg-gray-100" : "", "block w-full text-left px-4 py-2 text-sm text-gray-700")}
+                            >
                               {item.name}
                             </button>
                           )}
@@ -95,13 +97,4 @@ export default function Shell() {
       </div>
     </>
   );
-}
-
-function validateUser({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
-  // Check if user is logged in
-  const user = localStorage.getItem("user");
-  if (!user) {
-    navigate("/login");
-  } else return children;
 }

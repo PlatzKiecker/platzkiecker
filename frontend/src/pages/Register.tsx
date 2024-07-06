@@ -28,6 +28,21 @@ export default function Register() {
         const loginData = await postRequest('/login/', { email, password });
         if (loginData) {
           console.log('Login successful after registration:', loginData);
+          
+          // Create Restaurant
+          const restaurantData = await postRequest('/restaurant/', { name: "Restaurant-Name" });
+          if (!restaurantData) {
+            setError("Failed to create restaurant");
+            return;
+          }
+
+          // Create Zone
+          const zoneData = await postRequest('/zones/', { name: "1", bookable: true });
+          if (!zoneData) {
+            setError("Failed to create zone");
+            return;
+          }
+
           navigate('/');
         } else {
           setError("Failed to login after registration");
