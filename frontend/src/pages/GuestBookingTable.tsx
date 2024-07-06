@@ -29,6 +29,7 @@ export default function GuestDetails() {
     let day = today.getDate();
 
     // Füge führende Nullen hinzu, wenn der Monat oder der Tag einstellig ist
+    // Funktioniert aus irgendeinem Grund nur wenn das hier als Fehler hinterlegt ist
     if (month < 10) {
       month = `0${month}`;
     }
