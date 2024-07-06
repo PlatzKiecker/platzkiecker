@@ -31,5 +31,4 @@ services:
   
 volumes:
   postgres_data:
-  user_data:
   static_volume:

@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo " ____  _  __ "
+echo "|  _ \| |/ / "
+echo "| |_) | ' /  "
+echo "|  __/| . \  "
+echo "|_|   |_|\_\ "
+
 if [ "$DATABASE" = "postgres" ]
 then
     echo "Waiting for postgres..."
@@ -11,14 +17,19 @@ then
     echo "PostgreSQL started"
 fi
 
+# Database migrations
 python manage.py flush --no-input
 python manage.py makemigrations user
 python manage.py makemigrations restaurant
 python manage.py makemigrations booking
 python manage.py migrate
 
+# Integration Tests
 python manage.py test user
 python manage.py test restaurant
 python manage.py test booking
+
+# Create superuser
+python manage.py createsuperuser --noinput
 
 exec "$@"

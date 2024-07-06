@@ -71,7 +71,7 @@ class BookingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'start': 'Booking time must be within the restaurant\'s booking periods.'})
 
         # Ensure the booking time does not overlap with the restaurant's vacations
-        if restaurant and restaurant.vacations.filter(start__lte=data['start'], end__gte=data['start']).exists():
+        if restaurant and restaurant.vacations.filter(start__lte=data['start'], end__gt=data['start']).exists():
             raise serializers.ValidationError({'start': 'Booking time must not be within the restaurant\'s vacations.'})
 
         # If table is not provided in the data, find an available table with closest capacity
@@ -151,3 +151,13 @@ class BookingDetailSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'guest_name', 'guest_phone', 'start', 'end', 'guest_count', 'status', 'notes', 'restaurant', 'table']
         read_only_fields = ['restaurant', 'table', 'start', 'end', 'guest_count']
+
+class AvailableDaysSerializer(serializers.Serializer):
+    available_days = serializers.ListField(
+        child=serializers.DateField(format='%Y-%m-%d')
+    )
+
+class AvailableTimeSlotsSerializer(serializers.Serializer):
+    time_slots = serializers.ListField(
+        child=serializers.TimeField(format='%H:%M')
+    )
