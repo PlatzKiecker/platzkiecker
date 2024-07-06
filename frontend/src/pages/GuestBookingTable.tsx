@@ -1,62 +1,54 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProgressTracker from "../components/layout/ProgressTracker";
 import GuestCountDropdown from "../components/input/GuestCountDropdown";
 import mySWR from "../utils/mySWR";
-
 export default function GuestDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
   const [selectedDate, setSelectedDate] = useState<string>(""); // State für ausgewähltes Datum
   const [bookableDays, setBookableDays] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>(""); // State für Fehlermeldung
   const navigate = useNavigate();
-  const { data, error, loading } = bookablePeriods(guestCount);
-
+  const { data: bookableDaysData, error: bookableDaysError, loading: bookableDaysLoading } = bookablePeriods(guestCount);
   const handleGuestCountChange = (count: number) => {
     setGuestCount(count);
   };
-
   const handleSubmit = () => {
     // Perform any necessary form validation or data handling here
-
     // Navigate to the /guestbooking route
     navigate("/guestbooking");
   };
-
   useEffect(() => {
-    if (data && data.available_days) {
-      setBookableDays(data.available_days);
+    if (bookableDaysData && bookableDaysData.available_days) {
+      setBookableDays(bookableDaysData.available_days);
     }
-  }, [data]);
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  }, [bookableDaysData]);
+  const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
     if (bookableDays.includes(date)) {
       setSelectedDate(date);
       setErrorMessage(""); // Clear error message if the date is valid
+      console.log("Fetching bookable times for date:", date);
     } else {
       setSelectedDate(""); // Clear the date if it's not bookable
       setErrorMessage("Selected date is not available for booking. Please select another day or minimize the number of guests."); // Set error message
     }
   };
-
   // Funktion, um das heutige Datum im richtigen Format für das min-Attribut zu bekommen
   const getTodayDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     let month: string | number = today.getMonth() + 1;
     let day: string | number = today.getDate();
-
     if (month < 10) {
       month = `0${month}`;
     }
     if (day < 10) {
       day = `0${day}`;
     }
-
     return `${year}-${month}-${day}`;
   };
-
   return (
     <div className="flex items-center justify-center w-full h-screen p-4">
       <div className="bg-gray-100 p-6 w-full max-w-4xl h-auto max-h-screen overflow-auto mx-auto">
@@ -65,7 +57,6 @@ export default function GuestDetails() {
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">For more than 10 guests please call us directly.</p>
         </div>
-
         {/* Form Section */}
         <div className="mt-6 border-t border-gray-200">
           <dl className="divide-y divide-gray-200">
@@ -93,12 +84,20 @@ export default function GuestDetails() {
                 {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
               </dd>
             </div>
+            {/* Time Selection */}
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">Time</dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                <p>{selectedDate ? `Timeslot for ${selectedDate}` : 'Select a date to see available timeslots'}</p>
+              </dd> 
+            </div>
             {/* Table Details- Submit -Button */}
             <div className="flex justify-end mt-4">
               <button
                 type="button" // Change type to 'button'
                 onClick={handleSubmit} // Call handleSubmit function on click
-                className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
                 Submit Table Information
               </button>
             </div>
@@ -112,10 +111,8 @@ export default function GuestDetails() {
     </div>
   );
 }
-
 function bookablePeriods(count: number) {
   const startDate = new Date();
   const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split('T')[0]}`);
-
   return { data, error, loading }; // Return these if needed
 }
