@@ -29,17 +29,23 @@ DEBUG = os.environ.get("DEBUG", 'False') == 'True'
 
 #ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+CORS_ALLOW_CREDENTIALS = True
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_CORS_ALLOWED_ORIGINS', '').split(',')
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('DJANGO_CORS_ALLOW_ALL_ORIGINS', 'False') == 'True'
+CORS_ALLOW_HEADERS = ['X-CSRFToken', 'Content-Type']
+
 
 # Set default values if environment variables are not defined or empty
 if not CORS_ALLOWED_ORIGINS or CORS_ALLOWED_ORIGINS == ['']:
-    CORS_ALLOWED_ORIGINS = ['http://localhost:8000']  # Default allowed origins
+    CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000']  # Default allowed origins
 
 if not os.environ.get('DJANGO_CORS_ALLOW_ALL_ORIGINS'):
     CORS_ALLOW_ALL_ORIGINS = True  # Default allow all origins setting
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 AUTH_USER_MODEL = "user.User"
 
