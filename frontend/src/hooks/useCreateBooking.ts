@@ -1,17 +1,16 @@
-import useSWR from 'swr';
-import { useState } from 'react';
+import useSWR from "swr";
+import { useState } from "react";
 
-
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const useCreateBooking = () => {
   const [error, setError] = useState<Error | null>(null);
 
-  const newBooking = async (guest_name: string ,guest_phone: string ,start: string | Date, guest_count : number, notes: string) => {
+  const newBooking = async (guest_name: string, guest_phone: string, start: string | Date, guest_count: number, notes: string) => {
     try {
       setError(null); // Fehler zurücksetzen, bevor die Anfrage gesendet wird.
-      const startISO = (start instanceof Date) ? start.toISOString() : start;
-      const bookingData = {guest_name, guest_phone, start: startISO, guest_count, notes};
+      const startISO = start instanceof Date ? start.toISOString() : start;
+      const bookingData = { guest_name, guest_phone, start: startISO, guest_count, notes };
 
       const response = await fetch(`${BASE_URL}/bookings/1/`, {
         method: "POST",
@@ -36,4 +35,4 @@ export const useCreateBooking = () => {
     newBooking,
     error,
   };
-}
+};

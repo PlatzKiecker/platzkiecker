@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const useRegister = () => {
   const [error, setError] = useState<Error | null>(null);
@@ -11,12 +11,11 @@ export const useRegister = () => {
       setError(null); // Fehler zurücksetzen, bevor die Anfrage gesendet wird.
       const requestData = { email, password };
 
-
       // Sending a POST request to the backend to register the user
       const response = await fetch(`${BASE_URL}/register/`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(requestData),
       });
@@ -32,6 +31,6 @@ export const useRegister = () => {
   // Expose the register function, along with SWR's data and error states
   return {
     register,
-    error
+    error,
   };
 };

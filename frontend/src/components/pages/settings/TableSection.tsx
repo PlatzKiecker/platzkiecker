@@ -29,7 +29,7 @@ export default function TableSection() {
   }, [zones]);
 
   const handleAddTable = async () => {
-    const response = await postRequest("http://localhost:8000/tables/", { name: newTableName, capacity: parseInt(newTableChairs), zone: newTableZone });
+    const response = await postRequest("/tables/", { name: newTableName, capacity: parseInt(newTableChairs), zone: newTableZone });
 
     setTables((prev) => {
       // POST to backend
@@ -39,17 +39,16 @@ export default function TableSection() {
 
   const cleanupDelete = (id: number) => {
     setTables((prev) => {
-      const response = deleteRequest(`http://localhost:8000/tables/${id}/`);
+      const response = deleteRequest(`/tables/${id}/`);
       return prev.filter((table) => table.id !== id);
     });
   };
 
-  const handleUpdateTable = (id: number, chairs: number) => {
-    setTables((prev) => {
-      // PUT to backend
-      console.log("PUT to backend", id, chairs);
+  const handleUpdateTable = (id: number, name: string, capacity: number, zone: number) => {
+    const response = putRequest(`/tables/${id}/`, { name: name, capacity: capacity, zone: zone });
 
-      return prev.map((table) => (table.id === id ? { ...table, chairs } : table));
+    setTables((prev) => {
+      return prev.map((table) => (table.id === id ? { ...table, name, capacity, zone } : table));
     });
   };
 
@@ -133,7 +132,7 @@ function Zones() {
   const [newZoneName, setNewZoneName] = useState("");
 
   const addZone = async () => {
-    const response = await postRequest("http://localhost:8000/zones/", { name: newZoneName });
+    const response = await postRequest("/zones/", { name: newZoneName });
 
     setZones((prev) => {
       // POST to backend
@@ -146,14 +145,14 @@ function Zones() {
     setZones((prev) => {
       return prev.map((zone) => (zone.id === id ? { ...zone, name: name } : zone));
     });
-    putRequest(`http://localhost:8000/zones/${id}/`, { name });
+    putRequest(`/zones/${id}/`, { name });
   };
 
   const handleZoneDelete = (id: number) => {
     setZones((prev) => {
       return prev.filter((zone) => zone.id !== id);
     });
-    deleteRequest(`http://localhost:8000/zones/${id}/`);
+    deleteRequest(`/zones/${id}/`);
   };
 
   return (
