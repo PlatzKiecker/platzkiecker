@@ -43,7 +43,7 @@ export default function Register() {
             return;
           }
 
-          navigate('/');
+          navigate('/settings');
         } else {
           setError("Failed to login after registration");
         }
