@@ -86,7 +86,7 @@ export default function TableSection() {
   );
 }
 
-function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handleUpdate: (id: number, chairs: number) => void; cleanupDelete: (id: number) => void }) {
+function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handleUpdate: (id: number, name: string, capacity: number, zone: number) => void; cleanupDelete: (id: number) => void }) {
   const deleteTable = () => {
     // DELETE to backend
     console.log("DELETE to backend", table.id);
@@ -97,8 +97,8 @@ function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handle
     <tr>
       <td>
         <div className="flex gap-4">
-          <InputField value={table.name} onChange={(value) => handleUpdate(table.id, parseInt(value))} />
-          <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, parseInt(value))} type="number" />
+          <InputField value={table.name} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} />
+          <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} type="number" />
         </div>
       </td>
       <td className="mr-0">
