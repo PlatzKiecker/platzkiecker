@@ -19,7 +19,7 @@ function getTodayDate() {
   return `${year}-${month}-${day}`;
 }
 
-export default function GuestDetails() {
+export default function TableDetails() {
   const [guestCount, setGuestCount] = useState<number>(1);
   const [selectedDate, setSelectedDate] = useState<string>(getTodayDate());
   const [bookableDays, setBookableDays] = useState<string[]>([]);
