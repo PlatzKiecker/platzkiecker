@@ -18,7 +18,8 @@ export default function GuestConfirmation() {
         {/* Header */}
         <div className="px-4 sm:px-0">
           <h3 className="text-lg font-semibold text-gray-900">Online Reservation</h3>
-          <p className="mt-2 text-sm text-gray-600">Thank you for your reservation. Please find your booking details below. If you'd like to make any changes, please contact us.</p>
+          <p className="mt-2 text-sm text-gray-600">Thank you for your reservation. Please find your booking details below. <br/>
+          If you'd like to make any changes or delete your booking, please contact the restaurant directly.</p>
         </div>
 
         {/* Form Section */}
@@ -28,18 +29,18 @@ export default function GuestConfirmation() {
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium leading-6 text-gray-900">Guest Information</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2">
-                <p><span className="font-medium">Name:</span> {bookingData?.guest_name || 'N/A'}</p>
-                <p><span className="font-medium">Phone Number:</span> {bookingData?.guest_phone || 'N/A'}</p>
-                <p><span className="font-medium">Comment:</span> {bookingData?.notes || 'N/A'}</p>
+                <p>{bookingData?.guest_name || 'N/A'}</p>
+                <p>{bookingData?.guest_phone || 'N/A'}</p>
+                <p>{bookingData?.notes || ''}</p>
               </dd>
             </div>
             {/* Table Information */}
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4">
               <dt className="text-sm font-medium leading-6 text-gray-900">Table Information</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2">
-                <p><span className="font-medium">Date:</span> {new Date(bookingData?.start).toLocaleDateString() || 'N/A'}</p>
-                <p><span className="font-medium">Time:</span> {formatTimeUTC(bookingData?.start) || 'N/A'}</p>
-                <p><span className="font-medium">Guest Count:</span> {bookingData?.guest_count || 'N/A'}</p>
+                <p>{new Date(bookingData?.start).toLocaleDateString() || 'N/A'}</p>
+                <p>{formatTimeUTC(bookingData?.start) || 'N/A'} <span className="font-medium">(time)</span> </p>
+                <p>{bookingData?.guest_count || 'N/A'} <span className="font-medium">Guest(s)</span> </p>
               </dd>
             </div>
           </dl>

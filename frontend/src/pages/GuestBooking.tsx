@@ -13,7 +13,7 @@ export default function GuestDetails() {
   const [reservationDetails, setReservationDetails] = useState("");
   const navigate = useNavigate();
 
-  //Booking creation and navigation to confirmation page
+  // Booking creation and navigation to confirmation page
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -22,11 +22,11 @@ export default function GuestDetails() {
         guest_phone: phoneNumber,
         start: combinedDateTime,
         guest_count: guestCount,
-        notes: reservationDetails,
+        notes: reservationDetails, // This will be an empty string if not filled in
       };
       const response = await postRequest("/bookings/1/", bookingData);
       console.log("Booking created:", response.data);
-      
+
       navigate("/confirmation", { state: { bookingData: response.data } });
     } catch (err: any) {
       console.error("Booking creation failed:", err.message);
@@ -50,30 +50,32 @@ export default function GuestDetails() {
       <div className="bg-gray-100 p-6 w-full max-w-4xl h-auto max-h-screen overflow-auto mx-auto">
         <div className="px-4 sm:px-0">
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Please fill in more details for your reservation.</p>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Please fill in more details for your reservation.
+            <br/>*required fields
+          </p>
         </div>
         {/* Guest Information */}
         <form onSubmit={handleSubmit} className="mt-6 border-t border-gray-200">
           <dl className="divide-y divide-gray-200">
             {/* Name Input */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Full name</dt>
+              <dt className="text-sm font-medium leading-6 text-gray-900">Last name*</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 <InputFieldLogin label="" name="fullName" value={fullName} onChange={handleFullNameChange} />
               </dd>
             </div>
             {/* Phone Number Input */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Phone Number</dt>
+              <dt className="text-sm font-medium leading-6 text-gray-900">Phone number*</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 <InputFieldLogin label="" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
               </dd>
             </div>
             {/* Reservation Details Input */}
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Comment/ Reservation Details</dt>
+              <dt className="text-sm font-medium leading-6 text-gray-900">Comment (optional)</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                <InputFieldLogin label="" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} />
+                <InputFieldLogin label="" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} nonRequired />
               </dd>
             </div>
             {/* Submit Button */}
