@@ -1,14 +1,15 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import ProgressTracker from "../components/layout/ProgressTracker";
 
 export default function GuestConfirmation() {
-  // Retrieve booking information from sessionStorage
-  const bookingResponse = sessionStorage.getItem('bookingResponse');
-  const bookingData = bookingResponse ? JSON.parse(bookingResponse).data : null;
+  const location = useLocation();
+  const { bookingData } = location.state || {};
 
-  // Function to format time to HH:mm
-  const formatTime = (datetimeString: string) => {
-    return new Date(datetimeString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  // Function to format time to HH:mm in UTC
+  const formatTimeUTC = (datetimeString) => {
+    const date = new Date(datetimeString);
+    return date.toISOString().slice(11, 16);
   };
 
   return (
@@ -37,7 +38,7 @@ export default function GuestConfirmation() {
               <dt className="text-sm font-medium leading-6 text-gray-900">Table Information</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2">
                 <p><span className="font-medium">Date:</span> {new Date(bookingData?.start).toLocaleDateString() || 'N/A'}</p>
-                <p><span className="font-medium">Time:</span> {formatTime(bookingData?.start) || 'N/A'}</p>
+                <p><span className="font-medium">Time:</span> {formatTimeUTC(bookingData?.start) || 'N/A'}</p>
                 <p><span className="font-medium">Guest Count:</span> {bookingData?.guest_count || 'N/A'}</p>
               </dd>
             </div>
