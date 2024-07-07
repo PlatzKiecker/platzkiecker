@@ -18,6 +18,7 @@ export default function Booking() {
     guestCount: 0,
     notes: "",
     table: 0,
+    status: "PENDING",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +36,7 @@ export default function Booking() {
           guestCount: booking.guest_count || 0,
           notes: booking.notes || "",
           table: booking.table || 0,
+          status: booking.status || "PENDING",
         });
       }
     }
@@ -58,6 +60,10 @@ export default function Booking() {
 
   const handleNotesChange = (value) => {
     setBookingData({ ...bookingData, notes: value });
+  };
+
+  const handleStatusChange = (value) => {
+    setBookingData({ ...bookingData, status: value });
   };
 
   const handleUpdateBooking = () => {
@@ -161,6 +167,18 @@ export default function Booking() {
           value={bookingData.table}
           onChange={(value) => handleInputChange(value, "table")}
         />
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700">Status</label>
+          <select
+            value={bookingData.status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option value="PENDING">Pending</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="CANCELED">Canceled</option>
+          </select>
+        </div>
       </div>
       <div className="mt-6">
         <Button onClick={handleUpdateBooking}>Update booking</Button>

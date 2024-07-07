@@ -146,7 +146,7 @@ export default function TableDetails() {
                     </div>
                   </>
                 ) : (
-                  <p className="text-red-500">No tables available for this date and number of guests. Please select another date or reduce the number of guests.</p>
+                  <p className="text-red-500">No tables available for this date and number of guests. Please select another date or number of guests.</p>
                 )}
               </dd>
             </div>
