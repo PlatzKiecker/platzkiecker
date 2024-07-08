@@ -23,7 +23,7 @@ export default function TableSection() {
   }, [data]);
 
   useEffect(() => {
-    if (zones) {
+    if (zones && zones.length > 0) {
       setNewTableZone(zones[0].id);
     }
   }, [zones]);
@@ -61,12 +61,14 @@ export default function TableSection() {
               <tr>
                 <th>Table ID</th>
                 <th>Chairs</th>
+                <th>Zone</th>
+                <th>Bookable</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {tables.map((table) => (
-                <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
+                <TableRow zones={zones} key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
               ))}
             </tbody>
           </table>
@@ -86,7 +88,17 @@ export default function TableSection() {
   );
 }
 
-function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handleUpdate: (id: number, name: string, capacity: number, zone: number) => void; cleanupDelete: (id: number) => void }) {
+function TableRow({
+  table,
+  handleUpdate,
+  cleanupDelete,
+  zones,
+}: {
+  table: Table;
+  handleUpdate: (id: number, name: string, capacity: number, zone: number) => void;
+  cleanupDelete: (id: number) => void;
+  zones: Zone[];
+}) {
   const deleteTable = () => {
     // DELETE to backend
     console.log("DELETE to backend", table.id);
@@ -96,9 +108,17 @@ function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handle
   return (
     <tr>
       <td>
-        <div className="flex gap-4">
-          <InputField value={table.name} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} />
-          <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} type="number" />
+        <InputField value={table.name} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} />
+      </td>
+      <td>
+        <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} type="number" />
+      </td>
+      <td>
+        <Select value={zones?.find((zone) => zone.id === table.zone)?.name} options={zones?.map((zone: Zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
+      </td>
+      <td>
+        <div className="h-5 w-5">
+          <InputField type="checkbox" value="true" />
         </div>
       </td>
       <td className="mr-0">
@@ -139,6 +159,7 @@ function Zones() {
       const newZone = response.data;
       return [...prev, newZone];
     });
+    setNewZoneName("");
   };
 
   const handleZoneUpdate = (id: number, name: string) => {

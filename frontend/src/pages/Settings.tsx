@@ -4,7 +4,7 @@ import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
 import TableSection from "../components/pages/settings/TableSection";
-import mySWR from "../utils/mySWR";
+import mySWR, { putRequest } from "../utils/mySWR";
 import { useState, useEffect } from "react";
 
 export default function Settings() {
@@ -53,8 +53,9 @@ function RestaurantSection() {
     // PUT to backend
   }, [bookingDuration]);
 
-  const handleBookingDurationUpdate = (value: string) => {
-    // TODO: PUT to backend
+  const handleBookingDurationUpdate = async (value: string) => {
+    // TODO: fix
+    const response = putRequest(`/default-duration/detail/`, { duration: parseInt(value) });
     setDefaultBookingDuration(value);
   };
 
