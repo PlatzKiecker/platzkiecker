@@ -79,7 +79,7 @@ export default function BookingPeriodsSection() {
           if (!period.open && !period.close) return;
           return (
             <div className="flex gap-4 items--center">
-              <TimeRangePicker key={period.open.toString()} value={period} />
+              <TimeRangePicker key={period.open.toString()} value={period} onChange={() => {}} />
               <Button variant="secondary" onClick={() => handleDeletePeriod(period.id)}>
                 <TrashIcon className="text-red-500 h-4 w-4" />
               </Button>
