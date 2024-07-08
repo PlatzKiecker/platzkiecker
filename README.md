@@ -245,7 +245,6 @@ To use the application, follow these steps:
 
 1. Open your web browser and navigate to `http://localhost:80` or `http://localhost:443`.
 2. If you use the "docker-compose.full.yml" the frontend is reachable at `http://localhost:3000` and the backend is reacheable at `http://localhost:8000`.
-2a. 
 
 ## Configuration
 
