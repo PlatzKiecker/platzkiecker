@@ -10,7 +10,7 @@ function Section({ title, description, children }: { title: string; description?
         <p className="mt-1 text-sm leading-6 text-gray-600">{description}</p>
       </div>
 
-      <div className="w-full">{children}</div>
+      <div className="w-full md:col-span-2">{children}</div>
     </div>
   );
 }
