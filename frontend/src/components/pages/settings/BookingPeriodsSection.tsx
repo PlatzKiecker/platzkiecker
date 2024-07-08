@@ -34,11 +34,22 @@ export default function BookingPeriodsSection() {
   }, [data]);
 
   const handleValueChange = (value: DateValueType, id: number) => {
-    console.log(value);
+    setPeriods((prev) => {
+      return {
+        monday: prev.monday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        tuesday: prev.tuesday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        wednesday: prev.wednesday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        thursday: prev.thursday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        friday: prev.friday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        saturday: prev.saturday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+        sunday: prev.sunday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
+      };
+    });
   };
 
   const handleAddPeriod = async (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
-    const response = await postRequest("/booking-periods/", { weekday: "MO", open: "12:00:00", close: "19:00:00" });
+    const weekday = day.slice(0, 2).toUpperCase();
+    const response = await postRequest("/booking-periods/", { weekday: weekday, open: "12:00:00", close: "19:00:00" });
 
     setPeriods((prev) => {
       return { ...prev, [day]: [...prev[day], response.data] };
