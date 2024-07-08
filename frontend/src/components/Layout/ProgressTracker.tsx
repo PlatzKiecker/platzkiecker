@@ -4,8 +4,8 @@ interface ProgressBarProps {
 }
 const ProgressTracker: React.FC<ProgressBarProps> = ({ progress }) => {
   return (
-    { /* Progress Tracker for the guest booking*/}
     <div>
+      {/* Progress Tracker for guest booking*/}
       <h4 className="sr-only">Status</h4>
       <div className="mt-6" aria-hidden="true">
         <div className="overflow-hidden rounded-full bg-gray-200">

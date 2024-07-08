@@ -43,29 +43,14 @@ export default function Booking() {
   }, [loading, error, booking]);
 
   const handleInputChange = (value, name) => {
-    if (name === "startDate" || name === "startTime" || name === "table") {
-      setErrorMessage(`Cannot change ${name} field`);
-    } else {
+    if (name === "guest_name" || name === "guest_phone" || name === "notes" || name === "status") {
       setErrorMessage("");
+      setBookingData({ ...bookingData, [name]: value });
+    } else {
+      setErrorMessage(`Cannot change ${name} field`);
     }
   };
 
-  const handleNameChange = (value) => {
-    setBookingData({ ...bookingData, guest_name: value });
-  };
-
-  const handlePhoneChange = (value) => {
-    setBookingData({ ...bookingData, guest_phone: value });
-  };
-
-  const handleNotesChange = (value) => {
-    setBookingData({ ...bookingData, notes: value });
-  };
-
-  const handleStatusChange = (value) => {
-    setBookingData({ ...bookingData, status: value });
-  };
- // Updating the Booking
   const handleUpdateBooking = () => {
     update(bookingData)
       .then(() => {
@@ -78,7 +63,7 @@ export default function Booking() {
       });
   };
 
-  //Delete the booking
+  // Delete the booking
   const handleDeleteBooking = () => {
     // Display popup for confirmation
     const confirmDelete = window.confirm("Are you sure you want to delete this booking?");
@@ -114,66 +99,52 @@ export default function Booking() {
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">Edit booking</h1>
           <Button onClick={() => navigate("/")}>Back to Booking Overview</Button>
         </div>
-        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">You can only change name, phonenumber and notes</p>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">You can only change name, phone number, notes, and status</p>
       </header>
       {/* Form to edit booking details */}
+      <div className="flex mb-4">
+          <div className="mr-2">
+            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <p>{bookingData.startDate}</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Time</label>
+            <p>{bookingData.startTime}</p>
+          </div>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Guest Count</label>
+          <p>{bookingData.guestCount}</p>
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Table</label>
+          <p>{bookingData.table}</p>
+        </div>
       <div className="max-w-xl">
         <InputField
           label="Name"
           name="guest_name"
           value={bookingData.guest_name}
-          onChange={handleNameChange}
+          onChange={(value) => handleInputChange(value, "guest_name")}
         />
         <InputField
           label="Phone"
           name="guest_phone"
           value={bookingData.guest_phone}
-          onChange={handlePhoneChange}
-        />
-        <div className="flex">
-          <div className="mr-2">
-            <InputField
-              label="Date"
-              type="date"
-              name="startDate"
-              value={bookingData.startDate}
-              onChange={(value) => handleInputChange(value, "startDate")}
-            />
-          </div>
-          <div>
-            <InputField
-              label="Time"
-              type="time"
-              name="startTime"
-              value={bookingData.startTime}
-              onChange={(value) => handleInputChange(value, "startTime")}
-            />
-          </div>
-        </div>
-        <InputField
-          label="Guest Count"
-          name="guestCount"
-          value={bookingData.guestCount}
-          onChange={(value) => handleInputChange(value, "guestCount")}
+          onChange={(value) => handleInputChange(value, "guest_phone")}
         />
         <InputField
           label="Notes"
           name="notes"
           value={bookingData.notes}
-          onChange={handleNotesChange}
-        />
-        <InputField
-          label="Table"
-          name="table"
-          value={bookingData.table}
-          onChange={(value) => handleInputChange(value, "table")}
+          onChange={(value) => handleInputChange(value, "notes")}
         />
         {/* Status dropdown */}
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700">Status</label>
           <select
             value={bookingData.status}
-            onChange={(e) => handleStatusChange(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value, "status")}
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
           >
             <option value="PENDING">Pending</option>
