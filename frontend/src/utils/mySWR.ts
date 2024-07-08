@@ -5,7 +5,7 @@ import { getCookie } from "./csrf";
 const BASE_URL = import.meta.env.VITE_API_URL; // Get the API URL from the environment variables
 
 export default function mySWR(path: string) {
-  const url = `${BASE_URL}${path}`; // Construct the full URL
+  const url = `${BASE_URL}${path}`;
   const { data, error, isLoading } = useSWR(url, fetcher);
 
   async function update(newData: Record<string, any>) {
