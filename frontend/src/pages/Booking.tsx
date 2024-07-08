@@ -5,8 +5,8 @@ import InputField from "../components/input/InputField";
 import Button from "../components/input/Button";
 
 export default function Booking() {
-  const { id } = useParams(); // Buchungs-ID aus den Routenparametern holen
-  const navigate = useNavigate(); // Hook zum Navigieren zwischen Routen
+  const { id } = useParams(); // Get booking ID from route parameters
+  const navigate = useNavigate(); 
 
   const { data: booking, loading, error, update, remove } = mySWR(`/bookings/detail/${id}/`);
 
@@ -25,14 +25,14 @@ export default function Booking() {
 
   useEffect(() => {
     if (!loading && !error && booking) {
-      // Daten in den State setzen, wenn sie geladen wurden
+      // Set data in the state when it has been loaded
       if (booking.start) {
         const startDate = new Date(booking.start);
         setBookingData({
           guest_name: booking.guest_name || "",
           guest_phone: booking.guest_phone || "",
-          startDate: startDate.toISOString().split('T')[0], // Datum als YYYY-MM-DD
-          startTime: startDate.toISOString().split('T')[1].slice(0, 5), // Zeit als HH:mm
+          startDate: startDate.toISOString().split('T')[0], // Date as YYYY-MM-DD
+          startTime: startDate.toISOString().split('T')[1].slice(0, 5), // Time as HH:mm
           guestCount: booking.guest_count || 0,
           notes: booking.notes || "",
           table: booking.table || 0,
@@ -65,12 +65,11 @@ export default function Booking() {
   const handleStatusChange = (value) => {
     setBookingData({ ...bookingData, status: value });
   };
-
+ // Updating the Booking
   const handleUpdateBooking = () => {
-    // Logik zum Aktualisieren der Buchung
     update(bookingData)
       .then(() => {
-        // Optional: Feedback an den Benutzer, dass die Buchung aktualisiert wurde
+        // Optional: Feedback to the user that the booking has been updated
         console.log("Booking updated successfully!");
       })
       .catch((error) => {
@@ -79,14 +78,15 @@ export default function Booking() {
       });
   };
 
+  //Delete the booking
   const handleDeleteBooking = () => {
-    // Popup zur Bestätigung anzeigen
+    // Display popup for confirmation
     const confirmDelete = window.confirm("Are you sure you want to delete this booking?");
     if (confirmDelete) {
-      // API-Aufruf zum Löschen der Buchung
+      // API call to delete the booking
       remove()
         .then(() => {
-          // Nach dem Löschen zur Hauptseite navigieren
+          // Navigate to the main page after deletion
           navigate("/");
         })
         .catch((error) => {
@@ -97,11 +97,11 @@ export default function Booking() {
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Ladeanzeige, solange die Daten geladen werden
+    return <div>Loading...</div>; // Loading indicator while data is being loaded
   }
 
   if (error) {
-    return <div>Error loading booking details.</div>; // Fehlermeldung, falls ein Fehler auftritt
+    return <div>Error loading booking details.</div>; // Error message if an error occurs
   }
 
   return (
@@ -116,6 +116,7 @@ export default function Booking() {
         </div>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">You can only change name, phonenumber and notes</p>
       </header>
+      {/* Form to edit booking details */}
       <div className="max-w-xl">
         <InputField
           label="Name"
@@ -167,6 +168,7 @@ export default function Booking() {
           value={bookingData.table}
           onChange={(value) => handleInputChange(value, "table")}
         />
+        {/* Status dropdown */}
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700">Status</label>
           <select
@@ -180,11 +182,12 @@ export default function Booking() {
           </select>
         </div>
       </div>
+      {/* Update and delete buttons */}
       <div className="mt-6">
         <Button onClick={handleUpdateBooking}>Update booking</Button>
       </div>
       <div className="mt-4">
-        <Button onClick={handleDeleteBooking} variant="danger"> {/* Verwendung des "danger" (rot) Button */}
+        <Button onClick={handleDeleteBooking} variant="danger"> {/* Use "danger" (red) button */}
           Delete booking
         </Button>
       </div>

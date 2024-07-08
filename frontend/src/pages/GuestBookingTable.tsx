@@ -35,12 +35,14 @@ export default function TableDetails() {
     selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : null
   );
 
+  // Update the bookable days when the guest count changes
   useEffect(() => {
     if (bookableDaysData && bookableDaysData.available_days) {
       setBookableDays(bookableDaysData.available_days);
     }
   }, [bookableDaysData]);
 
+  // Update the bookable times when the selected date changes
   useEffect(() => {
     if (bookableTimesData && bookableTimesData.free_slots) {
       const startTimes = bookableTimesData.free_slots.map((slot: { start: string }) => slot.start);
@@ -53,16 +55,10 @@ export default function TableDetails() {
   const handleGuestCountChange = (count: number) => {
     setGuestCount(count);
   };
-
+  
+  // Navigating to the next page to fill in the guest details
   const handleSubmit = () => {
     const combinedDateTime = combineDateTime(selectedDate, selectedTime);
-
-    // Log the selected values for verification
-    console.log("Guest Count:", guestCount);
-    console.log("Selected Date:", selectedDate);
-    console.log("Selected Time:", selectedTime);
-    console.log("Combined DateTime:", combinedDateTime);
-
     // Navigate to the '/guestbooking' route with the selected values
     navigate("/guestbooking", { state: { guestCount, combinedDateTime } });
   };
@@ -71,11 +67,11 @@ export default function TableDetails() {
     const date = e.target.value;
     if (bookableDays.includes(date)) {
       setSelectedDate(date);
-      setErrorMessage(""); // Clear error message if the date is valid
+      setErrorMessage("");
       console.log("Fetching bookable times for date:", date);
     } else {
-      setSelectedDate(""); // Clear the date if it's not bookable
-      setErrorMessage("Selected date is not available for booking."); // Set error message
+      setSelectedDate(""); 
+      setErrorMessage("Selected date is not available for booking."); 
     }
   };
 
@@ -171,6 +167,7 @@ export default function TableDetails() {
   );
 }
 
+// Function to fetch available days for booking
 function bookablePeriods(count: number) {
   const startDate = new Date();
   const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split('T')[0]}`);

@@ -1,10 +1,8 @@
-// components/input/Button.tsx
-
 import React from "react";
 
 type ButtonProps = {
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "danger"; // Optionen für verschiedene Varianten
+  variant?: "primary" | "secondary" | "danger"; // different button styles
   children: React.ReactNode;
 };
 

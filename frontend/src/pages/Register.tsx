@@ -12,37 +12,32 @@ export default function Register() {
 
   const navigate = useNavigate();
 
+  // Send the registration request to the server
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-
     try {
       setError(null);
       const registerData = await postRequest('/register/', { email, password });
-
       if (registerData) {
         const loginData = await postRequest('/login/', { email, password });
         if (loginData) {
-          console.log('Login successful after registration:', loginData);
-          
+          console.log('Login successful after registration:', loginData);       
           // Create Restaurant
           const restaurantData = await postRequest('/restaurant/', { name: "Restaurant-Name" });
           if (!restaurantData) {
             setError("Failed to create restaurant");
             return;
           }
-
           // Create Zone
           const zoneData = await postRequest('/zones/', { name: "Zone 1", bookable: true });
           if (!zoneData) {
             setError("Failed to create zone");
             return;
           }
-
           navigate('/settings');
         } else {
           setError("Failed to login after registration");
@@ -62,7 +57,7 @@ export default function Register() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create your account</h2>
         </div>
-
+        {/* Registration form */}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <InputFieldLogin label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -76,7 +71,9 @@ export default function Register() {
               </button>
             </div>
           </form>
+          {/* Error message */}
           {error && <p className="mt-2 text-center text-sm text-red-500">{error}</p>}
+          {/* Login link */}
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{" "}
             <Link to="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">

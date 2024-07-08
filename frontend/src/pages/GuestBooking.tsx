@@ -22,7 +22,7 @@ export default function GuestDetails() {
         guest_phone: phoneNumber,
         start: combinedDateTime,
         guest_count: guestCount,
-        notes: reservationDetails, // This will be an empty string if not filled in
+        notes: reservationDetails, // Optional
       };
       const response = await postRequest("/bookings/1/", bookingData);
       console.log("Booking created:", response.data);
@@ -33,14 +33,13 @@ export default function GuestDetails() {
     }
   };
 
+  // Update state when input fields change
   const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
   };
-
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value);
   };
-
   const handleReservationDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReservationDetails(e.target.value);
   };

@@ -4,7 +4,6 @@ import Page from "../components/layout/Page";
 import InputFieldLogin from "../components/input/InputFieldLogin";
 import { postRequest } from "../utils/mySWR";
 import mySWR from "../utils/mySWR";
-import Button from "../components/input/Button";
 
 // Function to get today's date in "YYYY-MM-DD" format
 function getTodayDate() {
@@ -78,13 +77,13 @@ export default function NewBooking() {
         guest_count: parseInt(guestCount),
         notes: reservationDetails,
       };
-      const response = await postRequest(`/bookings/1/`, bookingData); // Ensure the URL is correct
+      const response = await postRequest(`/bookings/1/`, bookingData);
       console.log("Booking created:", response.data);
       if (response.data.guest_count && response.data.guest_count.length > 0) {
         const errorMessage = response.data.guest_count[0];
-        setResponseMsg(errorMessage); // Set response message
+        setResponseMsg(errorMessage);
       } else {
-        setResponseMsg("Booking created successfully"); // Set default success message
+        setResponseMsg("Booking created successfully"); 
         setShowPopup(true); // Show popup on successful booking
       }
     } catch (err: any) {
@@ -102,7 +101,6 @@ export default function NewBooking() {
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => { setPhoneNumber(e.target.value); };
   const handleReservationDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => { setReservationDetails(e.target.value); };
   const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => { setGuestCount(e.target.value); };
-
   const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
     if (bookableDays.includes(date)) {
@@ -111,7 +109,7 @@ export default function NewBooking() {
       console.log("Fetching bookable times for date:", date);
     } else {
       setSelectedDate(""); // Clear the date if it's not bookable
-      setErrorMessage("Selected date is not available for booking."); // Set error message
+      setErrorMessage("Selected date is not available for booking.");
     }
   };
 
@@ -134,6 +132,7 @@ export default function NewBooking() {
     <Page title="Create booking">  
       <form onSubmit={handleBooking} className="max-w-xl">
         <div className="grid grid-cols-1 gap-4">
+          {/* Booking Details */}
           <InputFieldLogin label="Guests" name="guestCount" value={guestCount} onChange={handleGuestCountChange} />
           <div>
             <label className="text-sm font-medium leading-6 text-gray-900">Date of Reservation</label>
@@ -172,11 +171,13 @@ export default function NewBooking() {
               </p>
             )}
           </div>
+          {/* Table Details */}
           <InputFieldLogin label="Name" name="fullName" value={fullName} onChange={handleFullNameChange} />
           <InputFieldLogin label="Phone number" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
           <InputFieldLogin label="Notes" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} nonRequired/>
           {responseMsg && <p className="text-red-600">{responseMsg}</p>} {/* Display response message */}
           <div className="mt-4">
+            {/* Submit button */}
             <button
               type="submit"
               className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -185,6 +186,7 @@ export default function NewBooking() {
           </div>
         </div>
       </form>
+      {/* Popup to show booking success */}
       {showPopup && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
