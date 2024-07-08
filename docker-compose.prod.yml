@@ -18,6 +18,7 @@ services:
     env_file:
       - ./.env.prod.db
     restart: always
+#  # Use this if you are not planning to use the nginx-proxy-manager
 #  proxy:
 #    build: ./proxy
 #    volumes:
@@ -29,6 +30,7 @@ services:
 #    depends_on:
 #      - web
 #    restart: always
+  # nginx-proxy-manager configuration
   proxy:
     image: jc21/nginx-proxy-manager:latest
     restart: always
