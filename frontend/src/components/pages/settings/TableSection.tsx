@@ -75,7 +75,7 @@ export default function TableSection() {
         )}
 
         <div className="flex gap-2 items-end">
-          <InputField placeholder="Enter table name" onChange={setNewTableName} />
+          <InputField label="Create new table" placeholder="Enter table name" onChange={setNewTableName} />
           <InputField placeholder="Enter number of chairs" type="number" onChange={setNewTableChairs} />
           <Select options={zones?.map((zone: Zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
           <Button variant="secondary" onClick={handleAddTable}>
@@ -187,7 +187,7 @@ function Zones() {
         </div>
       ))}
       <div className="flex gap-2 items-end">
-        <InputField placeholder="Enter zone name" value={newZoneName} onChange={setNewZoneName} />
+        <InputField label="Create new zone" placeholder="Enter zone name" value={newZoneName} onChange={setNewZoneName} />
         <Button variant="secondary" onClick={addZone}>
           Create a new zone
         </Button>
