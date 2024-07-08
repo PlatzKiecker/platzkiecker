@@ -7,7 +7,7 @@ export default function GuestConfirmation() {
   const { bookingData } = location.state || {};
 
   // Function to format time to HH:mm in UTC
-  const formatTimeUTC = (datetimeString) => {
+  const formatTimeUTC = (datetimeString: string) => {
     const date = new Date(datetimeString);
     return date.toISOString().slice(11, 16);
   };
