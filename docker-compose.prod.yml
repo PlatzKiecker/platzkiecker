@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
-    volumes:  
+    volumes:
       - static_volume:/backend/staticfiles
     env_file:
       - ./.env.prod
@@ -18,17 +18,33 @@ services:
     env_file:
       - ./.env.prod.db
     restart: always
+#  proxy:
+#    build: ./proxy
+#    volumes:
+#      - static_volume:/backend/staticfiles
+#      - ./certs:/etc/nginx/ssl
+#    ports:
+#      - 443:8080
+#      - 80:8080
+#    depends_on:
+#      - web
+#    restart: always
   proxy:
-    build: ./proxy
-    volumes:
-      - static_volume:/backend/staticfiles
+    image: jc21/nginx-proxy-manager:latest
+    restart: always
     ports:
-      - 443:8080
-      - 80:8080
+      - 80:80
+      - 443:443
+      - 81:81  # Admin interface
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+      - ./nginx-proxy-manager:/config
     depends_on:
       - web
-    restart: always
-  
 volumes:
   postgres_data:
   static_volume:
+  data:
