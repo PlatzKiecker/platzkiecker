@@ -34,7 +34,7 @@ export default function BookingPeriodsSection() {
   }, [data]);
 
   const handleValueChange = (value: DateValueType, id: number) => {
-    setPeriods((prev) => {
+    /*setPeriods((prev) => {
       return {
         monday: prev.monday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
         tuesday: prev.tuesday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
@@ -44,7 +44,7 @@ export default function BookingPeriodsSection() {
         saturday: prev.saturday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
         sunday: prev.sunday.map((period: BookingPeriod) => (period.id === id ? { ...period, open: value.start, close: value.end } : period)),
       };
-    });
+    });*/
   };
 
   const handleAddPeriod = async (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
