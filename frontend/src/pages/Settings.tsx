@@ -4,7 +4,7 @@ import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
 import TableSection from "../components/pages/settings/TableSection";
-import mySWR from "../utils/mySWR";
+import mySWR, { postRequest, putRequest } from "../utils/mySWR";
 import { useState, useEffect } from "react";
 
 export default function Settings() {
@@ -43,19 +43,30 @@ function RestaurantSection() {
   };
 
   const { data: bookingDuration, error: bookingDurationError, loading: bookingDurationLoading, update: updateBookingDuration } = mySWR(`/default-duration/detail/`);
-  const [defaultBookingDuration, setDefaultBookingDuration] = useState(bookingDuration?.duration || 0);
+  const [defaultBookingDuration, setDefaultBookingDuration] = useState(0);
+
+  function transformDurationIntoFloat(duration: string) {
+    const [hours, minutes] = duration.split(":");
+    return parseFloat(hours) + parseFloat(minutes) / 60;
+  }
 
   useEffect(() => {
     if (bookingDuration) {
-      setDefaultBookingDuration(parseInt(bookingDuration.duration));
-      updateBookingDuration({ duration: parseInt(bookingDuration.duration) });
+      setDefaultBookingDuration(transformDurationIntoFloat(bookingDuration.duration));
     }
-    // PUT to backend
   }, [bookingDuration]);
 
-  const handleBookingDurationUpdate = (value: string) => {
-    // TODO: PUT to backend
-    setDefaultBookingDuration(value);
+  const handleBookingDurationUpdate = async (value: string) => {
+    const totalMinutes = parseFloat(value) * 60;
+
+    const hours = Math.floor(totalMinutes / 60)
+      .toString()
+      .padStart(2, "0");
+    const minutes = (totalMinutes % 60).toString().padStart(2, "0");
+    //await postRequest(`/default-duration/`, { duration: `${hours}:${minutes}:00` });
+    const response = putRequest(`/default-duration/detail/`, { duration: `${hours}:${minutes}:00` });
+
+    setDefaultBookingDuration(parseFloat(value));
   };
 
   return (

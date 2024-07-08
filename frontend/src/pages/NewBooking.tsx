@@ -11,14 +11,14 @@ function getTodayDate() {
   const year = today.getFullYear();
   let month = today.getMonth() + 1;
   let day = today.getDate();
-  if (month < 10) month = `0${month}`;
-  if (day < 10) day = `0${day}`;
+  if (month < 10) month = parseInt(`0${month}`);
+  if (day < 10) day = parseInt(`0${day}`);
   return `${year}-${month}-${day}`;
 }
 
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split('T')[0]}`);
+  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
   return { data, error, loading };
 }
 
@@ -40,9 +40,7 @@ export default function NewBooking() {
 
   // Fetch bookable days and times
   const { data: bookableDaysData } = bookablePeriods(Number(guestCount));
-  const { data: bookableTimesData } = mySWR(
-    selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : null
-  );
+  const { data: bookableTimesData } = mySWR(selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : "/");
 
   useEffect(() => {
     if (bookableDaysData && bookableDaysData.available_days) {
@@ -83,7 +81,7 @@ export default function NewBooking() {
         const errorMessage = response.data.guest_count[0];
         setResponseMsg(errorMessage);
       } else {
-        setResponseMsg("Booking created successfully"); 
+        setResponseMsg("Booking created successfully");
         setShowPopup(true); // Show popup on successful booking
       }
     } catch (err: any) {
@@ -97,10 +95,18 @@ export default function NewBooking() {
     }
   };
 
-  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => { setFullName(e.target.value); };
-  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => { setPhoneNumber(e.target.value); };
-  const handleReservationDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => { setReservationDetails(e.target.value); };
-  const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => { setGuestCount(e.target.value); };
+  const handleFullNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullName(e.target.value);
+  };
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
+  };
+  const handleReservationDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReservationDetails(e.target.value);
+  };
+  const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGuestCount(e.target.value);
+  };
   const handleDateChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = e.target.value;
     if (bookableDays.includes(date)) {
@@ -129,10 +135,9 @@ export default function NewBooking() {
   };
 
   return (
-    <Page title="Create booking">  
+    <Page title="Create booking">
       <form onSubmit={handleBooking} className="max-w-xl">
         <div className="grid grid-cols-1 gap-4">
-        
           {/* Booking Details */}
           <InputFieldLogin label="Number of guests*" name="guestCount" value={guestCount} onChange={handleGuestCountChange} />
           <div>
@@ -159,26 +164,23 @@ export default function NewBooking() {
                       key={time}
                       type="button"
                       onClick={() => handleTimeSelection(time)}
-                      className={`p-2 border rounded ${selectedTime === time ? 'bg-indigo-500 text-white' : 'bg-white text-gray-900'}`}
-                    >
+                      className={`p-2 border rounded ${selectedTime === time ? "bg-indigo-500 text-white" : "bg-white text-gray-900"}`}>
                       {time}
                     </button>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="text-red-500">
-                {guestCount.trim() === "" ? "Please enter the number of guests." : "No tables available for this date and number of guests."}
-              </p>
+              <p className="text-red-500">{guestCount.trim() === "" ? "Please enter the number of guests." : "No tables available for this date and number of guests."}</p>
             )}
           </div>
           {/* Table Details */}
           <InputFieldLogin label="Name*" name="fullName" value={fullName} onChange={handleFullNameChange} />
           <InputFieldLogin label="Phone number*" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
-          <InputFieldLogin label="Notes" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} nonRequired/>
+          <InputFieldLogin label="Notes" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} nonRequired />
           {responseMsg && <p className="text-red-600">{responseMsg}</p>} {/* Display response message */}
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">*required fields</p>
-           {/* Submit button */}
+          {/* Submit button */}
           <div className="mt-4">
             <button
               type="submit"

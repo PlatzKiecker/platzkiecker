@@ -31,9 +31,11 @@ export default function TableDetails() {
 
   // Fetch bookable days and times
   const { data: bookableDaysData, error: bookableDaysError, loading: bookableDaysLoading } = bookablePeriods(guestCount);
-  const { data: bookableTimesData, error: bookableTimesError, loading: bookableTimesLoading } = mySWR(
-    selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : null
-  );
+  const {
+    data: bookableTimesData,
+    error: bookableTimesError,
+    loading: bookableTimesLoading,
+  } = mySWR(selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : "");
 
   // Update the bookable days when the guest count changes
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function TableDetails() {
   const handleGuestCountChange = (count: number) => {
     setGuestCount(count);
   };
-  
+
   // Navigating to the next page to fill in the guest details
   const handleSubmit = () => {
     const combinedDateTime = combineDateTime(selectedDate, selectedTime);
@@ -70,8 +72,8 @@ export default function TableDetails() {
       setErrorMessage("");
       console.log("Fetching bookable times for date:", date);
     } else {
-      setSelectedDate(""); 
-      setErrorMessage("Selected date is not available for booking."); 
+      setSelectedDate("");
+      setErrorMessage("Selected date is not available for booking.");
     }
   };
 
@@ -93,7 +95,6 @@ export default function TableDetails() {
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">For more than 10 guests please call the restaurant directly.
             <br/>You can book 1 month in advance.
-            <br/>*required fields
           </p>
         </div>
         {/* Form Section */}
@@ -129,14 +130,10 @@ export default function TableDetails() {
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 {bookableTimes.length > 0 ? (
                   <>
-                    <p>{selectedDate ? `Timeslot for ${selectedDate}` : 'Select a date to see available timeslots'}</p>
+                    <p>{selectedDate ? `Timeslot for ${selectedDate}` : "Select a date to see available timeslots"}</p>
                     <div className="grid grid-cols-4 gap-2">
                       {bookableTimes.map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => handleTimeSelection(time)}
-                          className={`p-2 border rounded ${selectedTime === time ? 'bg-indigo-500 text-white' : 'bg-white text-gray-900'}`}
-                        >
+                        <button key={time} onClick={() => handleTimeSelection(time)} className={`p-2 border rounded ${selectedTime === time ? "bg-indigo-500 text-white" : "bg-white text-gray-900"}`}>
                           {time}
                         </button>
                       ))}
@@ -152,8 +149,9 @@ export default function TableDetails() {
               <button
                 type="button" 
                 onClick={handleSubmit} 
-                className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Next Step
+                className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Submit Table Information
               </button>
             </div>
           </dl>
@@ -170,6 +168,6 @@ export default function TableDetails() {
 // Function to fetch available days for booking
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split('T')[0]}`);
-  return { data, error, loading }; 
+  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
+  return { data, error, loading };
 }

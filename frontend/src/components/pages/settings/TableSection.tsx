@@ -4,6 +4,7 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 import Select from "../../input/Select";
+import { mutate } from "swr";
 
 type Zone = { id: number; name: string; bookable: boolean; restaurant: number; tables: number[] };
 
@@ -23,7 +24,7 @@ export default function TableSection() {
   }, [data]);
 
   useEffect(() => {
-    if (zones) {
+    if (zones && zones.length > 0) {
       setNewTableZone(zones[0].id);
     }
   }, [zones]);
@@ -58,22 +59,24 @@ export default function TableSection() {
         {tables.length > 0 && (
           <table className="w-full">
             <thead>
-              <tr>
-                <th>Table ID</th>
-                <th>Chairs</th>
-                <th>Action</th>
+              <tr className="text-sm">
+                <th className="font-normal">Name</th>
+                <th className="font-normal">Chairs</th>
+                <th className="font-normal">Zone</th>
+                <th className="font-normal">Bookable</th>
+                <th className="font-normal">Action</th>
               </tr>
             </thead>
             <tbody>
               {tables.map((table) => (
-                <TableRow key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
+                <TableRow zones={zones} key={table.id} handleUpdate={handleUpdateTable} cleanupDelete={cleanupDelete} table={table} />
               ))}
             </tbody>
           </table>
         )}
 
         <div className="flex gap-2 items-end">
-          <InputField placeholder="Enter table name" onChange={setNewTableName} />
+          <InputField label="Create new table" placeholder="Enter table name" onChange={setNewTableName} />
           <InputField placeholder="Enter number of chairs" type="number" onChange={setNewTableChairs} />
           <Select options={zones?.map((zone: Zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
           <Button variant="secondary" onClick={handleAddTable}>
@@ -86,7 +89,17 @@ export default function TableSection() {
   );
 }
 
-function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handleUpdate: (id: number, name: string, capacity: number, zone: number) => void; cleanupDelete: (id: number) => void }) {
+function TableRow({
+  table,
+  handleUpdate,
+  cleanupDelete,
+  zones,
+}: {
+  table: Table;
+  handleUpdate: (id: number, name: string, capacity: number, zone: number) => void;
+  cleanupDelete: (id: number) => void;
+  zones: Zone[];
+}) {
   const deleteTable = () => {
     // DELETE to backend
     console.log("DELETE to backend", table.id);
@@ -96,9 +109,17 @@ function TableRow({ table, handleUpdate, cleanupDelete }: { table: Table; handle
   return (
     <tr>
       <td>
-        <div className="flex gap-4">
-          <InputField value={table.name} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} />
-          <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} type="number" />
+        <InputField value={table.name} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} />
+      </td>
+      <td>
+        <InputField value={table.capacity.toString()} onChange={(value) => handleUpdate(table.id, table.name, table.capacity, table.zone)} type="number" />
+      </td>
+      <td>
+        <Select value={zones?.find((zone) => zone.id === table.zone)?.name} options={zones?.map((zone: Zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
+      </td>
+      <td>
+        <div className="h-5 w-5">
+          <InputField type="checkbox" value="true" />
         </div>
       </td>
       <td className="mr-0">
@@ -133,12 +154,14 @@ function Zones() {
 
   const addZone = async () => {
     const response = await postRequest("/zones/", { name: newZoneName });
+    mutate("/zones/list/");
 
     setZones((prev) => {
       // POST to backend
       const newZone = response.data;
       return [...prev, newZone];
     });
+    setNewZoneName("");
   };
 
   const handleZoneUpdate = (id: number, name: string) => {
@@ -166,7 +189,7 @@ function Zones() {
         </div>
       ))}
       <div className="flex gap-2 items-end">
-        <InputField placeholder="Enter zone name" value={newZoneName} onChange={setNewZoneName} />
+        <InputField label="Create new zone" placeholder="Enter zone name" value={newZoneName} onChange={setNewZoneName} />
         <Button variant="secondary" onClick={addZone}>
           Create a new zone
         </Button>

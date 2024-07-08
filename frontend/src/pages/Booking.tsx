@@ -6,7 +6,7 @@ import Button from "../components/input/Button";
 
 export default function Booking() {
   const { id } = useParams(); // Get booking ID from route parameters
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const { data: booking, loading, error, update, remove } = mySWR(`/bookings/detail/${id}/`);
 
@@ -31,8 +31,8 @@ export default function Booking() {
         setBookingData({
           guest_name: booking.guest_name || "",
           guest_phone: booking.guest_phone || "",
-          startDate: startDate.toISOString().split('T')[0], // Date as YYYY-MM-DD
-          startTime: startDate.toISOString().split('T')[1].slice(0, 5), // Time as HH:mm
+          startDate: startDate.toISOString().split("T")[0], // Date as YYYY-MM-DD
+          startTime: startDate.toISOString().split("T")[1].slice(0, 5), // Time as HH:mm
           guestCount: booking.guest_count || 0,
           notes: booking.notes || "",
           table: booking.table || 0,
@@ -42,7 +42,7 @@ export default function Booking() {
     }
   }, [loading, error, booking]);
 
-  const handleInputChange = (value, name) => {
+  const handleInputChange = (value: string, name: string) => {
     if (name === "guest_name" || name === "guest_phone" || name === "notes" || name === "status") {
       setErrorMessage("");
       setBookingData({ ...bookingData, [name]: value });
@@ -91,9 +91,7 @@ export default function Booking() {
 
   return (
     <div>
-      {errorMessage && (
-        <div className="text-red-600 text-sm mb-4">{errorMessage}</div>
-      )}
+      {errorMessage && <div className="text-red-600 text-sm mb-4">{errorMessage}</div>}
       <header className="mb-10">
         <div className="mx-auto max-w-7xl flex justify-between items-center">
           <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">Edit booking</h1>
@@ -122,32 +120,16 @@ export default function Booking() {
       </div>
       {/* Form to edit booking details */}
       <div className="max-w-xl">
-        <InputField
-          label="Name"
-          name="guest_name"
-          value={bookingData.guest_name}
-          onChange={(value) => handleInputChange(value, "guest_name")}
-        />
-        <InputField
-          label="Phone"
-          name="guest_phone"
-          value={bookingData.guest_phone}
-          onChange={(value) => handleInputChange(value, "guest_phone")}
-        />
-        <InputField
-          label="Notes"
-          name="notes"
-          value={bookingData.notes}
-          onChange={(value) => handleInputChange(value, "notes")}
-        />
+        <InputField label="Name" value={bookingData.guest_name} onChange={(value) => handleInputChange(value, "guest_name")} />
+        <InputField label="Phone" value={bookingData.guest_phone} onChange={(value) => handleInputChange(value, "guest_phone")} />
+        <InputField label="Notes" value={bookingData.notes} onChange={(value) => handleInputChange(value, "notes")} />
         {/* Status dropdown */}
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700">Status</label>
           <select
             value={bookingData.status}
             onChange={(e) => handleInputChange(e.target.value, "status")}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
             <option value="PENDING">Pending</option>
             <option value="CONFIRMED">Confirmed</option>
             <option value="CANCELED">Canceled</option>
@@ -159,7 +141,9 @@ export default function Booking() {
         <Button onClick={handleUpdateBooking}>Update booking</Button>
       </div>
       <div className="mt-4">
-        <Button onClick={handleDeleteBooking} variant="danger"> {/* Use "danger" (red) button */}
+        <Button onClick={handleDeleteBooking} variant="danger">
+          {" "}
+          {/* Use "danger" (red) button */}
           Delete booking
         </Button>
       </div>
