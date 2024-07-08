@@ -10,8 +10,7 @@ export type BookingPeriods = {
 
 export type BookingPeriod = {
   id: number;
-  value: {
-    startTime: Date;
-    endTime: Date;
-  };
+  weekday: string; 
+  open: Date;
+  close: Date;
 };
