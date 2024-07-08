@@ -106,8 +106,20 @@ platzkiecker/
 ├── frontend/
 │   ├── public/
 │   ├── src/
-│   ├── package.json
-│   └── ... (other React files)
+│   │   ├── components/
+│   │   |   ├── feedback/
+│   │   |   ├── finput/
+│   │   |   ├── layout/
+│   │   |   └── pages/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── types/
+│   │   ├── utils/
+│   |   ├── index.css
+│   |   ├── main.tsx
+│   |   └── vite-env.d.ts
+│   ├── README.md (detailed structure)
+│   └── ... 
 ├── images/
 │   ├── pk_service_architecture.drawio
 │   └── pk_service_architecture.png
@@ -161,7 +173,12 @@ To set up the development environment, follow these steps:
     DJANGO_SUPERUSER_EMAIL=admin@example.com
     DJANGO_SUPERUSER_PASSWORD=verysecret
     ```
-4. Build and run the Docker containers using the development configuration:
+4. Navigate to the frontend directory: `cd platzkiecker/frontend`. 
+5. Create a `.env.development` file for the frontend and add the necessary environment variables for development.
+    ```bash
+    VITE_API_URL = 'http://localhost:8000'
+    ```
+6. Build and run the Docker containers using the development configuration:
     ```bash
     docker compose up -d --build
     ```
@@ -202,25 +219,33 @@ To set up the production environment, follow these steps:
     POSTGRES_PASSWORD=backend
     POSTGRES_DB=backend_prod
     ```
-5. Build and run the Docker containers using the production configuration:
+5. In production enviroment we use a CDN for deploying our frontend. If you plan to deploy the frontend on the same machine, please use our [docker-compose.full.yml](/docker-compose.full.yml).
+    > Navigate to the frontend directory: `cd platzkiecker/frontend`. 
+     Create a `.env` file for the frontend and add the necessary environment variables for development.
+    ```bash
+    VITE_API_URL = 'http://<your-domain>'
+    ```
+6. Build and run the Docker containers using the production configuration:
     ```bash
     docker compose -f docker-compose.prod.yml up -d --build
     ```
-6. Apply database migrations:
+7. Apply database migrations:
     ```bash
     docker compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
     ```
-7. Collect static files:
+8. Collect static files:
     ```bash
     docker compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
     ```
+> Wherever you deploy the frontend, keep in mind that you have to add the same environment-variable for the frontend there as well.
 
 ### Usage
 
 To use the application, follow these steps:
 
 1. Open your web browser and navigate to `http://localhost:80` or `http://localhost:443`.
-2. If you use the "docker-compose.full.yml" the frontend is reachable at `http://localhost:3000`.
+2. If you use the "docker-compose.full.yml" the frontend is reachable at `http://localhost:3000` and the backend is reacheable at `http://localhost:8000`.
+2a. 
 
 ## Configuration
 
@@ -354,7 +379,7 @@ The backend is responsible for handling API requests, processing business logic,
 The frontend is a single-page application built with React. It interacts with the backend via REST APIs and provides a dynamic user interface for managing restaurant tables.
 
 ### Proxy (nginx)
-Nginx is used as a reverse proxy to route requests to the appropriate backend or frontend services. It handles SSL termination, load balancing, and caching.
+Nginx is used as a reverse proxy to route requests to the appropriate backend or frontend services. It handles SSL termination, load balancing, and caching. In the Docker Compose prod.yaml, we use Nginx Proxy Manager instead of the standard Nginx server. Nginx Proxy Manager provides an easy-to-use web UI for managing configurations.
 
 ### Database (Postgres)
 The PostgreSQL database stores all persistent data, including user information, restaurant details, and table reservations. It is accessed by the Django backend.
