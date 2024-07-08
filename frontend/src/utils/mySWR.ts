@@ -2,7 +2,7 @@ import useSWR, { mutate } from "swr";
 import axios from "axios";
 import { getCookie } from "./csrf";
 
-const BASE_URL = "http://localhost:8000"; // Define your base URL here
+const BASE_URL = import.meta.env.VITE_API_URL; // Get the API URL from the environment variables
 
 export default function mySWR(path: string) {
   const url = `${BASE_URL}${path}`; // Construct the full URL
