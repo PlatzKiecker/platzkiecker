@@ -4,6 +4,7 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 import Select from "../../input/Select";
+import { mutate } from "swr";
 
 type Zone = { id: number; name: string; bookable: boolean; restaurant: number; tables: number[] };
 
@@ -58,12 +59,12 @@ export default function TableSection() {
         {tables.length > 0 && (
           <table className="w-full">
             <thead>
-              <tr>
-                <th>Table ID</th>
-                <th>Chairs</th>
-                <th>Zone</th>
-                <th>Bookable</th>
-                <th>Action</th>
+              <tr className="text-sm">
+                <th className="font-normal">Name</th>
+                <th className="font-normal">Chairs</th>
+                <th className="font-normal">Zone</th>
+                <th className="font-normal">Bookable</th>
+                <th className="font-normal">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -153,6 +154,7 @@ function Zones() {
 
   const addZone = async () => {
     const response = await postRequest("/zones/", { name: newZoneName });
+    mutate("/zones/list/");
 
     setZones((prev) => {
       // POST to backend
