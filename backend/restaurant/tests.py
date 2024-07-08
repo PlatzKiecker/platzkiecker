@@ -243,7 +243,6 @@ class DefaultBookingDurationTests(TestCase):
     
     def test_get_default_booking_duration(self):
         response = self.client.get(reverse('default-duration-detail'))
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['duration'], '01:00:00')
     
