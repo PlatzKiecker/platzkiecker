@@ -101,25 +101,26 @@ export default function Booking() {
         </div>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">You can only change name, phone number, notes, and status</p>
       </header>
-      {/* Form to edit booking details */}
+      {/* Display non-changeable fields */}
       <div className="flex mb-4">
-          <div className="mr-2">
-            <label className="block text-sm font-medium text-gray-700">Date</label>
-            <p>{bookingData.startDate}</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Time</label>
-            <p>{bookingData.startTime}</p>
-          </div>
+        <div className="mr-2">
+          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <p>{bookingData.startDate}</p>
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Guest Count</label>
-          <p>{bookingData.guestCount}</p>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Time</label>
+          <p>{bookingData.startTime}</p>
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Table</label>
-          <p>{bookingData.table}</p>
-        </div>
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Guest Count</label>
+        <p>{bookingData.guestCount}</p>
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Table</label>
+        <p>{bookingData.table}</p>
+      </div>
+      {/* Form to edit booking details */}
       <div className="max-w-xl">
         <InputField
           label="Name"

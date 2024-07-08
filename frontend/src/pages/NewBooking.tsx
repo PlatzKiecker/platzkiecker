@@ -132,10 +132,11 @@ export default function NewBooking() {
     <Page title="Create booking">  
       <form onSubmit={handleBooking} className="max-w-xl">
         <div className="grid grid-cols-1 gap-4">
+        
           {/* Booking Details */}
-          <InputFieldLogin label="Guests" name="guestCount" value={guestCount} onChange={handleGuestCountChange} />
+          <InputFieldLogin label="Number of guests*" name="guestCount" value={guestCount} onChange={handleGuestCountChange} />
           <div>
-            <label className="text-sm font-medium leading-6 text-gray-900">Date of Reservation</label>
+            <label className="text-sm font-medium leading-6 text-gray-900">Date of Reservation*</label>
             <input
               type="date"
               id="bookingDate"
@@ -172,16 +173,17 @@ export default function NewBooking() {
             )}
           </div>
           {/* Table Details */}
-          <InputFieldLogin label="Name" name="fullName" value={fullName} onChange={handleFullNameChange} />
-          <InputFieldLogin label="Phone number" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
+          <InputFieldLogin label="Name*" name="fullName" value={fullName} onChange={handleFullNameChange} />
+          <InputFieldLogin label="Phone number*" name="phoneNumber" value={phoneNumber} onChange={handlePhoneNumberChange} />
           <InputFieldLogin label="Notes" name="reservationDetails" value={reservationDetails} onChange={handleReservationDetailsChange} nonRequired/>
           {responseMsg && <p className="text-red-600">{responseMsg}</p>} {/* Display response message */}
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">*required fields</p>
+           {/* Submit button */}
           <div className="mt-4">
-            {/* Submit button */}
             <button
               type="submit"
               className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              New Booking
+              Create Booking
             </button>
           </div>
         </div>
