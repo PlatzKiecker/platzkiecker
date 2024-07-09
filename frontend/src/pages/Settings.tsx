@@ -8,6 +8,8 @@ import mySWR, { postRequest, putRequest } from "../utils/mySWR";
 import { useState, useEffect } from "react";
 
 export default function Settings() {
+  const { data, error, loading } = mySWR(`/restaurant/detail/`);
+
   return (
     <Page title="Settings">
       <SettingsLayout>
@@ -24,7 +26,7 @@ export default function Settings() {
           <VacationPeriodsSection />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Booking Portal" description="Use this link to allow users to book online">
-          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">https://platzkicker.com/create-booking?id=1</div>
+          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">https://platzkicker.com/create-booking?id={data.id}</div>
         </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
