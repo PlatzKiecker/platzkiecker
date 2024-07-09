@@ -9,9 +9,9 @@ type Zone = { id: number; name: string; bookable: boolean; restaurant: number; t
 
 export default function TableSection() {
   const [tables, setTables] = useState([]);
-  const [zones, setZones] = useState<Zone[]>([]);
+  const [zones, setZones] = useState<any>([]);
   const { data, error, loading, update } = mySWR("/tables/list/");
-  const { data: zoneDate, error: zoneError, loading: zoneLoading, update: zoneUpdate } = mySWR("/zones/list/");
+  const { data: zoneData, error: zoneError, loading: zoneLoading, update: zoneUpdate } = mySWR("/zones/list/");
 
   const [newZoneName, setNewZoneName] = useState("");
 
@@ -22,17 +22,17 @@ export default function TableSection() {
   }, [data]);
 
   useEffect(() => {
-    if (zones && zones.length > 0) {
-      setZones(zones);
+    if (zoneData) {
+      setZones(zoneData);
     }
-  }, [zoneDate]);
+  }, [zoneData]);
 
   const handleAddZone = async () => {
     console.log("Adding zone", newZoneName);
 
     const response = await postRequest("/zones/", { name: newZoneName });
 
-    setZones((prev) => {
+    setZones((prev: any) => {
       // POST to backend
       const newZone = response.data;
       return [...prev, newZone];
@@ -40,18 +40,34 @@ export default function TableSection() {
     setNewZoneName("");
   };
 
+  const handleZoneUpdate = (id: number, name: string) => {
+    setZones((prev: any) => {
+      return prev.map((zone: any) => (zone.id === id ? { ...zone, name: name } : zone));
+    });
+    putRequest(`/zones/${id}/`, { name });
+  };
+
+  const handleZoneDelete = (id: number) => {
+    setZones((prev: any) => {
+      return prev.filter((zone: any) => zone.id !== id);
+    });
+    deleteRequest(`/zones/${id}/`);
+  };
+
   function Zone({ zone }: { zone: Zone }) {
     return (
       <div>
-        <div key={zone.id} className="flex items-center gap-4">
-          <InputField placeholder="Enter zone name" value={zone.name} />
-          <Button variant="secondary">Delete</Button>
+        <div key={zone.id} className="flex items-end gap-4">
+          <InputField onChange={(val) => handleZoneUpdate(zone.id, val)} label={"Zone: " + zone.name} placeholder="Enter zone name" value={zone.name} />
+          <Button variant="secondary" onClick={() => handleZoneDelete(zone.id)}>
+            Delete
+          </Button>
         </div>
         <div>
           <div className="flex gap-2 items-end">
-            <InputField label="Create new table" placeholder="Enter table name" />
+            <InputField placeholder="Enter table name" />
             <InputField placeholder="Enter number of chairs" type="number" />
-            <Select options={zones.map((zone) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
+            <Select options={zones.map((zone: any) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
             <Button variant="secondary">+</Button>
           </div>
         </div>
@@ -62,8 +78,8 @@ export default function TableSection() {
   return (
     <div className="space-y-12">
       <div className="space-y-4 w-full">
-        <div>
-          {zones.map((zone) => (
+        <div className="space-y-8">
+          {zones.map((zone: any) => (
             <Zone key={zone.id} zone={zone} />
           ))}
           <div className="flex gap-2 items-end">
