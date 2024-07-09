@@ -82,6 +82,14 @@ export default function TableSection() {
         mutate("/zones/list/");
       };
 
+      const handleTableDelete = async () => {
+        const response = deleteRequest(`/tables/${table.id}/`);
+        mutate("/zones/list/");
+        //setTables((prev) => {
+        //  return prev.filter((table) => table.id !== id);
+        //});
+      };
+
       return (
         <div className="flex items-center gap-4">
           <InputField
@@ -108,7 +116,7 @@ export default function TableSection() {
               handleTableUpdate();
             }}
           />
-          <Button variant="secondary">
+          <Button variant="secondary" onClick={handleTableDelete}>
             <TrashIcon className="text-red-500 h-4 w-4" />
           </Button>
         </div>
