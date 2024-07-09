@@ -5,6 +5,8 @@ import InputFieldLogin from "../components/input/InputFieldLogin";
 import { postRequest } from "../utils/mySWR";
 import mySWR from "../utils/mySWR";
 
+const restaurantId = 1;
+
 // Function to get today's date in "YYYY-MM-DD" format
 function getTodayDate() {
   const today = new Date();
@@ -18,7 +20,7 @@ function getTodayDate() {
 
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
+  const { data, error, loading } = mySWR(`/available-days/${restaurantId}/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
   return { data, error, loading };
 }
 

@@ -38,6 +38,7 @@ export default function Shell() {
   }
   // TODO: todo
   // Check if session ID cookie exists
+
   //if (!document.cookie.includes("sessionid")) navigate("/login");
   return (
     <>

@@ -63,7 +63,7 @@ export default function TableSection() {
 
     const handleAddTable = async () => {
       const zoneId = zones.find((zone: any) => zone.name === newTableZone)?.id;
-      const response = await postRequest("/tables/", { name: newTableName, capacity: parseInt(newTableCapacity), zone: zoneId });
+      const response = await postRequest("/tables/", { name: newTableName, capacity: parseInt(newTableCapacity), zone: zoneId, bookable: true });
 
       mutate("/zones/list/");
     };
@@ -75,9 +75,8 @@ export default function TableSection() {
 
       const handleTableUpdate = async () => {
         const zoneId = zones.find((zone: any) => zone.name === selectedZone)?.id;
-        console.log(table.zone, zoneId);
 
-        const response = putRequest(`/tables/${table.id}/`, { name: name, capacity: capacity, zone: table.zone });
+        const response = putRequest(`/tables/${table.id}/`, { name: name, capacity: parseInt(capacity), zone: table.zone });
 
         mutate("/zones/list/");
       };
@@ -142,7 +141,7 @@ export default function TableSection() {
           <div className="flex gap-2 items-end">
             <InputField value={newTableName} onChange={setNewTableName} placeholder="Enter table name" />
             <InputField value={newTableCapacity} onChange={setNewTableCapacity} placeholder="Enter number of chairs" type="number" />
-            {/*<Select value={newTableZone} options={zones.map((zone: any) => [zone.id.toString(), zone.name])} onChange={(val) => setNewTableZone(val)} placeholder="Enter zone" />*/}
+            <Select value={newTableZone} options={zones.map((zone: any) => [zone.id.toString(), zone.name])} onChange={(val) => setNewTableZone(val)} placeholder="Enter zone" />
             <Button variant="secondary" onClick={handleAddTable}>
               +
             </Button>

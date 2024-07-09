@@ -26,7 +26,7 @@ export default function Settings() {
           <VacationPeriodsSection />
         </SettingsLayout.Section>
         <SettingsLayout.Section title="Booking Portal" description="Use this link to allow users to book online">
-          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">https://platzkicker.com/create-booking?id={data?.id}</div>
+          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">http://localhost:3000/tableReservation?id={data?.id}</div>
         </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
