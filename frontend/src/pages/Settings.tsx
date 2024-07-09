@@ -23,6 +23,9 @@ export default function Settings() {
         <SettingsLayout.Section title="Vacations" description="Set when your restaurant is on vacation">
           <VacationPeriodsSection />
         </SettingsLayout.Section>
+        <SettingsLayout.Section title="Booking Portal" description="Use this link to allow users to book online">
+          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">https://platzkicker.com/create-booking?id=1</div>
+        </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
   );
