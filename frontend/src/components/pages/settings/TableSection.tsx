@@ -4,6 +4,8 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 import Select from "../../input/Select";
+import { mutate } from "swr";
+import { log } from "util";
 
 type Zone = { id: number; name: string; bookable: boolean; restaurant: number; tables: number[] };
 
@@ -28,8 +30,6 @@ export default function TableSection() {
   }, [zoneData]);
 
   const handleAddZone = async () => {
-    console.log("Adding zone", newZoneName);
-
     const response = await postRequest("/zones/", { name: newZoneName });
 
     setZones((prev: any) => {
@@ -55,6 +55,66 @@ export default function TableSection() {
   };
 
   function Zone({ zone }: { zone: Zone }) {
+    const [newTableName, setNewTableName] = useState("");
+    const [newTableCapacity, setNewTableCapacity] = useState("3");
+    const [newTableZone, setNewTableZone] = useState("");
+
+    console.log(newTableZone);
+
+    const handleAddTable = async () => {
+      const zoneId = zones.find((zone: any) => zone.name === newTableZone)?.id;
+      const response = await postRequest("/tables/", { name: newTableName, capacity: parseInt(newTableCapacity), zone: zoneId });
+
+      mutate("/zones/list/");
+    };
+
+    function TableItem({ table }: { table: any }) {
+      const [name, setName] = useState(table.name);
+      const [capacity, setCapacity] = useState(table.capacity);
+      const [selectedZone, setSelectedZone] = useState(table.zone);
+
+      const handleTableUpdate = async () => {
+        const zoneId = zones.find((zone: any) => zone.name === selectedZone)?.id;
+        console.log(table.zone, zoneId);
+
+        const response = putRequest(`/tables/${table.id}/`, { name: name, capacity: capacity, zone: table.zone });
+
+        mutate("/zones/list/");
+      };
+
+      return (
+        <div className="flex items-center gap-4">
+          <InputField
+            value={name}
+            onChange={(val) => {
+              setName(val);
+              handleTableUpdate();
+            }}
+          />
+          <InputField
+            value={capacity.toString()}
+            type="number"
+            onChange={(val) => {
+              setCapacity(val);
+              handleTableUpdate();
+            }}
+          />
+          <Select
+            value={selectedZone}
+            options={zones.map((zone: any) => [zone.id.toString(), zone.name])}
+            onChange={(val) => {
+              console.log(selectedZone);
+              setSelectedZone(val);
+              handleTableUpdate();
+            }}
+          />
+          <Button variant="secondary">
+            <TrashIcon className="text-red-500 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    }
+
     return (
       <div>
         <div key={zone.id} className="flex items-end gap-4">
@@ -64,11 +124,20 @@ export default function TableSection() {
           </Button>
         </div>
         <div>
+          <div>
+            {zone.tables.map((table: any) => (
+              <div key={table.id} className="flex items-end gap-4">
+                <TableItem table={table} />
+              </div>
+            ))}
+          </div>
           <div className="flex gap-2 items-end">
-            <InputField placeholder="Enter table name" />
-            <InputField placeholder="Enter number of chairs" type="number" />
-            <Select options={zones.map((zone: any) => [zone.id.toString(), zone.name])} placeholder="Enter zone" />
-            <Button variant="secondary">+</Button>
+            <InputField value={newTableName} onChange={setNewTableName} placeholder="Enter table name" />
+            <InputField value={newTableCapacity} onChange={setNewTableCapacity} placeholder="Enter number of chairs" type="number" />
+            {/*<Select value={newTableZone} options={zones.map((zone: any) => [zone.id.toString(), zone.name])} onChange={(val) => setNewTableZone(val)} placeholder="Enter zone" />*/}
+            <Button variant="secondary" onClick={handleAddTable}>
+              +
+            </Button>
           </div>
         </div>
       </div>

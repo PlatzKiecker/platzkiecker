@@ -28,6 +28,16 @@ export default function Shell() {
     }
   };
 
+  function validateUser({ children }: { children: React.ReactNode }) {
+    const navigate = useNavigate();
+    // Check if user is logged in
+    const user = localStorage.getItem("user");
+    if (!user) {
+      navigate("/login");
+    } else return children;
+  }
+  // TODO: todo
+  //if (!document.cookie.sessionID) navigate("/login");
   return (
     <>
       <div className="min-h-full">
@@ -91,13 +101,4 @@ export default function Shell() {
       </div>
     </>
   );
-}
-
-function validateUser({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
-  // Check if user is logged in
-  const user = localStorage.getItem("user");
-  if (!user) {
-    navigate("/login");
-  } else return children;
 }
