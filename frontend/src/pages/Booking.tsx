@@ -7,6 +7,7 @@ import Button from "../components/input/Button";
 export default function Booking() {
   const { id } = useParams(); // Get booking ID from route parameters
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
 
   const { data: booking, loading, error, update, remove } = mySWR(`/bookings/detail/${id}/`);
 
@@ -54,7 +55,7 @@ export default function Booking() {
   const handleUpdateBooking = () => {
     update(bookingData)
       .then(() => {
-        // Optional: Feedback to the user that the booking has been updated
+        setShowPopup(true); // Set showPopup to true to display the popup
         console.log("Booking updated successfully!");
       })
       .catch((error) => {
@@ -147,6 +148,18 @@ export default function Booking() {
           Delete booking
         </Button>
       </div>
+
+      {/* Popup to show booking update success */}
+      {showPopup && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="text-xl font-semibold mb-4">Booking updated successfully!</p>
+            <button onClick={() => setShowPopup(false)} className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500 focus:outline-none">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

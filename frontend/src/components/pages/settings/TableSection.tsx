@@ -5,23 +5,15 @@ import InputField from "../../input/InputField";
 import mySWR, { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 import Select from "../../input/Select";
 import { mutate } from "swr";
-import { log } from "util";
 
 type Zone = { id: number; name: string; bookable: boolean; restaurant: number; tables: number[] };
 
 export default function TableSection() {
-  const [tables, setTables] = useState([]);
   const [zones, setZones] = useState<any>([]);
   const { data, error, loading, update } = mySWR("/tables/list/");
   const { data: zoneData, error: zoneError, loading: zoneLoading, update: zoneUpdate } = mySWR("/zones/list/");
 
   const [newZoneName, setNewZoneName] = useState("");
-
-  useEffect(() => {
-    if (data) {
-      setTables(data);
-    }
-  }, [data]);
 
   useEffect(() => {
     if (zoneData) {
@@ -40,18 +32,18 @@ export default function TableSection() {
     setNewZoneName("");
   };
 
-  const handleZoneUpdate = (id: number, name: string) => {
+  const handleZoneUpdate = async (id: number, name: string) => {
     setZones((prev: any) => {
       return prev.map((zone: any) => (zone.id === id ? { ...zone, name: name } : zone));
     });
-    putRequest(`/zones/${id}/`, { name });
+    await putRequest(`/zones/${id}/`, { name });
   };
 
-  const handleZoneDelete = (id: number) => {
+  const handleZoneDelete = async (id: number) => {
     setZones((prev: any) => {
       return prev.filter((zone: any) => zone.id !== id);
     });
-    deleteRequest(`/zones/${id}/`);
+    await deleteRequest(`/zones/${id}/`);
   };
 
   function Zone({ zone }: { zone: Zone }) {
@@ -59,13 +51,17 @@ export default function TableSection() {
     const [newTableCapacity, setNewTableCapacity] = useState("3");
     const [newTableZone, setNewTableZone] = useState("");
 
-    console.log(newTableZone);
-
     const handleAddTable = async () => {
       const zoneId = zones.find((zone: any) => zone.name === newTableZone)?.id;
       const response = await postRequest("/tables/", { name: newTableName, capacity: parseInt(newTableCapacity), zone: zoneId, bookable: true });
-
-      mutate("/zones/list/");
+      setZones((prev: any) => {
+        return prev.map((zone: any) => {
+          if (zone.id === zoneId) {
+            return { ...zone, tables: [...zone.tables, response.data] };
+          }
+          return zone;
+        });
+      });
     };
 
     function TableItem({ table }: { table: any }) {
@@ -73,17 +69,19 @@ export default function TableSection() {
       const [capacity, setCapacity] = useState(table.capacity);
       const [selectedZone, setSelectedZone] = useState(table.zone);
 
-      const handleTableUpdate = async () => {
+      const handleTableUpdate = async (name: string, capacity: string) => {
+        console.log("Table update", name, capacity, selectedZone);
+
+        if (name === "") return;
+        if (capacity === "") return;
+        if (selectedZone === "") return;
+
         const zoneId = zones.find((zone: any) => zone.name === selectedZone)?.id;
-
-        const response = putRequest(`/tables/${table.id}/`, { name: name, capacity: parseInt(capacity), zone: table.zone });
-
-        mutate("/zones/list/");
+        const response = await putRequest(`/tables/${table.id}/`, { name: name, capacity: parseInt(capacity), zone: table.zone });
       };
 
       const handleTableDelete = async () => {
-        const response = deleteRequest(`/tables/${table.id}/`);
-        mutate("/zones/list/");
+        const response = await deleteRequest(`/tables/${table.id}/`);
         //setTables((prev) => {
         //  return prev.filter((table) => table.id !== id);
         //});
@@ -94,8 +92,9 @@ export default function TableSection() {
           <InputField
             value={name}
             onChange={(val) => {
+              console.log("Name change", val);
               setName(val);
-              handleTableUpdate();
+              handleTableUpdate(val, capacity.toString());
             }}
           />
           <InputField
@@ -103,18 +102,10 @@ export default function TableSection() {
             type="number"
             onChange={(val) => {
               setCapacity(val);
-              handleTableUpdate();
+              handleTableUpdate(name, val);
             }}
           />
-          <Select
-            value={selectedZone}
-            options={zones.map((zone: any) => [zone.id.toString(), zone.name])}
-            onChange={(val) => {
-              console.log(selectedZone);
-              setSelectedZone(val);
-              handleTableUpdate();
-            }}
-          />
+          <p></p>
           <Button variant="secondary" onClick={handleTableDelete}>
             <TrashIcon className="text-red-500 h-4 w-4" />
           </Button>

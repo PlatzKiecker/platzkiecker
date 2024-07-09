@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import InputFieldLogin from "../components/input/InputFieldLogin";
 import { Link } from "react-router-dom";
-import { postRequest } from "../utils/mySWR";
+import mySWR, { postRequest } from "../utils/mySWR";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Send the login request to the server
@@ -18,17 +18,29 @@ export default function Login() {
       const requestData = { email: username, password };
 
       const response = await postRequest("/login/", requestData);
+      localStorage.setItem("loggedIn", username);
       if (response.data) {
         console.log("Login successful:", response.data);
         navigate("/");
       } else {
         setError("Failed to login"); // Set generic error message
       }
-    } catch (error: any) { // Catch any type of error
+    } catch (error: any) {
+      // Catch any type of error
       console.error("Login failed:", error.message);
       setError("Failed to login"); // Set generic error message
     }
   };
+
+  const { data: restaurant, loading } = mySWR("/restaurant/detail/");
+
+  useEffect(() => {
+    console.log("restaurant: ", restaurant);
+
+    if (!loading && restaurant?.id) {
+      navigate("/");
+    }
+  }, [restaurant]);
 
   return (
     <>

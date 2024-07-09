@@ -93,8 +93,12 @@ export default function TableDetails() {
         {/* Header */}
         <div className="px-4 sm:px-0">
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">For more than 10 guests please call the restaurant directly.
-            <br/>You can book 1 month in advance.
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            For more than 10 guests please call the restaurant directly.
+            <br />
+            You can book 1 month in advance.
+            <br />
+            *required fields
           </p>
         </div>
         {/* Form Section */}
@@ -147,11 +151,12 @@ export default function TableDetails() {
             {/* Table Details- Submit -Button */}
             <div className="flex justify-end mt-4">
               <button
-                type="button" 
-                onClick={handleSubmit} 
+                type="button"
+                onClick={handleSubmit}
                 className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={!selectedDate || !guestCount || !selectedTime} // Disable the button if any required field is not selected
               >
-                Submit Table Information
+                Next Step
               </button>
             </div>
           </dl>
