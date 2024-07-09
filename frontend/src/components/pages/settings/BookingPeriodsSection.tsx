@@ -3,8 +3,8 @@ import { BookingPeriod, BookingPeriods } from "../../../types/bookings";
 import mySWR, { postRequest, deleteRequest, putRequest } from "../../../utils/mySWR";
 import { useEffect, useState } from "react";
 import Button from "../../input/Button";
-import { DateValueType } from "react-tailwindcss-datepicker";
 import { TrashIcon } from "@heroicons/react/16/solid";
+import { TimeRangeValue } from "../../../types/input";
 
 export default function BookingPeriodsSection() {
   const { data, error, loading } = mySWR(`/booking-periods/list/`);
@@ -16,6 +16,18 @@ export default function BookingPeriodsSection() {
     friday: [],
     saturday: [],
     sunday: [],
+  });
+
+  const [newTimeRange, setNewTimeRange] = useState<{
+    [key: string]: { open: string; close: string };
+  }>({
+    monday: { open: "12:00:00", close: "19:00:00" },
+    tuesday: { open: "12:00:00", close: "19:00:00" },
+    wednesday: { open: "12:00:00", close: "19:00:00" },
+    thursday: { open: "12:00:00", close: "19:00:00" },
+    friday: { open: "12:00:00", close: "19:00:00" },
+    saturday: { open: "12:00:00", close: "19:00:00" },
+    sunday: { open: "12:00:00", close: "19:00:00" },
   });
 
   useEffect(() => {
@@ -33,7 +45,7 @@ export default function BookingPeriodsSection() {
     }
   }, [data]);
 
-  const handleValueChange = async (id: number, value: BookingPeriod) => {
+  const handleValueChange = async (id: number, value: TimeRangeValue) => {
     console.log("Value changed", value);
 
     const response = await putRequest(`/booking-periods/${id}/`, value);
@@ -54,7 +66,7 @@ export default function BookingPeriodsSection() {
 
   const handleAddPeriod = async (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
     const weekday = day.slice(0, 2).toUpperCase();
-    const response = await postRequest("/booking-periods/", { weekday: weekday, open: "12:00:00", close: "19:00:00" });
+    const response = await postRequest("/booking-periods/", { weekday: weekday, open: newTimeRange[day].open, close: newTimeRange[day].close });
 
     setPeriods((prev) => {
       return { ...prev, [day]: [...prev[day], response.data] };
@@ -97,9 +109,19 @@ export default function BookingPeriodsSection() {
             </div>
           );
         })}
-        <Button variant="secondary" onClick={() => handleAddPeriod(day as keyof BookingPeriods)}>
-          +
-        </Button>
+        <div>
+          <TimeRangePicker
+            value={newTimeRange[day]}
+            onChange={(value) => {
+              setNewTimeRange((prev) => {
+                return { ...prev, [day]: value };
+              });
+            }}
+          />
+          <Button variant="secondary" onClick={() => handleAddPeriod(day as keyof BookingPeriods)}>
+            +
+          </Button>
+        </div>
       </div>
     );
   });

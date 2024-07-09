@@ -1,7 +1,7 @@
 import InputField from "./InputField";
-import { BookingPeriod } from "../../types/bookings";
+import { TimeRangeValue } from "../../types/input";
 
-export default function TimeRangePicker({ value, onChange }: { value: BookingPeriod; onChange: (value: BookingPeriod) => void }) {
+export default function TimeRangePicker({ value, onChange }: { value: TimeRangeValue; onChange: (value: TimeRangeValue) => void }) {
   const handleChange = ({ open, close }: { open?: string; close?: string }) => {
     onChange({ ...value, open: open ? open : value.open, close: close ? close : value.close });
   };
