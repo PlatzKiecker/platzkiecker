@@ -109,7 +109,7 @@ export default function BookingPeriodsSection() {
             </div>
           );
         })}
-        <div>
+        <div className="flex items-center gap-4">
           <TimeRangePicker
             value={newTimeRange[day]}
             onChange={(value) => {
