@@ -24,7 +24,10 @@ export default function Dashboard() {
     note: string;
     status: string;
     id: number; // Add the 'id' property
+    phone: string;
   };
+
+  console.log("bookings: ", bookings);
 
   return (
     <Page
@@ -57,6 +60,9 @@ export default function Dashboard() {
                     Guests
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Guest phone
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Note
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -68,7 +74,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {bookings?.length === 0 ? (
+                {!bookings || bookings?.length === 0 ? (
                   <tr>
                     <td className="text-center tex-xl text-gray-600 py-8" colSpan={8}>
                       No bookings yet
@@ -82,6 +88,7 @@ export default function Dashboard() {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.end}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.table}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.guests}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.phone}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.note}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <Badge tone={booking.status === "canceled" ? "critical" : booking.status === "confirmed" ? "success" : booking.status === "pending" ? "default" : "warning"}>
