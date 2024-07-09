@@ -7,7 +7,8 @@ import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
 
 export default function Dashboard() {
-  const { data: bookings } = mySWR("/bookings/list/");
+  const [date, setDate] = useState(new Date());
+  const { data: bookings } = mySWR(`/bookings/list/?day=${date}`);
   //const bookings = [
   //  { name: "Lindsay Walton", start: "2024-04-10 10Uhr", end: "2024-04-10 13Uhr", table: "1", guests: "4", note: "Das ist eine notiz", status: "canceled" },
   //
@@ -24,8 +25,6 @@ export default function Dashboard() {
     status: string;
     id: number; // Add the 'id' property
   };
-
-  const [date, setDate] = useState(new Date());
 
   return (
     <Page
@@ -90,9 +89,9 @@ export default function Dashboard() {
                         </Badge>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <Link to={`/booking/view/${booking.id}`} className="text-indigo-600 hover:text-indigo-900">
-                        Edit<span className="sr-only">, {booking.name}</span>
-                      </Link>
+                        <Link to={`/booking/view/${booking.id}`} className="text-indigo-600 hover:text-indigo-900">
+                          Edit<span className="sr-only">, {booking.name}</span>
+                        </Link>
                       </td>
                     </tr>
                   ))

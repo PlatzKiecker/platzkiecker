@@ -37,7 +37,8 @@ export default function Shell() {
     } else return children;
   }
   // TODO: todo
-  //if (!document.cookie.sessionID) navigate("/login");
+  // Check if session ID cookie exists
+  //if (!document.cookie.includes("sessionid")) navigate("/login");
   return (
     <>
       <div className="min-h-full">
