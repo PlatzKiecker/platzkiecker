@@ -4,7 +4,7 @@ import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
 import TableSection from "../components/pages/settings/TableSection";
-import mySWR, { postRequest, putRequest } from "../utils/mySWR";
+import mySWR, { putRequest } from "../utils/mySWR";
 import { useState, useEffect } from "react";
 
 export default function Settings() {
