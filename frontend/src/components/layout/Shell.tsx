@@ -4,6 +4,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { mutate } from "swr";
 import axios from "axios";
+import { getCookie } from "../../utils/csrf";
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -32,7 +33,7 @@ export default function Shell() {
   };
 
   const API_URL = import.meta.env.VITE_API_URL;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchUser() {
@@ -47,10 +48,11 @@ export default function Shell() {
         console.log("Response:", response);
 
         if (response.status === 200) {
-          navigate("/");
+          setLoading(false);
         }
-      } catch (error) {}
-      setLoading(false);
+      } catch (error) {
+        navigate("/login");
+      }
     }
     setLoading(true);
     fetchUser();
