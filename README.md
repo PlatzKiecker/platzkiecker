@@ -178,7 +178,8 @@ To set up the development environment, follow these steps:
     ```bash
     VITE_API_URL = 'http://localhost:8000'
     ```
-6. Build and run the Docker containers using the development configuration:
+6. Navigate back to the root directory: `cd ..`. 
+7. Build and run the Docker containers using the development configuration:
     ```bash
     docker compose up -d --build
     ```
