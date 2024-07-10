@@ -53,7 +53,9 @@ export default function Login() {
         if (response.status === 200) {
           navigate("/");
         }
-      } catch (error) {}
+      } catch (error) {
+        window.alert("Something went wrong. Please contact us");
+      }
       setLoading(false);
     }
     setLoading(true);
