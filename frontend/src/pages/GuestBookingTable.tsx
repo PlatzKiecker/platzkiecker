@@ -176,6 +176,6 @@ export default function TableDetails() {
 // Function to fetch available days for booking
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days${restaurantID}/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
+  const { data, error, loading } = mySWR(`/available-days/${restaurantID}/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
   return { data, error, loading };
 }
