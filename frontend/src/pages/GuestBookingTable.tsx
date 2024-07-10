@@ -4,6 +4,9 @@ import ProgressTracker from "../components/layout/ProgressTracker";
 import GuestCountDropdown from "../components/input/GuestCountDropdown";
 import mySWR from "../utils/mySWR";
 
+const params = new URL(document.location.toString()).searchParams;
+const restaurantID = params.get("id");
+
 // Function to get today's date in "YYYY-MM-DD" format
 function getTodayDate() {
   const today = new Date();
@@ -35,7 +38,7 @@ export default function TableDetails() {
     data: bookableTimesData,
     error: bookableTimesError,
     loading: bookableTimesLoading,
-  } = mySWR(selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : "");
+  } = mySWR(selectedDate ? `/available-timeslots/${restaurantID}/?guest_count=${guestCount}&start_day=${selectedDate}` : "");
 
   // Update the bookable days when the guest count changes
   useEffect(() => {
@@ -173,6 +176,6 @@ export default function TableDetails() {
 // Function to fetch available days for booking
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
+  const { data, error, loading } = mySWR(`/available-days${restaurantID}/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
   return { data, error, loading };
 }
