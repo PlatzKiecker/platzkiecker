@@ -4,10 +4,13 @@ import InputField from "../components/input/InputField";
 import BookingPeriodsSection from "../components/pages/settings/BookingPeriodsSection";
 import VacationPeriodsSection from "../components/pages/settings/VacationPeriodsSection";
 import TableSection from "../components/pages/settings/TableSection";
-import mySWR, { postRequest, putRequest } from "../utils/mySWR";
+import mySWR, { putRequest } from "../utils/mySWR";
 import { useState, useEffect } from "react";
 
 export default function Settings() {
+  const { data, error, loading } = mySWR(`/restaurant/detail/`);
+
+  const currentDomain = window.location.origin;
   return (
     <Page title="Settings">
       <SettingsLayout>
@@ -23,13 +26,18 @@ export default function Settings() {
         <SettingsLayout.Section title="Vacations" description="Set when your restaurant is on vacation">
           <VacationPeriodsSection />
         </SettingsLayout.Section>
+        <SettingsLayout.Section title="Booking Portal" description="Use this link to allow users to book online">
+          <div className="bg-gray-800 text-gray-300 py-4 px-8 rounded-lg shadow">
+            {currentDomain}/tableReservation?id={data?.id}
+          </div>
+        </SettingsLayout.Section>
       </SettingsLayout>
     </Page>
   );
 }
 function RestaurantSection() {
   const { data: restaurant, error, loading, update: updateRestaurantName } = mySWR(`/restaurant/detail/`);
-  const [restaurantName, setRestaurantName] = useState(restaurant?.name ?? "");
+  const [restaurantName, setRestaurantName] = useState(restaurant?.name || "");
 
   useEffect(() => {
     if (restaurant) {

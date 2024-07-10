@@ -5,6 +5,8 @@ import InputFieldLogin from "../components/input/InputFieldLogin";
 import { postRequest } from "../utils/mySWR";
 import mySWR from "../utils/mySWR";
 
+const restaurantId = 1;
+
 // Function to get today's date in "YYYY-MM-DD" format
 function getTodayDate() {
   const today = new Date();
@@ -18,7 +20,7 @@ function getTodayDate() {
 
 function bookablePeriods(count: number) {
   const startDate = new Date();
-  const { data, error, loading } = mySWR(`/available-days/1/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
+  const { data, error, loading } = mySWR(`/available-days/${restaurantId}/?guest_count=${count}&start_day=${startDate.toISOString().split("T")[0]}`);
   return { data, error, loading };
 }
 
@@ -36,11 +38,13 @@ export default function NewBooking() {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  const { data } = mySWR("/restaurant/detail/");
+
   const navigate = useNavigate();
 
   // Fetch bookable days and times
   const { data: bookableDaysData } = bookablePeriods(Number(guestCount));
-  const { data: bookableTimesData } = mySWR(selectedDate ? `/available-timeslots/1/?guest_count=${guestCount}&start_day=${selectedDate}` : "/");
+  const { data: bookableTimesData } = mySWR(selectedDate ? `/available-timeslots/${data?.id}/?guest_count=${guestCount}&start_day=${selectedDate}` : "/");
 
   useEffect(() => {
     if (bookableDaysData && bookableDaysData.available_days) {
@@ -75,7 +79,7 @@ export default function NewBooking() {
         guest_count: parseInt(guestCount),
         notes: reservationDetails,
       };
-      const response = await postRequest(`/bookings/1/`, bookingData);
+      const response = await postRequest(`/bookings/${data.id}/`, bookingData);
       console.log("Booking created:", response.data);
       if (response.data.guest_count && response.data.guest_count.length > 0) {
         const errorMessage = response.data.guest_count[0];
