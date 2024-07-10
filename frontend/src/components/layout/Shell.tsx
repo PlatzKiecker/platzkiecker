@@ -1,10 +1,9 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { useLogout } from "../../hooks/useLogout";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { getCookie } from "../../utils/csrf";
-import mySWR from "../../utils/mySWR";
+import { useEffect, useState } from "react";
 import { mutate } from "swr";
+import axios from "axios";
 
 const navigation = [
   { name: "Dashboard", href: "/" },
@@ -32,13 +31,30 @@ export default function Shell() {
     }
   };
 
-  const { data: restaurant, loading } = mySWR("/restaurant/detail/");
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!loading && !restaurant?.id) {
-      navigate("/login");
+    async function fetchUser() {
+      console.log("Fetching user");
+      try {
+        const response = await axios.get(`${API_URL}/restaurant/detail/`, {
+          withCredentials: true,
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+        });
+        console.log("Response:", response);
+
+        if (response.status === 200) {
+          navigate("/");
+        }
+      } catch (error) {}
+      setLoading(false);
     }
-  }, [restaurant]);
+    setLoading(true);
+    fetchUser();
+  }, []);
 
   if (loading && !restaurant?.id) {
     return <div>Loading...</div>;

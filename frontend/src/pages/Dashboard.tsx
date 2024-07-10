@@ -8,12 +8,8 @@ import mySWR from "../utils/mySWR";
 
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
-  const { data: bookings } = mySWR(`/bookings/list/?day=${date}`);
-  //const bookings = [
-  //  { name: "Lindsay Walton", start: "2024-04-10 10Uhr", end: "2024-04-10 13Uhr", table: "1", guests: "4", note: "Das ist eine notiz", status: "canceled" },
-  //
-  //  // More people...
-  //];
+  const formattedDate = date.toISOString().split("T")[0];
+  const { data: bookings } = mySWR(`/bookings/list/?day=${formattedDate}`);
 
   type Booking = {
     name: string;
@@ -26,8 +22,6 @@ export default function Dashboard() {
     id: number; // Add the 'id' property
     phone: string;
   };
-
-  console.log("bookings: ", bookings);
 
   return (
     <Page
@@ -84,13 +78,13 @@ export default function Dashboard() {
                   bookings &&
                   bookings?.map((booking: Booking) => (
                     <tr key={booking.name}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{booking.name}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.start}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.end}</td>
+                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{booking.guest_name}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.start.split("T")[1].slice(0, -1)}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.end.split("T")[1].slice(0, -1)}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.table}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.guests}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.phone}</td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.note}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.guest_count}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.guest_phone}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.notes}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <Badge tone={booking.status === "canceled" ? "critical" : booking.status === "confirmed" ? "success" : booking.status === "pending" ? "default" : "warning"}>
                           {booking.status}

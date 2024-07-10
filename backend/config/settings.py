@@ -36,12 +36,10 @@ CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_CORS_ALLOWED_ORIGINS', '').split('
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('DJANGO_CORS_ALLOW_ALL_ORIGINS', 'False') == 'True'
 CORS_ALLOW_HEADERS = ['X-CSRFToken', 'Content-Type']
 
-# Disable csrf for now
-
-
 # Set default values if environment variables are not defined or empty
 if not CORS_ALLOWED_ORIGINS or CORS_ALLOWED_ORIGINS == ['']:
     CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000']  # Default allowed origins
+
 
 if not os.environ.get('DJANGO_CORS_ALLOW_ALL_ORIGINS'):
     CORS_ALLOW_ALL_ORIGINS = True  # Default allow all origins setting
@@ -49,14 +47,12 @@ if not os.environ.get('DJANGO_CORS_ALLOW_ALL_ORIGINS'):
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
-
-CSRF_COOKIE_SAMESITE = 'Strict'
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if DEBUG == False:
+    CSRF_COOKIE_SAMESITE = 'Strict'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 AUTH_USER_MODEL = "user.User"
@@ -95,7 +91,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

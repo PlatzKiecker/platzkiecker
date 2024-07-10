@@ -37,7 +37,7 @@ export default function Settings() {
 }
 function RestaurantSection() {
   const { data: restaurant, error, loading, update: updateRestaurantName } = mySWR(`/restaurant/detail/`);
-  const [restaurantName, setRestaurantName] = useState(restaurant?.name ?? "");
+  const [restaurantName, setRestaurantName] = useState(restaurant?.name || "");
 
   useEffect(() => {
     if (restaurant) {
