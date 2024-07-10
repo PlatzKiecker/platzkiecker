@@ -14,3 +14,15 @@ export type BookingPeriod = {
   open: string;
   close: string;
 };
+
+export type Booking = {
+  guest_name: string;
+  start: string;
+  end: string;
+  table: string;
+  guest_count: string;
+  notes: string;
+  status: string;
+  id: number; // Add the 'id' property
+  guest_phone: string;
+};

@@ -56,7 +56,7 @@ export default function Shell() {
     fetchUser();
   }, []);
 
-  if (loading && !restaurant?.id) {
+  if (loading) {
     return <div>Loading...</div>;
   } else
     return (

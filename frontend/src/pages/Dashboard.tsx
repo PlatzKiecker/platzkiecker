@@ -5,23 +5,12 @@ import Badge from "../components/feedback/Badge";
 import { useState } from "react";
 import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
+import { Booking } from "../types/booking";
 
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
   const formattedDate = date.toISOString().split("T")[0];
   const { data: bookings } = mySWR(`/bookings/list/?day=${formattedDate}`);
-
-  type Booking = {
-    name: string;
-    start: string;
-    end: string;
-    table: string;
-    guests: string;
-    note: string;
-    status: string;
-    id: number; // Add the 'id' property
-    phone: string;
-  };
 
   return (
     <Page
