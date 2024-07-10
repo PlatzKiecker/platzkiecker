@@ -5,7 +5,7 @@ import Badge from "../components/feedback/Badge";
 import { useState } from "react";
 import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
-import { Booking } from "../types/booking";
+import { Booking } from "../types/bookings";
 
 export default function Dashboard() {
   const [date, setDate] = useState(new Date());
