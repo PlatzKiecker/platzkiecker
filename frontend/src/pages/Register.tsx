@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import InputFieldLogin from '../components/input/InputFieldLogin';
-import { Link } from 'react-router-dom';
-import { postRequest } from '../utils/mySWR';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import InputFieldLogin from "../components/input/InputFieldLogin";
+import { Link } from "react-router-dom";
+import { postRequest } from "../utils/mySWR";
 
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -21,24 +21,26 @@ export default function Register() {
     }
     try {
       setError(null);
-      const registerData = await postRequest('/register/', { email, password });
+      const registerData = await postRequest("/register/", { email, password });
       if (registerData) {
-        const loginData = await postRequest('/login/', { email, password });
+        const loginData = await postRequest("/login/", { email, password });
         if (loginData) {
-          console.log('Login successful after registration:', loginData);       
+          console.log("Login successful after registration:", loginData);
           // Create Restaurant
-          const restaurantData = await postRequest('/restaurant/', { name: "Restaurant-Name" });
+          const restaurantData = await postRequest("/restaurant/", { name: "Restaurant-Name" });
+          const bookingDuration = await postRequest("/default-duration/", { duration: "02:00:00" });
+
           if (!restaurantData) {
             setError("Failed to create restaurant");
             return;
           }
           // Create Zone
-          const zoneData = await postRequest('/zones/', { name: "Zone 1", bookable: true });
+          const zoneData = await postRequest("/zones/", { name: "Zone 1", bookable: true });
           if (!zoneData) {
             setError("Failed to create zone");
             return;
           }
-          navigate('/settings');
+          navigate("/settings");
         } else {
           setError("Failed to login after registration");
         }

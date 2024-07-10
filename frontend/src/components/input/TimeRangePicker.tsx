@@ -1,16 +1,16 @@
 import InputField from "./InputField";
-import { BookingPeriod } from "../../types/bookings";
+import { TimeRangeValue } from "../../types/input";
 
-export default function TimeRangePicker({ value, onChange }: { value: BookingPeriod; onChange: (value: BookingPeriod) => void }) {
-  const handleChange = (open: string, close: string) => {
-    onChange({ ...value, open: new Date(`2000-01-01T${open}:00`), close: new Date(`2000-01-01T${close}:00`) });
+export default function TimeRangePicker({ value, onChange }: { value: TimeRangeValue; onChange: (value: TimeRangeValue) => void }) {
+  const handleChange = ({ open, close }: { open?: string; close?: string }) => {
+    onChange({ ...value, open: open ? open : value.open, close: close ? close : value.close });
   };
 
   return (
     <div className="flex items-center">
-      <InputField type="time" value={value.open.toString()} onChange={(val) => handleChange} />
+      <InputField type="time" value={value.open.toString()} onChange={(val) => handleChange({ open: val })} />
       <span className="mx-2 text-sm text-gray-700">to</span>
-      <InputField type="time" value={value.close.toString()} onChange={(val) => handleChange} />
+      <InputField type="time" value={value.close.toString()} onChange={(val) => handleChange({ close: val })} />
     </div>
   );
 }

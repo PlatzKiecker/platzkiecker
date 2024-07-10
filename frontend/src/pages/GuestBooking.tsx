@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { postRequest } from "../utils/mySWR";
 import { useLocation } from "react-router-dom";
 
+const params = new URL(document.location.toString()).searchParams;
+const restaurantID = params.get("id");
+
 export default function GuestDetails() {
   const location = useLocation();
   const { guestCount, combinedDateTime } = location.state || {};
@@ -24,7 +27,7 @@ export default function GuestDetails() {
         guest_count: guestCount,
         notes: reservationDetails, // Optional
       };
-      const response = await postRequest("/bookings/1/", bookingData);
+      const response = await postRequest(`/bookings/${restaurantID}/`, bookingData);
       console.log("Booking created:", response.data);
 
       navigate("/confirmation", { state: { bookingData: response.data } });
@@ -49,8 +52,10 @@ export default function GuestDetails() {
       <div className="bg-gray-100 p-6 w-full max-w-4xl h-auto max-h-screen overflow-auto mx-auto">
         <div className="px-4 sm:px-0">
           <h3 className="text-base font-semibold leading-7 text-gray-900">Online Reservation</h3>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Please fill in more details for your reservation.
-            <br/>*required fields
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            Please fill in more details for your reservation.
+            <br />
+            *required fields
           </p>
         </div>
         {/* Guest Information */}

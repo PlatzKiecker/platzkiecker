@@ -9,6 +9,8 @@ import { postRequest, putRequest, deleteRequest } from "../../../utils/mySWR";
 export default function VacationPeriodsSection() {
   const { data, error, loading } = mySWR(`/vacations/list/`);
 
+  const [newPeriod, setNewPeriod] = useState({ startDate: "", endDate: "" });
+
   const [periods, setPeriods] = useState<VacationPeriod[]>([]);
 
   useEffect(() => {
@@ -43,11 +45,8 @@ export default function VacationPeriodsSection() {
   };
 
   const handleAddPeriod = async () => {
-    // TODO: overlapping periods
-    const startDate = new Date().toISOString().split("T")[0];
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + 1);
-    const endDateString = endDate.toISOString().split("T")[0];
+    const startDate = newPeriod.startDate.split("T")[0];
+    const endDateString = newPeriod.endDate.split("T")[0];
     const response = await postRequest("/vacations/", { start: startDate, end: endDateString });
     setPeriods((prev) => {
       return [...prev, response.data];
@@ -65,9 +64,13 @@ export default function VacationPeriodsSection() {
   return (
     <div className="space-y-4">
       {periodJSX}
-      <Button variant="secondary" onClick={handleAddPeriod}>
-        +
-      </Button>
+      <p className="text-sm font-medium">Create new vacation</p>
+      <div className="flex items-center gap-4">
+        <DateRangePicker value={newPeriod} onChange={(value) => setNewPeriod({ startDate: value?.startDate?.toString() || "", endDate: value?.endDate?.toString() || "" })} />
+        <Button variant="secondary" onClick={handleAddPeriod}>
+          +
+        </Button>
+      </div>
     </div>
   );
 }

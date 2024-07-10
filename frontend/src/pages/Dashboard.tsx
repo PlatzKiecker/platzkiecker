@@ -7,7 +7,8 @@ import Button from "../components/input/Button";
 import mySWR from "../utils/mySWR";
 
 export default function Dashboard() {
-  const { data: bookings } = mySWR("/bookings/list/");
+  const [date, setDate] = useState(new Date());
+  const { data: bookings } = mySWR(`/bookings/list/?day=${date}`);
   //const bookings = [
   //  { name: "Lindsay Walton", start: "2024-04-10 10Uhr", end: "2024-04-10 13Uhr", table: "1", guests: "4", note: "Das ist eine notiz", status: "canceled" },
   //
@@ -23,9 +24,10 @@ export default function Dashboard() {
     note: string;
     status: string;
     id: number; // Add the 'id' property
+    phone: string;
   };
 
-  const [date, setDate] = useState(new Date());
+  console.log("bookings: ", bookings);
 
   return (
     <Page
@@ -58,6 +60,9 @@ export default function Dashboard() {
                     Guests
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Guest phone
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Note
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -69,13 +74,14 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {bookings?.length === 0 ? (
+                {!bookings || bookings?.length === 0 ? (
                   <tr>
                     <td className="text-center tex-xl text-gray-600 py-8" colSpan={8}>
                       No bookings yet
                     </td>
                   </tr>
                 ) : (
+                  bookings &&
                   bookings?.map((booking: Booking) => (
                     <tr key={booking.name}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">{booking.name}</td>
@@ -83,6 +89,7 @@ export default function Dashboard() {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.end}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.table}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.guests}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.phone}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{booking.note}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         <Badge tone={booking.status === "canceled" ? "critical" : booking.status === "confirmed" ? "success" : booking.status === "pending" ? "default" : "warning"}>
@@ -90,9 +97,9 @@ export default function Dashboard() {
                         </Badge>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <Link to={`/booking/view/${booking.id}`} className="text-indigo-600 hover:text-indigo-900">
-                        Edit<span className="sr-only">, {booking.name}</span>
-                      </Link>
+                        <Link to={`/booking/view/${booking.id}`} className="text-indigo-600 hover:text-indigo-900">
+                          Edit<span className="sr-only">, {booking.name}</span>
+                        </Link>
                       </td>
                     </tr>
                   ))
