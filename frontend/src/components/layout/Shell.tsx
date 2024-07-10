@@ -48,7 +48,6 @@ export default function Shell() {
         console.log("Response:", response);
 
         if (response.status === 200) {
-          navigate("/");
           setLoading(false);
         }
       } catch (error) {
