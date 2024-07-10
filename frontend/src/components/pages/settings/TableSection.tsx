@@ -22,7 +22,7 @@ export default function TableSection() {
   }, [zoneData]);
 
   const handleAddZone = async () => {
-    const response = await postRequest("/zones/", { name: newZoneName });
+    const response = await postRequest("/zones/", { name: newZoneName, bookable: true });
 
     setZones((prev: any) => {
       // POST to backend

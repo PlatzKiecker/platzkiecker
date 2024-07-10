@@ -45,25 +45,6 @@ export default function BookingPeriodsSection() {
     }
   }, [data]);
 
-  const handleValueChange = async (id: number, value: TimeRangeValue) => {
-    console.log("Value changed", value);
-
-    const response = await putRequest(`/booking-periods/${id}/`, value);
-    console.log("Response", response.data);
-
-    setPeriods((prev) => {
-      return {
-        monday: prev.monday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        tuesday: prev.tuesday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        wednesday: prev.wednesday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        thursday: prev.thursday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        friday: prev.friday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        saturday: prev.saturday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-        sunday: prev.sunday.map((period: BookingPeriod) => (period.id === id ? response.data : period)),
-      };
-    });
-  };
-
   const handleAddPeriod = async (day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday") => {
     const weekday = day.slice(0, 2).toUpperCase();
     const response = await postRequest("/booking-periods/", { weekday: weekday, open: newTimeRange[day].open, close: newTimeRange[day].close });
@@ -95,21 +76,17 @@ export default function BookingPeriodsSection() {
         {value.map((period: BookingPeriod) => {
           if (!period.open && !period.close) return;
           return (
-            <div className="flex gap-4 items--center">
-              <TimeRangePicker
-                key={period.open.toString()}
-                value={period}
-                onChange={(value) => {
-                  handleValueChange(period.id, value);
-                }}
-              />
+            <div className="flex gap-4 items-center">
+              <p className="text-gray-600">
+                {period.open.toString()} - {period.close.toString()}
+              </p>
               <Button variant="secondary" onClick={() => handleDeletePeriod(period.id)}>
                 <TrashIcon className="text-red-500 h-4 w-4" />
               </Button>
             </div>
           );
         })}
-        <div className="flex items-center gap-4">
+        <div className="flex items-end gap-4">
           <TimeRangePicker
             value={newTimeRange[day]}
             onChange={(value) => {
